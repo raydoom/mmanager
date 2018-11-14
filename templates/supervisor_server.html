@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block hovor %}
+<ul class="nav nav-pills">
+	<li role="presentation"><a href="/docker_server/">Docker Server</a></li>
+    <li role="presentation" class="active"><a href="/supervisor_server/">Supervisor Server</a></li>
+</ul>
+{% endblock %}
+{% block body %}
+<div class="page-header">
+    <h1>
+        <small>controlled by supervisor</small>
+    </h1>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <ul class="nav nav-pills nav-stacked">
+            {% for server in servers %}
+            <li role="presentation" style="background-color: lemonchiffon  ">
+ <!--              <a href="#" onclick="show_server_status('{{server.id}}')">
+                    {{server.host}}:{{server.port}} {{server.Id}}
+ -->               </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-md-8" id="server_div">
+    </div>
+</div>
+
+{% for server in server_all_list %}
+
+<h3>Host: {{server.ip}}</h3>
+<table class="table table-striped">
+    <tr>
+        <th width="10%">status</th>
+        <th width="30%">app</thw>
+        <th width="20%">location</th>
+        <th width="30%">description</th>
+        <th colspan="4" width="10%">operation</th>
+    </tr>
+    {% for app in server.apps %}
+    <tr>
+        <td>
+            {% if app.statename == 'RUNNING' %}
+                <span style="background-color: lightgreen">
+                 {% elif app.statename == 'STOPPED' %}
+                <span style="background-color: lightgray">
+                 {% else %}
+                <span style="background-color: yellow">
+                    {% endif %}
+                    {{app.statename}}
+                </span>
+        </td>
+        <td>{{app.name}}</td>
+        <td>{{server.ip}}</td>
+        <td>{{app.description}}</td>
+        <td>
+            <button class="btn btn-primary btn-xs"
+                    onclick="supervisor_app_opt('{{server.ip}}', '{{server.port}}' , '{{app.name}}', 'start')">
+                start
+            </button>
+        </td>
+        <td>
+            <button class="btn btn-primary btn-xs"
+                    onclick="supervisor_app_opt('{{server.ip}}', '{{server.port}}' , '{{app.name}}', 'restart')">
+                restart
+            </button>
+        </td>
+        <td>
+            <button class="btn btn-primary btn-xs"
+                    onclick="supervisor_app_opt('{{server.ip}}', '{{server.port}}' , '{{app.name}}', 'stop')">
+                stop
+            </button>
+        </td>
+        <td>
+            <button class="btn btn-primary btn-xs"
+                    onclick="tail_supervisor_app_log('{{server.ip}}', '{{server.port}}',  '{{app.name}}')">
+                tail
+            </button>
+        </td>
+
+    </tr>
+    {% endfor %}
+</table>
+{% endfor %}
+{% endblock %}
+</body>
+</html>
