@@ -41,7 +41,7 @@ def tail_container_log(request):
 	log = server.tail_container_log(container_id)
 	print (log)
 	return render(request, 'tail.html', {'log': log})
-	
+
 
 # 获取supervisor服务器及程序列表
 def supervisor_server(request):
@@ -65,7 +65,7 @@ def supervisor_app_option(request):
 	supervisor_opt = request.GET.get('supervisor_opt')
 	servers = Supervisor_Server.objects.filter(ip=server_ip)
 	for server in servers:
-		result = server.supervisor_app_opts(supervisor_app, supervisor_opt)
+		result = server.supervisor_app_opt(supervisor_app, supervisor_opt)
 	return redirect('/docker_servers/')
 
 # 获取supervisor程序的日志

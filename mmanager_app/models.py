@@ -51,7 +51,7 @@ class Docker_Server(models.Model):
 	def tail_container_log(self, container_id):
 		log_list = []
 		func_tail_log = self.get_docker_client().containers.get(container_id).logs
-		log = func_tail_log(tail=15)
+		log = func_tail_log(tail=20)
 		log = log.decode()
 		for log_line in log.split('\n'):
 			time_stamp = get_time_stamp()
