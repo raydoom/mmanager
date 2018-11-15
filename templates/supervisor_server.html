@@ -40,7 +40,7 @@
     </tr>
     {% for app in server.apps %}
     <tr>
-        <td>
+        <td  style="text-transform:lowercase;">
             {% if app.statename == 'RUNNING' %}
                 <span style="background-color: lightgreen">
                  {% elif app.statename == 'STOPPED' %}
