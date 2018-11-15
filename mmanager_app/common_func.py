@@ -14,6 +14,9 @@ def get_time_stamp():
     time_stamp = "%s.%03d" % (data_head, data_secs)
     return time_stamp
 
+def TimeStampToTime(timestamp):
+	timeStruct = time.localtime(timestamp)
+	return time.strftime('%Y-%m-%d %H:%M:%S',timeStruct)
 
 # 定义格式化日志的函数
 def format_log(log):

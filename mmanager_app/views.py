@@ -3,9 +3,9 @@ from django.http import HttpResponse
 from django.contrib.auth import models, authenticate
 # from django.contrib.auth.decorators import login_required
 
-import docker, xmlrpc.client, logging
+import docker, xmlrpc.client, logging, os
 from .models import Supervisor_Server, Docker_Server
-from .common_func import format_log, auth_controller
+from .common_func import format_log, auth_controller, TimeStampToTime
 
 # 获取docker服务器及容器列表
 @auth_controller
@@ -111,3 +111,27 @@ def logout(request):
 def register(request):
 	pass
 	return redirect("/index/")
+
+# 本地日志目录浏览
+def logdir_viewer(request):
+	logdir_infos = []
+	logdir_root = '/Users/ma/Downloads/'
+	logdir = os.listdir(logdir_root)
+	for dir in logdir:
+		logdir_info = {}
+		filePath = logdir_root+ dir
+		fsize = os.path.getsize(filePath)
+		fsize = fsize/float(1024*1024)
+		mtime = os.path.getmtime(filePath)
+		if os.path.isdir(filePath):
+			logdir_info['isdir'] = 1
+		else:
+			logdir_info['isdir'] = 0
+
+		logdir_info['file_name'] = dir
+		logdir_info['file_size'] = fsize
+		logdir_info['mtime'] = TimeStampToTime(mtime)
+		logdir_infos.append(logdir_info)
+	print (logdir_infos)
+
+	return render(request, 'logdir_viewer.html', {'logdir_infos': logdir_infos})
