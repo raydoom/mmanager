@@ -11,9 +11,9 @@
 #### 所需组件
 
 - python3.6
-- django2.1.3(python模块)
-- docker3.5.1(python模块)
-- mysqlclient(python模块)
+- django2.1.3（python模块）
+- docker3.5.1（python模块）
+- mysqlclient（python模块）
 - bootstrap3.3.6
 - jquery1.9.1
 - fontawesome4.7.0
