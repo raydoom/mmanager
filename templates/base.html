@@ -5,6 +5,7 @@
     <title>mmanager</title>
     {% load staticfiles %}
     <link   href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link   href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/app.js' %}"></script>
@@ -13,6 +14,36 @@
 <div class="row">
     <div class="col-md-1"></div>
     <div class="col-md-10">
+        <nav class="navbar navbar-default"><!-- /navbar -->
+              <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#my-nav" aria-expanded="false">
+                    <span class="sr-only">sw</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand" href="#">mmanager</a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="my-nav">
+                  <ul class="nav navbar-nav">
+                    <li class="active"><a href="/index/">Server</a></li>
+                  </ul>
+                  <ul class="nav navbar-nav navbar-right">
+                      {% if request.session.islogin %}
+                          <li><a class="fa fa-user" href="#"> {{ request.session.username }}</a></li>
+                          <li><a class="fa fa-sign-out" href="/logout/"> Logout</a></li>
+                      {% else %}
+                          <li><a href="/login/">Login</a></li>
+                          <li><a href="/register/">Register</a></li>
+                      {% endif %}
+                  </ul>
+                </div><!-- /.navbar-collapse -->
+              </div><!-- /.container-fluid -->
+            </nav><!-- /navbar -->
         {% block hovor %}
         {% endblock %}
         {% block body %}

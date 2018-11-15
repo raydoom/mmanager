@@ -17,8 +17,8 @@
 </style>
 </head>
 
-
-<form class="form-horizontal" role="form" action='/login' method="post">
+<form class="form-horizontal" role="form" action='/login/' method="post">
+{% csrf_token %}
 <div class="container">
   <div class="row myCenter">
     <div class="col-xs-6 col-md-4 col-center-block">
@@ -39,6 +39,10 @@
         </div>
         </br>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Login in</button>
+        </br>
+        {% if message %}
+            <div class="alert alert-warning">{{ message }}</div>
+        {% endif %}
       </form>
     </div>
   </div>

@@ -26,6 +26,11 @@ urlpatterns = [
     url(r'^supervisor_server', views.supervisor_server, name='supervisor_server'),
     url(r'^supervisor_app_opt', views.supervisor_app_option),
     url(r'^tail_supervisor_app_log', views.tail_supervisor_app_log),
+
+    url(r'^login/', views.login),
+    url(r'^register/', views.register),
+	url(r'^logout/', views.logout),
+
     url(r'', views.docker_server),
     
 ]

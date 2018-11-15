@@ -137,7 +137,6 @@ class Supervisor_Server(models.Model):
 		offset = 0
 		func = self.get_rpc_proxy().supervisor.tailProcessLog
 		log, offset, ret = func(supervisor_app, offset, 2000)
-		logging.error (log)
 		for log_line in log.split('\n'):
 			time_stamp = get_time_stamp()
 			log_line = '[' + time_stamp + ']--' + log_line

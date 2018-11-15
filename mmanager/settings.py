@@ -25,7 +25,7 @@ SECRET_KEY = '3ibw+bwwjuu66)m0(cgglkjh_#v+d7r6zq*)y$7&!n248ekun='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -124,3 +124,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS=(BASE_DIR,'static')
+
+LOGIN_URL = '/login/'
