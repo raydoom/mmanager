@@ -5,7 +5,7 @@ from django.contrib.auth import models, authenticate
 
 import docker, xmlrpc.client, logging, os
 from .models import Supervisor_Server, Docker_Server
-from .common_func import format_log, auth_controller, TimeStampToTime
+from .common_func import format_log, auth_controller, get_dir_info, get_file_contents
 
 # 获取docker服务器及容器列表
 @auth_controller
@@ -112,26 +112,29 @@ def register(request):
 	pass
 	return redirect("/index/")
 
+dir_root = '/Users/ma/Downloads/'
+
 # 本地日志目录浏览
-def logdir_viewer(request):
-	logdir_infos = []
-	logdir_root = '/Users/ma/Downloads/'
-	logdir = os.listdir(logdir_root)
-	for dir in logdir:
-		logdir_info = {}
-		filePath = logdir_root+ dir
-		fsize = os.path.getsize(filePath)
-		fsize = fsize/float(1024*1024)
-		mtime = os.path.getmtime(filePath)
-		if os.path.isdir(filePath):
-			logdir_info['isdir'] = 1
-		else:
-			logdir_info['isdir'] = 0
+def dir_viewer(request):
+	#logdir_root = '/Users/ma/Downloads/'
+	current_dir = dir_root
+	to_dir_name = ''
+	if request.GET.get('current_dir'):
+		current_dir = request.GET.get('current_dir')
+	if request.GET.get('to_dir_name'):
+		to_dir_name = request.GET.get('to_dir_name')
+	to_dir = current_dir + to_dir_name + '/'
+	dir_infos = get_dir_info(to_dir)
 
-		logdir_info['file_name'] = dir
-		logdir_info['file_size'] = fsize
-		logdir_info['mtime'] = TimeStampToTime(mtime)
-		logdir_infos.append(logdir_info)
-	print (logdir_infos)
+	return render(request, 'dir_viewer.html', {'dir_infos': dir_infos, 'current_dir': to_dir})
 
-	return render(request, 'logdir_viewer.html', {'logdir_infos': logdir_infos})
+# 本地日志文件浏览
+def text_viewer(request):
+	#logdir_root = '/Users/ma/Downloads/'
+	current_dir = dir_root
+	if request.GET.get('current_dir'):
+		current_dir = request.GET.get('current_dir')
+	file_name = request.GET.get('file_name')
+	text_contents = []
+	text_contents = get_file_contents(current_dir, file_name)
+	return render(request, 'text_viewer.html', {'text_contents': text_contents})

@@ -3,7 +3,7 @@
 <ul class="nav nav-pills">
 	<li role="presentation"><a href="/docker_server/">Docker Server</a></li>
     <li role="presentation"><a href="/supervisor_server/">Supervisor Server</a></li>
-    <li role="presentation" class="active"><a href="/logdir_viewer/">Logdir Viewer</a></li>
+    <li role="presentation" class="active"><a href="/dir_viewer/">Dir Viewer</a></li>
 </ul>
 {% endblock %}
 {% block body %}
@@ -29,7 +29,7 @@
 </div>
 
 
-
+<h3>{{current_dir}}</h3>
 <table class="table table-striped">
     <tr>
         <th width="40%">name</th>
@@ -37,23 +37,45 @@
         <th width="25%">mtime</th>
         <th colspan="4" width="10%">operation</th>
     </tr>
-    {% for logdir_info in logdir_infos %}
+    {% for dir_info in dir_infos %}
+    {% if dir_info.isdir == 1  %}
     <tr>
         <td>
-        {% if logdir_info.isdir == 1  %}
-        <span style="background-color: lightgreen">
-        {{logdir_info.file_name}}/
-        {% else %}
-        <span style="background-color: lightgray">
-        {{logdir_info.file_name}}
-        {% endif %}
+        <span class="fa fa-folder" onclick="dir_viewer('{{dir_info.file_name}}', '{{current_dir}}')">
+        {{dir_info.file_name}}
         </span>
         </td>
-        <td>{{logdir_info.file_size}} MB</td>
-        <td>{{logdir_info.mtime}}</td>
+        <td>{{dir_info.file_size}}</td>
+        <td>{{dir_info.mtime}}</td>
         <td>
             <button class="btn btn-primary btn-xs"
-                    onclick="supervisor_app_opt('{{server.ip}}', '{{server.port}}' , '{{app.name}}', 'start')">
+                    onclick="text_viewer('{{dir_info.file_name}}')">
+                open
+            </button>
+        </td>
+        <td>
+            <button class="btn btn-primary btn-xs"
+                    onclick="supervisor_app_opt('{{server.ip}}', '{{server.port}}' , '{{app.name}}', 'restart')">
+                download
+            </button>
+        </td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+
+    {% for dir_info in dir_infos %}
+    {% if dir_info.isdir == 0  %}
+    <tr>
+        <td>
+        <span class="fa fa-file-text" onclick="text_viewer('{{dir_info.file_name}}', '{{current_dir}}')">
+        {{dir_info.file_name}}
+        </span>
+        </td>
+        <td>{{dir_info.file_size}}</td>
+        <td>{{dir_info.mtime}}</td>
+        <td>
+            <button class="btn btn-primary btn-xs"
+                    onclick="text_viewer('{{dir_info.file_name}}')">
                 open
             </button>
         </td>
@@ -66,6 +88,7 @@
 
 
     </tr>
+    {% endif %}
     {% endfor %}
 </table>
 

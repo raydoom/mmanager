@@ -27,7 +27,8 @@ urlpatterns = [
     url(r'^supervisor_app_opt', views.supervisor_app_option),
     url(r'^tail_supervisor_app_log', views.tail_supervisor_app_log),
 
-    url(r'^logdir_viewer', views.logdir_viewer),
+    url(r'^dir_viewer', views.dir_viewer),
+     url(r'^text_viewer', views.text_viewer),
 
 
     url(r'^login/', views.login),

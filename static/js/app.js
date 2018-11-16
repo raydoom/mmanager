@@ -29,3 +29,12 @@ function tail_container_log(server_ip, server_port, container_id) {
 function tail_supervisor_app_log(server_ip, server_port, supervisor_app) {
     window.open("/tail_supervisor_app_log/?server_ip=" + server_ip + "&server_port=" + server_port + "&supervisor_app=" + supervisor_app)
 }
+
+function text_viewer(file_name, current_dir){
+    window.open("/text_viewer/?file_name="+file_name + "&current_dir=" + current_dir)   
+}
+
+function dir_viewer(to_dir_name, current_dir){
+    window.open("/dir_viewer/?to_dir_name="+ to_dir_name + "&current_dir=" + current_dir)
+
+}
