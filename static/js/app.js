@@ -35,6 +35,6 @@ function text_viewer(file_name, current_dir){
 }
 
 function dir_viewer(to_dir_name, current_dir){
-    window.open("/dir_viewer/?to_dir_name="+ to_dir_name + "&current_dir=" + current_dir)
+    this.location.href = ("/dir_viewer/?to_dir_name="+ to_dir_name + "&current_dir=" + current_dir)
 
 }

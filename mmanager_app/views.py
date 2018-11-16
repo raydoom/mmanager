@@ -124,21 +124,22 @@ def register(request):
 
 # 本地日志目录浏览
 def dir_viewer(request):
-	#logdir_root = '/Users/ma/Downloads/'
 	current_dir = dir_root
 	to_dir_name = ''
 	if request.GET.get('current_dir'):
 		current_dir = request.GET.get('current_dir')
 	if request.GET.get('to_dir_name'):
 		to_dir_name = request.GET.get('to_dir_name')
-	to_dir = current_dir + to_dir_name + '/'
-	dir_infos = get_dir_info(to_dir)
+		if to_dir_name == '..':
+			pass
 
-	return render(request, 'dir_viewer.html', {'dir_infos': dir_infos, 'current_dir': to_dir})
+		else:
+			to_dir = current_dir + to_dir_name + '/'
+			dir_infos = get_dir_info(to_dir)
+			return render(request, 'dir_viewer.html', {'dir_infos': dir_infos, 'current_dir': to_dir})
 
 # 本地日志文件浏览
 def text_viewer(request):
-	#logdir_root = '/Users/ma/Downloads/'
 	current_dir = dir_root
 	if request.GET.get('current_dir'):
 		current_dir = request.GET.get('current_dir')
