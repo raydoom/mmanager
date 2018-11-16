@@ -3,9 +3,19 @@ from django.http import HttpResponse
 from django.contrib.auth import models, authenticate
 # from django.contrib.auth.decorators import login_required
 
-import docker, xmlrpc.client, logging, os
+import docker, xmlrpc.client, logging, os, configparser
 from .models import Supervisor_Server, Docker_Server
 from .common_func import format_log, auth_controller, get_dir_info, get_file_contents
+from django.conf import settings
+
+
+# 获取cconfig.ini中的配置项
+CONF_DIRS=(settings.BASE_DIR+'/config')
+conf_dir = configparser.ConfigParser()
+conf_dir.read(CONF_DIRS+'/config.ini')
+
+dir_root = conf_dir.get('dir_info', 'dir_root')
+offset = int(conf_dir.get('dir_info', 'offset'))
 
 # 获取docker服务器及容器列表
 @auth_controller
@@ -31,7 +41,6 @@ def container_option(request):
 	servers = Docker_Server.objects.filter(ip=server_ip)
 	for server in servers:
 		result = server.container_opt(container_id, container_opt)
-	print (result)
 	return redirect('/docker_servers/')
 
 # 获取容器日志
@@ -112,7 +121,6 @@ def register(request):
 	pass
 	return redirect("/index/")
 
-dir_root = '/Users/ma/Downloads/'
 
 # 本地日志目录浏览
 def dir_viewer(request):
@@ -136,5 +144,5 @@ def text_viewer(request):
 		current_dir = request.GET.get('current_dir')
 	file_name = request.GET.get('file_name')
 	text_contents = []
-	text_contents = get_file_contents(current_dir, file_name)
+	text_contents = get_file_contents(current_dir, file_name, offset)
 	return render(request, 'text_viewer.html', {'text_contents': text_contents})

@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
-import os
+import os, configparser
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -18,6 +18,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
+
+CONF_DIRS=(BASE_DIR+'/config')
+conf_db = configparser.ConfigParser()
+conf_db.read(CONF_DIRS+'/config.ini')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '3ibw+bwwjuu66)m0(cgglkjh_#v+d7r6zq*)y$7&!n248ekun='
@@ -77,11 +81,11 @@ WSGI_APPLICATION = 'mmanager.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mmanager',
-        'USER':'root',
-        'PASSWORD':'123123',
-        'HOST':'192.168.0.64',
-        'PORT':'3306',
+        'NAME': conf_db.get('db_info', 'db_name'),
+        'USER': conf_db.get('db_info', 'user'),
+        'PASSWORD': conf_db.get('db_info', 'password'),
+        'HOST': conf_db.get('db_info', 'host'),
+        'PORT': conf_db.get('db_info', 'port'),
     }
 }  
 

@@ -33,7 +33,6 @@ def auth_controller(func):
 
 # 获取文件夹列表信息
 def get_dir_info(path):
-	print (path)
 	dir_infos = [{'file_name': '..', 'isdir': 1},]	
 	for dir_name in os.listdir(path):
 		dir_info = {}
@@ -62,17 +61,15 @@ def get_dir_info(path):
 		dir_info['file_size'] = fsize
 		dir_info['mtime'] = TimeStampToTime(mtime)
 		dir_infos.append(dir_info)
-	print (dir_infos)
 	return (dir_infos)
 
 # 获取文件最后10000字符的内容
-def get_file_contents(path, file_name):
+def get_file_contents(path, file_name, bytes_to_read):
 	file = path + file_name
-	print('file_to_read:', file)
 	contents_list = []
 	try:
 		with open(file, 'rb' ) as file_to_read: # 以只读，二进制打开文件，只有二进制才能支持函数seek(0, 2)从末尾读
-			bytes_to_read = 100000 # 需要读取的字节数
+			bytes_to_read = bytes_to_read # 需要读取的字节数
 			bytes_counter = file_to_read.seek(0, 2)
 			if bytes_counter > bytes_to_read:
 				offset = file_to_read.tell() - bytes_to_read
