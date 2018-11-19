@@ -89,3 +89,9 @@ def get_file_contents(path, file_name, bytes_to_read):
 		contents_list = ['Can not open file']
 	return (contents_list)
 
+
+# 记录日志函数
+def log_record(log_user, log_detail):
+	return (User_Log.objects.create(log_user=log_user, log_detail=log_detail))
+
+

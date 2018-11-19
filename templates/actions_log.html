@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block topbar %}
+<li ><a href="/docker_server/">Docker Server</a></li>
+<li ><a href="/supervisor_server/">Supervisor Server</a></li>
+<li ><a href="/dir_viewer/">Dir Viewer</a></li>
+<li class="active"><a href="/actions_log/">Actions Log</a></li>
+{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <h1>
+        <small>controlled by supervisor</small>
+    </h1>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <ul class="nav nav-pills nav-stacked">
+            {% for server in servers %}
+            <li role="presentation" style="background-color: lemonchiffon  ">
+ <!--              <a href="#" onclick="show_server_status('{{server.id}}')">
+                    {{server.host}}:{{server.port}} {{server.Id}}
+ -->               </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-md-8" id="server_div">
+    </div>
+</div>
+
+
+<h3>actions_log</h3>
+<table class="table table-striped">
+    <tr>
+        <th width="20%">log_time</th>
+        <th width="15%">log_user</thw>
+        <th width="65%">log_detail</th>
+    </tr>
+    {% for log in actions_log %}
+    <tr>
+        <td>
+        {{log.log_time}}
+        </td>
+        <td>{{log.log_user}}</td>
+        <td>{{log.log_detail}}</td>
+
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
+</body>
+</html>

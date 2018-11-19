@@ -1,11 +1,12 @@
 {% extends "base.html" %}
-{% block hovor %}
-<ul class="nav nav-pills">
-	<li role="presentation"><a href="/docker_server/">Docker Server</a></li>
-    <li role="presentation"><a href="/supervisor_server/">Supervisor Server</a></li>
-    <li role="presentation" class="active"><a href="/dir_viewer/">Dir Viewer</a></li>
-</ul>
+
+{% block topbar %}
+<li ><a href="/docker_server/">Docker Server</a></li>
+<li ><a href="/supervisor_server/">Supervisor Server</a></li>
+<li class="active"><a href="/dir_viewer/">Dir Viewer</a></li>
+<li ><a href="/actions_log/">Actions Log</a></li>
 {% endblock %}
+
 {% block body %}
 <div class="page-header">
     <h1>
@@ -49,13 +50,13 @@
         <td>{{dir_info.mtime}}</td>
         <td>
             <button class="btn btn-primary btn-xs"
-                    onclick="text_viewer('{{dir_info.file_name}}')">
+                    onclick="dir_viewer('{{dir_info.file_name}}', '{{current_dir}}')">
                 open
             </button>
         </td>
         <td>
             <button class="btn btn-primary btn-xs"
-                    onclick="supervisor_app_opt('{{server.ip}}', '{{server.port}}' , '{{app.name}}', 'restart')">
+                    onclick="#">
                 download
             </button>
         </td>
@@ -75,13 +76,13 @@
         <td>{{dir_info.mtime}}</td>
         <td>
             <button class="btn btn-primary btn-xs"
-                    onclick="text_viewer('{{dir_info.file_name}}')">
+                    onclick="text_viewer('{{dir_info.file_name}}', '{{current_dir}}')">
                 open
             </button>
         </td>
         <td>
             <button class="btn btn-primary btn-xs"
-                    onclick="supervisor_app_opt('{{server.ip}}', '{{server.port}}' , '{{app.name}}', 'restart')">
+                    onclick="file_download('{{dir_info.file_name}}', '{{current_dir}}')">
                 download
             </button>
         </td>

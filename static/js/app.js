@@ -38,3 +38,8 @@ function dir_viewer(to_dir_name, current_dir){
     this.location.href = ("/dir_viewer/?to_dir_name="+ to_dir_name + "&current_dir=" + current_dir)
 
 }
+
+function file_download(to_dir_name, current_dir){
+    window.open("/file_download/?to_dir_name="+ to_dir_name + "&current_dir=" + current_dir)
+
+}

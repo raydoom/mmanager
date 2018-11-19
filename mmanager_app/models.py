@@ -142,3 +142,11 @@ class Supervisor_Server(models.Model):
 			log_line = '[' + time_stamp + ']--' + log_line
 			log_list.append(log_line)
 		return (log_list)
+
+
+class User_Log(models.Model):
+	log_time = models.DateTimeField(auto_now_add=True)
+	log_user = models.CharField(max_length=50)
+	log_detail = models.CharField(max_length=256)
+
+		

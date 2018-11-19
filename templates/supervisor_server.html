@@ -1,11 +1,12 @@
 {% extends "base.html" %}
-{% block hovor %}
-<ul class="nav nav-pills">
-	<li role="presentation"><a href="/docker_server/">Docker Server</a></li>
-    <li role="presentation" class="active"><a href="/supervisor_server/">Supervisor Server</a></li>
-    <li role="presentation"><a href="/dir_viewer/">Dir Viewer</a></li>
-</ul>
+
+{% block topbar %}
+<li ><a href="/docker_server/">Docker Server</a></li>
+<li class="active"><a href="/supervisor_server/">Supervisor Server</a></li>
+<li ><a href="/dir_viewer/">Dir Viewer</a></li>
+<li ><a href="/actions_log/">Actions Log</a></li>
 {% endblock %}
+
 {% block body %}
 <div class="page-header">
     <h1>

@@ -12,8 +12,7 @@
 </head>
 <body>
 <div class="row">
-    <div class="col-md-1"></div>
-    <div class="col-md-10">
+    <div class="col-md-12">
         <nav class="navbar navbar-default"><!-- /navbar -->
               <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
@@ -30,7 +29,8 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="my-nav">
                   <ul class="nav navbar-nav">
-                    <li class="active"><a href="/index/">Server</a></li>
+                    {% block topbar %}
+                    {% endblock %}
                   </ul>
                   <ul class="nav navbar-nav navbar-right">
                       {% if request.session.islogin %}
@@ -44,12 +44,15 @@
                 </div><!-- /.navbar-collapse -->
               </div><!-- /.container-fluid -->
             </nav><!-- /navbar -->
+    </div>
+</div>
+<div class="row" style="margin-right:1px; margin-left: 1px">
+    <div class="col-md-12">
         {% block hovor %}
         {% endblock %}
         {% block body %}
         {% endblock %}
     </div>
-    <div class="col-md-1"></div>
 </div>
 </body>
 </html>
