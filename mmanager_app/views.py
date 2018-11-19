@@ -131,7 +131,7 @@ def register(request):
 
 # 本地日志目录浏览
 def dir_viewer(request):
-	current_dir = dir_root
+	current_dir = ''
 	to_dir_name = ''
 	to_dir = dir_root
 	if request.GET.get('current_dir'):
@@ -139,21 +139,27 @@ def dir_viewer(request):
 	if request.GET.get('to_dir_name'):
 		to_dir_name = request.GET.get('to_dir_name')
 		if to_dir_name == '..':
-			print (len(current_dir), len('dir_root'))
 			list_c =  current_dir.split('/')
-			to_dir = '/' + list_c[1] + '/'
-			for i in range(2,len(list_c)-2):
+			#to_dir = list_c[1] + '/'
+			to_dir = ''
+			for i in range(0,len(list_c)-2):
 				to_dir = to_dir + list_c[i] + '/'
+			print (to_dir)
+			current_dir = to_dir
+			to_dir = dir_root + '/' + to_dir
+			
+			dir_infos = get_dir_info(to_dir)
+			return render(request, 'dir_viewer.html', {'dir_infos': dir_infos, 'current_dir': current_dir})
 		else:
-			to_dir = current_dir + to_dir_name + '/'
+			to_dir = dir_root + current_dir + to_dir_name + '/'
 	dir_infos = get_dir_info(to_dir)
-	return render(request, 'dir_viewer.html', {'dir_infos': dir_infos, 'current_dir': to_dir})
+	return render(request, 'dir_viewer.html', {'dir_infos': dir_infos, 'current_dir': current_dir + to_dir_name + '/'})
 
 # 本地日志文件浏览
 def text_viewer(request):
 	current_dir = dir_root
 	if request.GET.get('current_dir'):
-		current_dir = request.GET.get('current_dir')
+		current_dir = dir_root + request.GET.get('current_dir')
 	file_name = request.GET.get('file_name')
 	text_contents = []
 	text_contents = get_file_contents(current_dir, file_name, offset)
@@ -173,7 +179,7 @@ def actions_log(request):
 def file_download(request):  
 	current_dir = request.GET.get('current_dir')
 	to_dir_name = request.GET.get('to_dir_name')
-	filename = current_dir + to_dir_name
+	filename = dir_root + current_dir + to_dir_name
 	file=open(filename, 'rb')  
 	response =FileResponse(file)
 	response['Content-Type']='application/octet-stream'
