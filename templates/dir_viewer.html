@@ -31,8 +31,8 @@
 
 
 <h3>{{current_dir}}</h3>
-<table class="table table-striped">
-    <tr>
+<table class="table">
+    <tr class="active">
         <th width="40%">name</th>
         <th width="25%">size</thw>
         <th width="25%">mtime</th>
@@ -42,20 +42,20 @@
     {% if dir_info.isdir == 1  %}
     <tr>
         <td>
-        <span class="fa fa-folder" onclick="dir_viewer('{{dir_info.file_name}}', '{{current_dir}}')">
+        <span class="fa fa-folder-o" onclick="dir_viewer('{{dir_info.file_name}}', '{{current_dir}}')">
         {{dir_info.file_name}}
         </span>
         </td>
         <td>{{dir_info.file_size}}</td>
         <td>{{dir_info.mtime}}</td>
         <td>
-            <button class="btn btn-primary btn-xs"
+            <button class="btn btn-default btn-xs"
                     onclick="dir_viewer('{{dir_info.file_name}}', '{{current_dir}}')">
                 open
             </button>
         </td>
         <td>
-            <button class="btn btn-primary btn-xs"
+            <button class="btn btn-default btn-xs"
                     onclick="#">
                 download
             </button>
@@ -68,20 +68,20 @@
     {% if dir_info.isdir == 0  %}
     <tr>
         <td>
-        <span class="fa fa-file-text" onclick="text_viewer('{{dir_info.file_name}}', '{{current_dir}}')">
+        <span class="fa fa-file-text-o" onclick="text_viewer('{{dir_info.file_name}}', '{{current_dir}}')">
         {{dir_info.file_name}}
         </span>
         </td>
         <td>{{dir_info.file_size}}</td>
         <td>{{dir_info.mtime}}</td>
         <td>
-            <button class="btn btn-primary btn-xs"
+            <button class="btn btn-default btn-xs"
                     onclick="text_viewer('{{dir_info.file_name}}', '{{current_dir}}')">
                 open
             </button>
         </td>
         <td>
-            <button class="btn btn-primary btn-xs"
+            <button class="btn btn-default btn-xs"
                     onclick="file_download('{{dir_info.file_name}}', '{{current_dir}}')">
                 download
             </button>

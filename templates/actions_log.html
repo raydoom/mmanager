@@ -31,17 +31,15 @@
 
 
 <h3>actions_log</h3>
-<table class="table table-striped">
-    <tr>
+<table class="table">
+    <tr class="active">
         <th width="20%">log_time</th>
         <th width="15%">log_user</thw>
         <th width="65%">log_detail</th>
     </tr>
     {% for log in actions_log %}
     <tr>
-        <td>
-        {{log.log_time}}
-        </td>
+        <td>{{log.log_time}}</td>
         <td>{{log.log_user}}</td>
         <td>{{log.log_detail}}</td>
 
@@ -49,6 +47,23 @@
     {% endfor %}
 </table>
 
+<nav aria-label="pager">
+  <ul class="pager">
+    <li>{% if actions_log.has_previous %}
+            <a href="?page={{ actions_log.previous_page_number }}">Previous</a>
+        {% endif %}
+    </li>
+    <li>
+    <span class="current">
+            {{ actions_log.number }} / {{ actions_log.paginator.num_pages }}
+        </span>
+    </li>
+    <li>{% if actions_log.has_next %}
+            <a style="color:gray href="?page={{ actions_log.next_page_number }}">Next</a>
+        {% endif %}
+    </li>
+  </ul>
+</nav>
 {% endblock %}
 </body>
 </html>

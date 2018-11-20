@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, FileResponse  
 from django.contrib.auth import models, authenticate
 # from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 import docker, xmlrpc.client, logging, os, configparser
 from .models import Supervisor_Server, Docker_Server
@@ -158,6 +159,9 @@ def text_viewer(request):
 		dist = dir_root + dist
 	text_contents = []
 	text_contents = get_file_contents(dist, offset)
+	log_user=request.session.get('username')
+	log_detail=log_user + ' viewer ' + dist
+	log_record(log_user=log_user, log_detail=log_detail)
 	return render(request, 'text_viewer.html', {'text_contents': text_contents})
 
 
@@ -168,7 +172,17 @@ def log_record(log_user, log_detail):
 
 # 操作日志查看页面试图函数
 def actions_log(request):
-	actions_log = User_Log.objects.all().order_by('-log_time')
+	actions_logs = User_Log.objects.all().order_by('-log_time')
+	paginator = Paginator(actions_logs, 10)
+	page = request.GET.get('page')
+	try:
+		actions_log = paginator.page(page)
+	except PageNotAnInteger:
+		# If page is not an integer, deliver first page.
+		actions_log = paginator.page(1)
+	except EmptyPage:
+		# If page is out of range (e.g. 9999), deliver last page of results.
+		actions_log = paginator.page(paginator.num_pages)
 	return render(request, 'actions_log.html', {'actions_log': actions_log})
 
 

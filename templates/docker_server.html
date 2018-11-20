@@ -31,8 +31,8 @@
 
 {% for server in server_all_list %}
 <h3>Host: {{server.ip}}</h3>
-<table class="table table-striped">
-    <tr>
+<table class="table">
+    <tr class="active">
         <th width="10%">status</th>
         <th width="30%">app</thw>
         <th width="20%">location</th>
@@ -41,28 +41,28 @@
     </tr>
     {% for container in server.containers %}
     <tr>
-        <td>
+        <td style="text-transform:capitalize;">
             {% if container.status == 'running' %}
-                <span style="background-color: lightgreen">
+                <span style="background-color: #E0E0E0">
                  {% elif container.status == 'exited' %}
-                <span style="background-color: lightgray">
+                <span style="background-color: #C0C0C0">
                  {% else %}
-                <span style="background-color: yellow">
+                <span>
                     {% endif %}
-                    {{container.status}}
+                    {{container.status|lower}}
                 </span>
         </td>
         <td>{{container.name}}</td>
         <td>{{server.ip}}</td>
         <td>{{container.attrs.Config.ExposedPorts}}</td>
         <td>
-            <button class="btn btn-primary btn-xs"
+            <button class="btn btn-default btn-xs"
                     onclick="container_opt('{{server.ip}}', '{{server.port}}' , '{{container.id}}', 'start')">
                 start
             </button>
         </td>
         <td>
-            <button class="btn btn-primary btn-xs"
+            <button class="btn btn-default btn-xs"
                 server_ip={{server.host}} 
                 server_port={{server.port}} 
                 container_id={{container.id}}
@@ -71,7 +71,7 @@
             </button>
         </td>
         <td>
-            <button class="btn btn-primary btn-xs"
+            <button class="btn btn-default btn-xs"
                 server_ip={{server.host}} 
                 server_port={{server.port}} 
                 container_id={{container.id}}
@@ -80,7 +80,7 @@
             </button>
         </td>
         <td>
-            <button class="btn btn-primary btn-xs"
+            <button class="btn btn-default btn-xs"
                 server_ip={{server.host}} 
                 server_port={{server.port}} 
                 container_id={{container.id}}

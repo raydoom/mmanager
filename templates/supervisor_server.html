@@ -32,8 +32,8 @@
 {% for server in server_all_list %}
 
 <h3>Host: {{server.ip}}</h3>
-<table class="table table-striped">
-    <tr>
+<table class="table">
+    <tr class="active">
         <th width="10%">status</th>
         <th width="30%">app</thw>
         <th width="20%">location</th>
@@ -42,40 +42,40 @@
     </tr>
     {% for app in server.apps %}
     <tr>
-        <td  style="text-transform:lowercase;">
+        <td style="text-transform:capitalize;">
             {% if app.statename == 'RUNNING' %}
-                <span style="background-color: lightgreen">
+                <span style="background-color: #E0E0E0">
                  {% elif app.statename == 'STOPPED' %}
-                <span style="background-color: lightgray">
+                <span style="background-color: #C0C0C0">
                  {% else %}
-                <span style="background-color: yellow">
+                <span>
                     {% endif %}
-                    {{app.statename}}
+                    {{app.statename|lower}}
                 </span>
         </td>
         <td>{{app.name}}</td>
         <td>{{server.ip}}</td>
         <td>{{app.description}}</td>
         <td>
-            <button class="btn btn-primary btn-xs"
+            <button class="btn btn-default btn-xs"
                     onclick="supervisor_app_opt('{{server.ip}}', '{{server.port}}' , '{{app.name}}', 'start')">
                 start
             </button>
         </td>
         <td>
-            <button class="btn btn-primary btn-xs"
+            <button class="btn btn-default btn-xs"
                     onclick="supervisor_app_opt('{{server.ip}}', '{{server.port}}' , '{{app.name}}', 'restart')">
                 restart
             </button>
         </td>
         <td>
-            <button class="btn btn-primary btn-xs"
+            <button class="btn btn-default btn-xs"
                     onclick="supervisor_app_opt('{{server.ip}}', '{{server.port}}' , '{{app.name}}', 'stop')">
                 stop
             </button>
         </td>
         <td>
-            <button class="btn btn-primary btn-xs"
+            <button class="btn btn-default btn-xs"
                     onclick="tail_supervisor_app_log('{{server.ip}}', '{{server.port}}',  '{{app.name}}')">
                 tail
             </button>
