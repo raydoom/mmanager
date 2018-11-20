@@ -19,19 +19,19 @@ from mmanager_app import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls,name=admin),
-    url(r'^docker_server', views.docker_server, name='docker_server'),
+    url(r'^dockerserver', views.docker_server, name='docker_server'),
     url(r'^container_opt', views.container_option),
     url(r'^tail_container_log', views.tail_container_log),
 
-    url(r'^supervisor_server', views.supervisor_server, name='supervisor_server'),
+    url(r'^supervisorserver', views.supervisor_server, name='supervisor_server'),
     url(r'^supervisor_app_opt', views.supervisor_app_option),
     url(r'^tail_supervisor_app_log', views.tail_supervisor_app_log),
 
-    url(r'^dir_viewer', views.dir_viewer),
-    url(r'^text_viewer', views.text_viewer),
-    url(r'^file_download', views.file_download),
+    url(r'^dirviewer', views.dir_viewer),
+    url(r'^textviewer', views.text_viewer),
+    url(r'^filedownload', views.file_download),
 
-    url(r'^actions_log', views.actions_log),
+    url(r'^actionslog', views.actions_log),
 
 
     url(r'^login/', views.login),

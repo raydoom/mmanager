@@ -47,6 +47,7 @@ def container_option(request):
 	log_record(log_user=log_user, log_detail=log_detail)
 	return redirect('/docker_servers/')
 
+
 # 获取容器日志
 @auth_controller
 def tail_container_log(request):
@@ -90,6 +91,7 @@ def supervisor_app_option(request):
 	log_record(log_user=log_user, log_detail=log_detail)
 	return redirect('/docker_servers/')
 
+
 # 获取supervisor程序的日志
 @auth_controller
 def tail_supervisor_app_log(request):
@@ -117,11 +119,13 @@ def login(request):
 			return render(request, 'login.html', {"message": message})
 	return render(request, 'login.html')
 
+
 # 用户退出
 @auth_controller
 def logout(request):
 	request.session.flush()
 	return redirect("/index/")
+
 
 # 用户注册
 def register(request):
@@ -129,40 +133,31 @@ def register(request):
 	return redirect("/index/")
 
 
-# 本地日志目录浏览
+## 本地日志目录浏览
 def dir_viewer(request):
-	current_dir = ''
-	to_dir_name = ''
-	to_dir = dir_root
-	if request.GET.get('current_dir'):
-		current_dir = request.GET.get('current_dir')
-	if request.GET.get('to_dir_name'):
-		to_dir_name = request.GET.get('to_dir_name')
-		if to_dir_name == '..':
-			list_c =  current_dir.split('/')
-			#to_dir = list_c[1] + '/'
-			to_dir = ''
-			for i in range(0,len(list_c)-2):
-				to_dir = to_dir + list_c[i] + '/'
-			print (to_dir)
-			current_dir = to_dir
-			to_dir = dir_root + '/' + to_dir
-			
-			dir_infos = get_dir_info(to_dir)
-			return render(request, 'dir_viewer.html', {'dir_infos': dir_infos, 'current_dir': current_dir})
-		else:
-			to_dir = dir_root + current_dir + to_dir_name + '/'
-	dir_infos = get_dir_info(to_dir)
-	return render(request, 'dir_viewer.html', {'dir_infos': dir_infos, 'current_dir': current_dir + to_dir_name + '/'})
+	dist = '/'
+	current_dir = '/'
+	if request.GET.get('dist'):
+		dist = request.GET.get('dist') + '/'
+		if dist.split('/')[-2] == '..': 
+			dist_list = dist.split('/')
+			dist = ''
+			for i in range(0,len(dist_list)-3):
+				dist = dist + dist_list[i] +'/'
+	current_dir = dist			
+	dist = dir_root + dist	
+	dir_infos = get_dir_info(dist)
+	return render(request, 'dir_viewer.html', {'dir_infos': dir_infos, 'current_dir': current_dir})
+
 
 # 本地日志文件浏览
 def text_viewer(request):
-	current_dir = dir_root
-	if request.GET.get('current_dir'):
-		current_dir = dir_root + request.GET.get('current_dir')
-	file_name = request.GET.get('file_name')
+	dist = dir_root
+	if request.GET.get('dist'):
+		dist = request.GET.get('dist')
+		dist = dir_root + dist
 	text_contents = []
-	text_contents = get_file_contents(current_dir, file_name, offset)
+	text_contents = get_file_contents(dist, offset)
 	return render(request, 'text_viewer.html', {'text_contents': text_contents})
 
 
@@ -170,19 +165,21 @@ def text_viewer(request):
 def log_record(log_user, log_detail):
 	return (User_Log.objects.create(log_user=log_user, log_detail=log_detail))
 
+
 # 操作日志查看页面试图函数
 def actions_log(request):
 	actions_log = User_Log.objects.all().order_by('-log_time')
 	return render(request, 'actions_log.html', {'actions_log': actions_log})
 
+
 # 文件下载视图函数
 def file_download(request):  
-	current_dir = request.GET.get('current_dir')
-	to_dir_name = request.GET.get('to_dir_name')
-	filename = dir_root + current_dir + to_dir_name
-	file=open(filename, 'rb')  
+	filepath = request.GET.get('filepath')
+	filepath = dir_root + filepath
+	file=open(filepath, 'rb')  
 	response =FileResponse(file)
 	response['Content-Type']='application/octet-stream'
-	Content_Disposition = 'attachment;filename=' + to_dir_name
+	filename = filepath.split('/')[-1]
+	Content_Disposition = 'attachment;filename=' + filename
 	response['Content-Disposition']=Content_Disposition
 	return response 

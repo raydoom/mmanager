@@ -31,15 +31,15 @@ function tail_supervisor_app_log(server_ip, server_port, supervisor_app) {
 }
 
 function text_viewer(file_name, current_dir){
-    window.open("/text_viewer/?file_name="+file_name + "&current_dir=" + current_dir)   
+    window.open("/textviewer/?dist=" + current_dir + file_name)   
 }
 
 function dir_viewer(to_dir_name, current_dir){
-    this.location.href = ("/dir_viewer/?to_dir_name="+ to_dir_name + "&current_dir=" + current_dir)
+    this.location.href = ("/dirviewer/?dist=" + current_dir + to_dir_name)
 
 }
 
-function file_download(to_dir_name, current_dir){
-    window.open("/file_download/?to_dir_name="+ to_dir_name + "&current_dir=" + current_dir)
+function file_download(file_name, current_dir){
+    window.open("/filedownload/?filepath="+ current_dir + file_name)
 
 }

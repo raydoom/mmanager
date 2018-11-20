@@ -64,8 +64,8 @@ def get_dir_info(path):
 	return (dir_infos)
 
 # 获取文件最后10000字符的内容
-def get_file_contents(path, file_name, bytes_to_read):
-	file = path + file_name
+def get_file_contents(dist, bytes_to_read):
+	file = dist
 	contents_list = []
 	try:
 		with open(file, 'rb' ) as file_to_read: # 以只读，二进制打开文件，只有二进制才能支持函数seek(0, 2)从末尾读
