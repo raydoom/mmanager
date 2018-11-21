@@ -42,8 +42,9 @@
     {% if dir_info.isdir == 1  %}
     <tr>
         <td>
-        <span class="fa fa-folder-o" onclick="dir_viewer('{{dir_info.file_name}}', '{{current_dir}}')">
-        {{dir_info.file_name}}
+        <span class="fa fa-folder-o">
+            <a href="?dist={{current_dir}}{{dir_info.file_name}}"</a>
+            {{dir_info.file_name}}
         </span>
         </td>
         <td>{{dir_info.file_size}}</td>
@@ -68,7 +69,8 @@
     {% if dir_info.isdir == 0  %}
     <tr>
         <td>
-        <span class="fa fa-file-text-o" onclick="text_viewer('{{dir_info.file_name}}', '{{current_dir}}')">
+        <span class="fa fa-file-text-o">
+            <a href="/textviewer/?dist={{current_dir}}{{dir_info.file_name}}"</a>
         {{dir_info.file_name}}
         </span>
         </td>

@@ -54,7 +54,7 @@
         </td>
         <td>{{container.name}}</td>
         <td>{{server.ip}}</td>
-        <td>{{container.attrs.Config.ExposedPorts}}</td>
+        <td>{{container.apistatus|lower}}</td>
         <td>
             <button class="btn btn-default btn-xs"
                     onclick="container_opt('{{server.ip}}', '{{server.port}}' , '{{container.id}}', 'start')">

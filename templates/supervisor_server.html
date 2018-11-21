@@ -55,7 +55,7 @@
         </td>
         <td>{{app.name}}</td>
         <td>{{server.ip}}</td>
-        <td>{{app.description}}</td>
+        <td>{{app.description|lower}}</td>
         <td>
             <button class="btn btn-default btn-xs"
                     onclick="supervisor_app_opt('{{server.ip}}', '{{server.port}}' , '{{app.name}}', 'start')">

@@ -14,21 +14,36 @@ class Docker_Server(models.Model):
 	hostname = models.CharField(max_length=50, verbose_name=u"主机名", unique=True)
 	ip = models.GenericIPAddressField(u"主机IP", max_length=15)
 	port = models.IntegerField(u'dockerAPI端口')
+	apiversion = models.CharField(max_length=50, verbose_name=u"API版本", default='1.21', blank=True)
 	username = models.CharField(max_length=50, verbose_name=u"docker用户名", default='', blank=True)
 	password = models.CharField(max_length=50, verbose_name=u"docker密码", default='', blank=True)
 	def __str__(self):
 		return self.hostname
 
-	# 获取docker api连接函数
+	# 获取docker client连接函数
 	def get_docker_client(self):
-		docker_client = docker.DockerClient(base_url='tcp://%s:%d' % (self.ip, self.port),version='1.21')
+		docker_client = docker.DockerClient(base_url='tcp://%s:%d' % (self.ip, self.port), version=self.apiversion)
 		return docker_client
+
+	# 获取docker apiclient连接函数
+	def get_docker_apiclient(self):
+		docker_apiclient = docker.APIClient(base_url='tcp://%s:%d' % (self.ip, self.port), version=self.apiversion)
+		return docker_apiclient
 
 	# 获取全部容器列表函数
 	def get_all_container_info(self):
 		try:
 			docker_client = self.get_docker_client()
-			container_infos = docker_client.containers.list(all=1)
+			docker_apiclient = self.get_docker_apiclient()
+			container_info_client = docker_client.containers.list(all=1)
+			container_info_apiclient = docker_apiclient.containers(all=1)
+			# 利用APIClient获取docker运行的时长，添加到容器信息中，字段为apistatus
+			for container_api in container_info_apiclient:
+				print (container_api['Id'])
+				for container in container_info_client:
+					if container.id == container_api['Id']:
+						container.apistatus = container_api['Status']
+			container_infos = container_info_client
 			return container_infos
 		except Exception as e:
 			logging.error(e)
