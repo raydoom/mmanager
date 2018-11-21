@@ -14,6 +14,7 @@
 - django2.1.3（python模块）
 - docker3.5.1（python模块）
 - pymysql0.9.2（python模块）
+- python-jenkins（python模块）
 - bootstrap3.3.6
 - jquery1.9.1
 - fontawesome4.7.0
