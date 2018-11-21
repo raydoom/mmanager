@@ -30,6 +30,14 @@ function tail_supervisor_app_log(server_ip, server_port, supervisor_app) {
     window.open("/tail_supervisor_app_log/?server_ip=" + server_ip + "&server_port=" + server_port + "&supervisor_app=" + supervisor_app)
 }
 
+function jenkins_job_opt(server_ip, server_port, job_name, opt) {
+    $.get("/jenkins_job_opt/?server_ip=" + server_ip + "&server_port=" + server_port + "&job_name=" + job_name + "&jenkins_opt=" + opt, 
+        function () {
+        reload_window()
+                    }
+    );
+}
+
 function text_viewer(file_name, current_dir){
     window.open("/textviewer/?dist=" + current_dir + file_name)   
 }
@@ -43,3 +51,4 @@ function file_download(file_name, current_dir){
     window.open("/filedownload/?filepath="+ current_dir + file_name)
 
 }
+

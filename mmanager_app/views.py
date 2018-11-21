@@ -51,7 +51,7 @@ def container_option(request):
 	log_user=request.session.get('username')
 	log_detail=log_user + ' ' + container_opt + ' ' + container_id + ' on host ' + server_ip
 	log_record(log_user=log_user, log_detail=log_detail)
-	return redirect('/docker_servers/')
+	return redirect('/dockerservers/')
 
 
 # 获取容器日志
@@ -95,7 +95,7 @@ def supervisor_app_option(request):
 	log_user=request.session.get('username')
 	log_detail=log_user + ' ' + supervisor_opt + ' ' + supervisor_app + ' on host' + server_ip
 	log_record(log_user=log_user, log_detail=log_detail)
-	return redirect('/docker_servers/')
+	return redirect('/dockerservers/')
 
 
 # 获取supervisor程序的日志
@@ -126,6 +126,20 @@ def jenkins_server(request):
 	return render(request, 'jenkins_server.html', {'server_all_list': server_all_list})
 
 
+# jenkins操作
+@auth_controller
+def jenkins_job_opt(request):
+	server_ip = request.GET.get('server_ip')
+	server_port = int(request.GET.get('server_port'))
+	job_name = request.GET.get('job_name')
+	jenkins_opt = request.GET.get('jenkins_opt')
+	servers = Jenkins_Server.objects.filter(ip=server_ip)
+	for server in servers:
+		result = server.send_build_job(job_name)
+	log_user=request.session.get('username')
+	log_detail=log_user + ' ' + jenkins_opt + ' ' + job_name + ' on host' + server_ip
+	log_record(log_user=log_user, log_detail=log_detail)
+	return redirect('/jenkinsservers/')
 
 
 
