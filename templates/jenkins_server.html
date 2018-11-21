@@ -11,28 +11,14 @@
 {% block body %}
 <div class="page-header">
     <h1>
-        <small>controlled by supervisor</small>
+        <small>controlled by jenkins</small>
     </h1>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        <ul class="nav nav-pills nav-stacked">
-            {% for server in servers %}
-            <li role="presentation" style="background-color: lemonchiffon  ">
- <!--              <a href="#" onclick="show_server_status('{{server.id}}')">
-                    {{server.host}}:{{server.port}} {{server.Id}}
- -->               </a>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-    <div class="col-md-8" id="server_div">
-    </div>
 </div>
 
 {% for server in server_all_list %}
-
-<h3>Host: {{server.ip}}</h3>
+<h2>
+    <small>Server: {{server.ip}} </small>
+</h2>
 <table class="table">
     <tr class="active">
         <th width="10%">status</th>
@@ -75,5 +61,3 @@
 </table>
 {% endfor %}
 {% endblock %}
-</body>
-</html>

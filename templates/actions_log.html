@@ -14,24 +14,9 @@
         <small>controlled by django</small>
     </h1>
 </div>
-<div class="row">
-    <div class="col-md-4">
-        <ul class="nav nav-pills nav-stacked">
-            {% for server in servers %}
-            <li role="presentation" style="background-color: lemonchiffon  ">
- <!--              <a href="#" onclick="show_server_status('{{server.id}}')">
-                    {{server.host}}:{{server.port}} {{server.Id}}
- -->               </a>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-    <div class="col-md-8" id="server_div">
-    </div>
-</div>
-
-
-<h3>actions_log</h3>
+<h2>
+    <small>actions_log</small>
+</h2>
 <table class="table">
     <tr class="active">
         <th width="20%">log_time</th>
@@ -43,7 +28,6 @@
         <td>{{log.log_time}}</td>
         <td>{{log.log_user}}</td>
         <td>{{log.log_detail}}</td>
-
     </tr>
     {% endfor %}
 </table>
@@ -66,5 +50,3 @@
   </ul>
 </nav>
 {% endblock %}
-</body>
-</html>
