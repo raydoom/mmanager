@@ -63,30 +63,21 @@ def get_dir_info(path):
 		dir_infos.append(dir_info)
 	return (dir_infos)
 
-# 获取文件最后10000字符的内容
-def get_file_contents(dist, bytes_to_read):
+# 获取文件最后lines_per_page行的内容
+def get_file_contents(dist, lines_per_page):
 	file = dist
 	contents_list = []
 	try:
-		with open(file, 'rb' ) as file_to_read: # 以只读，二进制打开文件，只有二进制才能支持函数seek(0, 2)从末尾读
-			bytes_to_read = bytes_to_read # 需要读取的字节数
-			bytes_counter = file_to_read.seek(0, 2)
-			if bytes_counter > bytes_to_read:
-				offset = file_to_read.tell() - bytes_to_read
-			else:
-				offset = 0
-			file_to_read.seek(offset, 0)
+		with open(file, 'r' , encoding='utf-8' ) as file_to_read: # 
 			lines = file_to_read.readlines()
-			for line in lines:
-				try:
-					line = line.decode(encoding = "utf-8") # 将读取到的二进制转为文本
-					contents_list.append(line)
-				except Exception as e:
-					logging.error(e)
-					contents_list = ['Not a text file']
+			if lines_per_page > len(lines):
+				lines_per_page = len(lines)
+			lines_reversed = lines[::-1] #对读取到的行进行反序排列
+			for i in range(0, lines_per_page):
+				contents_list.append(lines_reversed[i])
 	except Exception as e:
 		logging.error(e)
-		contents_list = ['Can not open file']
+		contents_list = ['Can not open file']	
 	return (contents_list)
 
 

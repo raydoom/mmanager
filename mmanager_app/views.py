@@ -5,10 +5,15 @@ from django.contrib.auth import models, authenticate
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 import docker, xmlrpc.client, logging, os, configparser
-from .models import Supervisor_Server, Docker_Server
+
+from .models.docker_server import  Docker_Server
+from .models.supervisor_server import Supervisor_Server
+from .models.jenkins_server import Jenkins_Server
+from .models.user_log import User_Log
+
 from .common_func import format_log, auth_controller, get_dir_info, get_file_contents
 from django.conf import settings
-from .models import User_Log
+
 
 # 获取cconfig.ini中的配置项
 CONF_DIRS=(settings.BASE_DIR+'/config')
@@ -16,7 +21,7 @@ conf_dir = configparser.ConfigParser()
 conf_dir.read(CONF_DIRS+'/config.ini')
 
 dir_root = conf_dir.get('dir_info', 'dir_root')
-offset = int(conf_dir.get('dir_info', 'offset'))
+lines_per_page = int(conf_dir.get('dir_info', 'lines_per_page'))
 
 # 获取docker服务器及容器列表
 @auth_controller
@@ -106,6 +111,32 @@ def tail_supervisor_app_log(request):
 	return render(request, 'tail.html', {'log': log})
 
 
+# jenkins任务列表视图
+@auth_controller
+def jenkins_server(request):
+	servers = Jenkins_Server.objects.all()
+	server_all_list = []
+	for server in servers:
+		server_jobs_dict = {}
+		server_jobs_dict['ip'] = server.ip
+		server_jobs_dict['port'] = server.port
+		jobs = server.get_all_jobs_list()
+		server_jobs_dict['jobs'] = jobs
+		server_all_list.append(server_jobs_dict)
+	return render(request, 'jenkins_server.html', {'server_all_list': server_all_list})
+
+
+
+
+
+
+
+
+
+
+
+
+
 # 用户登陆
 def login(request):
 	if request.method == "POST":
@@ -158,7 +189,7 @@ def text_viewer(request):
 		dist = request.GET.get('dist')
 		dist = dir_root + dist
 	text_contents = []
-	text_contents = get_file_contents(dist, offset)
+	text_contents = get_file_contents(dist, lines_per_page)
 	log_user=request.session.get('username')
 	log_detail=log_user + ' viewer ' + dist
 	log_record(log_user=log_user, log_detail=log_detail)

@@ -27,6 +27,11 @@ urlpatterns = [
     url(r'^supervisor_app_opt', views.supervisor_app_option),
     url(r'^tail_supervisor_app_log', views.tail_supervisor_app_log),
 
+    url(r'^jenkinsserver', views.jenkins_server, name='jenkins_server'),
+    #url(r'^jenkins_job_opt', views.jenkins_job_opt),
+    #url(r'^tail_supervisor_app_log', views.tail_supervisor_app_log),
+
+
     url(r'^dirviewer', views.dir_viewer),
     url(r'^textviewer', views.text_viewer),
     url(r'^filedownload', views.file_download),
