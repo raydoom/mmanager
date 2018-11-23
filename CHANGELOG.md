@@ -1,5 +1,8 @@
 # Change Log
 
+### 2018/11/23
+>- 修改docker和supervisor的日志为实时刷新查看
+
 ### 2018/11/21
 >- 添加容器运行时长，使用APIdocker获取此参数
 >- 添加dockerapi版本字段，默认为1.21

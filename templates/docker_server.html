@@ -29,7 +29,7 @@
     </tr>
     {% for container in server.containers %}
     <tr>
-        <td style="text-transform:capitalize;">
+        <td>
             {% if container.status == 'running' %}
                 <span style="background-color: #E0E0E0">
                  {% elif container.status == 'exited' %}

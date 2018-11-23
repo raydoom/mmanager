@@ -3,6 +3,7 @@ __author__ = 'ma'
 
 import time, os, logging
 
+from .models.user_log import User_Log
 from django.shortcuts import render, redirect
 
 # 获取格式化的当前时间

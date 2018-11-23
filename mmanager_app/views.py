@@ -1,17 +1,17 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, FileResponse  
+from django.http import HttpResponse, FileResponse, StreamingHttpResponse
 from django.contrib.auth import models, authenticate
 # from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-import docker, xmlrpc.client, logging, os, configparser
+import docker, xmlrpc.client, logging, os, configparser, json
 
 from .models.docker_server import  Docker_Server
 from .models.supervisor_server import Supervisor_Server
 from .models.jenkins_server import Jenkins_Server
 from .models.user_log import User_Log
 
-from .common_func import format_log, auth_controller, get_dir_info, get_file_contents
+from .common_func import format_log, auth_controller, get_dir_info, get_file_contents, log_record
 from django.conf import settings
 
 
@@ -45,9 +45,8 @@ def container_option(request):
 	server_port = int(request.GET.get('server_port'))
 	container_id = request.GET.get('container_id')
 	container_opt = request.GET.get('container_opt')
-	servers = Docker_Server.objects.filter(ip=server_ip)
-	for server in servers:
-		result = server.container_opt(container_id, container_opt)
+	server = Docker_Server.objects.filter(ip=server_ip).first()
+	result = server.container_opt(container_id, container_opt)
 	log_user=request.session.get('username')
 	log_detail=log_user + ' ' + container_opt + ' ' + container_id + ' on host ' + server_ip
 	log_record(log_user=log_user, log_detail=log_detail)
@@ -60,11 +59,10 @@ def tail_container_log(request):
 	server_ip = request.GET.get('server_ip')
 	server_port = int(request.GET.get('server_port'))
 	container_id = request.GET.get('container_id')	
-	servers = Docker_Server.objects.filter(ip=server_ip)
-	for server in servers:
-		server = server
-	log = server.tail_container_log(container_id)
-	return render(request, 'tail.html', {'log': log})
+	server = Docker_Server.objects.filter(ip=server_ip).first()
+	log = server.tail_container_log(container_id, format_log)
+	return StreamingHttpResponse(log)
+	#return render(request, 'tail.html', {'log': log})
 
 
 # 获取supervisor服务器及程序列表
@@ -89,9 +87,8 @@ def supervisor_app_option(request):
 	server_port = int(request.GET.get('server_port'))
 	supervisor_app = request.GET.get('supervisor_app')
 	supervisor_opt = request.GET.get('supervisor_opt')
-	servers = Supervisor_Server.objects.filter(ip=server_ip)
-	for server in servers:
-		result = server.supervisor_app_opt(supervisor_app, supervisor_opt)
+	server = Supervisor_Server.objects.filter(ip=server_ip).first()
+	result = server.supervisor_app_opt(supervisor_app, supervisor_opt)
 	log_user=request.session.get('username')
 	log_detail=log_user + ' ' + supervisor_opt + ' ' + supervisor_app + ' on host' + server_ip
 	log_record(log_user=log_user, log_detail=log_detail)
@@ -104,12 +101,9 @@ def tail_supervisor_app_log(request):
 	server_ip = request.GET.get('server_ip')
 	server_port = int(request.GET.get('server_port'))
 	supervisor_app = request.GET.get('supervisor_app')
-	servers = Supervisor_Server.objects.filter(ip=server_ip)
-	for server in servers:
-		server = server
-	log = server.tail_supervisor_app_log(supervisor_app)
-	return render(request, 'tail.html', {'log': log})
-
+	server = Supervisor_Server.objects.filter(ip=server_ip).first()
+	log = server.tail_supervisor_app_log(supervisor_app, format_log)
+	return StreamingHttpResponse(log) # 使用StreamingHttpResponse返回yield对象，实现实时浏览日志
 
 # jenkins任务列表视图
 @auth_controller
@@ -133,22 +127,12 @@ def jenkins_job_opt(request):
 	server_port = int(request.GET.get('server_port'))
 	job_name = request.GET.get('job_name')
 	jenkins_opt = request.GET.get('jenkins_opt')
-	servers = Jenkins_Server.objects.filter(ip=server_ip)
-	for server in servers:
-		result = server.send_build_job(job_name)
+	server = Jenkins_Server.objects.filter(ip=server_ip).first()
+	result = server.send_build_job(job_name)
 	log_user=request.session.get('username')
 	log_detail=log_user + ' ' + jenkins_opt + ' ' + job_name + ' on host' + server_ip
 	log_record(log_user=log_user, log_detail=log_detail)
 	return redirect('/jenkinsservers/')
-
-
-
-
-
-
-
-
-
 
 
 # 用户登陆
@@ -211,8 +195,8 @@ def text_viewer(request):
 
 
 # 记录日志函数
-def log_record(log_user, log_detail):
-	return (User_Log.objects.create(log_user=log_user, log_detail=log_detail))
+# def log_record(log_user, log_detail):
+# 	return (User_Log.objects.create(log_user=log_user, log_detail=log_detail))
 
 
 # 操作日志查看页面试图函数
