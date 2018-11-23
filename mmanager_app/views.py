@@ -14,7 +14,6 @@ from .models.user_log import User_Log
 from .common_func import format_log, auth_controller, get_dir_info, get_file_contents, log_record
 from django.conf import settings
 
-from .ansible_run.test_runner import TestCommandRunner
 
 # 获取cconfig.ini中的配置项
 CONF_DIRS=(settings.BASE_DIR+'/config')
@@ -27,7 +26,6 @@ lines_per_page = int(conf_dir.get('dir_info', 'lines_per_page'))
 # 获取docker服务器及容器列表
 @auth_controller
 def docker_server(request):
-	TestCommandRunner()
 	servers = Docker_Server.objects.all().order_by('ip')
 	server_all_list = []
 	for server in servers:
@@ -228,3 +226,6 @@ def file_download(request):
 	Content_Disposition = 'attachment;filename=' + filename
 	response['Content-Disposition']=Content_Disposition
 	return response 
+
+
+ 	
