@@ -44,11 +44,12 @@ def container_option(request):
 	server_ip = request.GET.get('server_ip')
 	server_port = int(request.GET.get('server_port'))
 	container_id = request.GET.get('container_id')
+	container_name = request.GET.get('container_name')
 	container_opt = request.GET.get('container_opt')
 	server = Docker_Server.objects.filter(ip=server_ip).first()
 	result = server.container_opt(container_id, container_opt)
 	log_user=request.session.get('username')
-	log_detail=log_user + ' ' + container_opt + ' ' + container_id + ' on host ' + server_ip
+	log_detail=log_user + ' ' + container_opt + ' <' + container_name + '> on host ' + server_ip
 	log_record(log_user=log_user, log_detail=log_detail)
 	return redirect('/dockerservers/')
 
@@ -90,7 +91,7 @@ def supervisor_app_option(request):
 	server = Supervisor_Server.objects.filter(ip=server_ip).first()
 	result = server.supervisor_app_opt(supervisor_app, supervisor_opt)
 	log_user=request.session.get('username')
-	log_detail=log_user + ' ' + supervisor_opt + ' ' + supervisor_app + ' on host' + server_ip
+	log_detail=log_user + ' ' + supervisor_opt + ' <' + supervisor_app + '> on host ' + server_ip
 	log_record(log_user=log_user, log_detail=log_detail)
 	return redirect('/dockerservers/')
 

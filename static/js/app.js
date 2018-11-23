@@ -6,8 +6,8 @@ function reload_window() {
 
 }
 
-function container_opt(server_ip, server_port, container_id, opt) {
-    $.get("/container_opt/?server_ip=" + server_ip + "&server_port=" + server_port + "&container_id=" + container_id + "&container_opt=" + opt, 
+function container_opt(server_ip, server_port, container_id, container_name, opt) {
+    $.get("/container_opt/?server_ip=" + server_ip + "&server_port=" + server_port + "&container_id=" + container_id + '&container_name=' +  container_name + "&container_opt=" + opt, 
         function () {
         reload_window()
                     }

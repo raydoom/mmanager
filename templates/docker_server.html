@@ -45,7 +45,7 @@
         <td>{{container.apistatus|lower}}</td>
         <td>
             <button class="btn btn-default btn-xs"
-                    onclick="container_opt('{{server.ip}}', '{{server.port}}' , '{{container.id}}', 'start')">
+                    onclick="container_opt('{{server.ip}}', '{{server.port}}' , '{{container.id}}', '{{container.name}}', 'start')">
                 start
             </button>
         </td>
@@ -54,7 +54,7 @@
                 server_ip={{server.host}} 
                 server_port={{server.port}} 
                 container_id={{container.id}}
-                    onclick="container_opt('{{server.ip}}', '{{server.port}}',  '{{container.id}}', 'restart')">
+                    onclick="container_opt('{{server.ip}}', '{{server.port}}',  '{{container.id}}', '{{container.name}}', 'restart')">
                 restart
             </button>
         </td>
@@ -63,7 +63,7 @@
                 server_ip={{server.host}} 
                 server_port={{server.port}} 
                 container_id={{container.id}}
-                    onclick="container_opt('{{server.ip}}', '{{server.port}}',  '{{container.id}}', 'stop')">
+                    onclick="container_opt('{{server.ip}}', '{{server.port}}',  '{{container.id}}', '{{container.name}}', 'stop')">
                 stop
             </button>
         </td>
