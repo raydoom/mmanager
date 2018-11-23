@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from  runner import AdHocRunner, CommandRunner
-from  inventory import BaseInventory
+from  .runner import AdHocRunner, CommandRunner
+from  .inventory import BaseInventory
 
 
 def  TestAdHocRunner():
@@ -27,8 +27,8 @@ def  TestAdHocRunner():
             {"action": {"module": "shell", "args": "whoami"}, "name": "run_whoami"},
         ]
         ret = runner.run(tasks, "all")
-        print(ret.results_summary)
-        print(ret.results_raw)
+        #print(ret.results_summary)
+        #print(ret.results_raw)
 
 def TestCommandRunner():
         """
@@ -38,24 +38,32 @@ def TestCommandRunner():
 
         host_data = [
             {
-                "hostname": "testserver",
+                "hostname": "192.168.0.77",
                 "ip": "192.168.0.77",
                 "port": 22,
                 "username": "root",
                 "password": "111111",
+            },
+
+            {
+                "hostname": "192.168.0.64",
+                "ip": "192.168.0.64",
+                "port": 22,
+                "username": "root",
+                "password": "zrbao1113",
             },
         ]
         inventory = BaseInventory(host_data)
         runner = CommandRunner(inventory)
 
 
-        res = runner.execute('pwd', 'all')
+        res = runner.execute('docker ps', 'all')
         print(res.results_command)
-        print(res.results_raw)
-        print(res.results_command['testserver']['stdout'])
+        #print(res.results_raw)
+        #print(res.results_command['testserver']['stdout'])
 
 
 
 
-if __name__ == "__main__":
-    TestCommandRunner()
+# if __name__ == "__main__":
+#     TestCommandRunner()

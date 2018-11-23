@@ -44,19 +44,19 @@ def  Test():
         inventory = BaseInventory(host_list=host_list)
 
 
-        print("#"*10 + "Hosts" + "#"*10)
+        #print("#"*10 + "Hosts" + "#"*10)
         for host in inventory.hosts:
-            print(host)
+         #   print(host)
 
 
-        print("#" * 10 + "Groups" + "#" * 10)
+        #print("#" * 10 + "Groups" + "#" * 10)
         for group in inventory.groups:
-            print(group)
+          #  print(group)
 
 
-        print("#" * 10 + "all group hosts" + "#" * 10)
+        #print("#" * 10 + "all group hosts" + "#" * 10)
         group = inventory.get_group('all')
-        print(group.hosts)
+        #print(group.hosts)
 
 
 if __name__ == '__main__':
