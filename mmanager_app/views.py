@@ -27,7 +27,7 @@ lines_per_page = int(conf_dir.get('dir_info', 'lines_per_page'))
 @auth_controller
 def docker_server(request):
 	print (request.GET.get('REMOTE_ADDR'))
-	servers = Docker_Server.objects.all()
+	servers = Docker_Server.objects.all().order_by('ip')
 	server_all_list = []
 	for server in servers:
 		server_dict = {}
@@ -68,7 +68,7 @@ def tail_container_log(request):
 # 获取supervisor服务器及程序列表
 @auth_controller
 def supervisor_server(request):
-	servers = Supervisor_Server.objects.all()
+	servers = Supervisor_Server.objects.all().order_by('ip')
 	server_all_list = []
 	for server in servers:
 		server_app_dict = {}
@@ -108,7 +108,7 @@ def tail_supervisor_app_log(request):
 # jenkins任务列表视图
 @auth_controller
 def jenkins_server(request):
-	servers = Jenkins_Server.objects.all()
+	servers = Jenkins_Server.objects.all().order_by('ip')
 	server_all_list = []
 	for server in servers:
 		server_jobs_dict = {}
