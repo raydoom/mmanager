@@ -130,7 +130,7 @@ def jenkins_job_opt(request):
 	server = Jenkins_Server.objects.filter(ip=server_ip).first()
 	result = server.send_build_job(job_name)
 	log_user=request.session.get('username')
-	log_detail=log_user + ' ' + jenkins_opt + ' ' + job_name + ' on host' + server_ip
+	log_detail=log_user + ' ' + jenkins_opt + ' ' + job_name + ' on host ' + server_ip
 	log_record(log_user=log_user, log_detail=log_detail)
 	return redirect('/jenkinsservers/')
 
