@@ -24,8 +24,8 @@
         <th width="10%">status</th>
         <th width="30%">app</thw>
         <th width="20%">location</th>
-        <th width="30%">description</th>
-        <th colspan="4" width="10%">operation</th>
+        <th width="25%">description</th>
+        <th colspan="4" width="15%">operation</th>
     </tr>
     {% for container in server.containers %}
     <tr>
@@ -44,37 +44,25 @@
         <td>{{server.ip}}</td>
         <td>{{container.apistatus|lower}}</td>
         <td>
-            <button class="btn btn-default btn-xs"
-                    onclick="container_opt('{{server.ip}}', '{{server.port}}' , '{{container.id}}', '{{container.name}}', 'start')">
+            <a style="text-decoration:underline; color:inherit;" href="#" onclick="container_opt('{{server.ip}}', '{{server.port}}' , '{{container.id}}', '{{container.name}}', 'start')">
                 start
-            </button>
+            </a>
         </td>
         <td>
-            <button class="btn btn-default btn-xs"
-                server_ip={{server.host}} 
-                server_port={{server.port}} 
-                container_id={{container.id}}
-                    onclick="container_opt('{{server.ip}}', '{{server.port}}',  '{{container.id}}', '{{container.name}}', 'restart')">
+            <a style="text-decoration:underline; color:inherit;" href="#" onclick="container_opt('{{server.ip}}', '{{server.port}}',  '{{container.id}}', '{{container.name}}', 'restart')">    
                 restart
-            </button>
+            </a>
         </td>
         <td>
-            <button class="btn btn-default btn-xs"
-                server_ip={{server.host}} 
-                server_port={{server.port}} 
-                container_id={{container.id}}
-                    onclick="container_opt('{{server.ip}}', '{{server.port}}',  '{{container.id}}', '{{container.name}}', 'stop')">
+
+            <a style="text-decoration:underline; color:inherit;" href="#" onclick="container_opt('{{server.ip}}', '{{server.port}}',  '{{container.id}}', '{{container.name}}', 'stop')">
                 stop
-            </button>
+            </a>
         </td>
         <td>
-            <button class="btn btn-default btn-xs"
-                server_ip={{server.host}} 
-                server_port={{server.port}} 
-                container_id={{container.id}}
-                    onclick="tail_container_log('{{server.ip}}', '{{server.port}}',  '{{container.id}}')">
+            <a style="text-decoration:underline; color:inherit;" href="/tail_container_log/?server_ip={{server.ip}}&server_port={{server.port}}&container_id={{container.id}}">
                 tail
-            </button>
+            </a>
         </td>
 
     </tr>

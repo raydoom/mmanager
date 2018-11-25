@@ -22,14 +22,14 @@ function supervisor_app_opt(server_ip, server_port, supervisor_app, opt) {
     );
 }
 
-function tail_container_log(server_ip, server_port, container_id) {
+/*function tail_container_log(server_ip, server_port, container_id) {
     window.open("/tail_container_log/?server_ip=" + server_ip + "&server_port=" + server_port + "&container_id=" + container_id)
-}
+}*/
 
-function tail_supervisor_app_log(server_ip, server_port, supervisor_app) {
+/*function tail_supervisor_app_log(server_ip, server_port, supervisor_app) {
     window.open("/tail_supervisor_app_log/?server_ip=" + server_ip + "&server_port=" + server_port + "&supervisor_app=" + supervisor_app)
 }
-
+*/
 function jenkins_job_opt(server_ip, server_port, job_name, opt) {
     $.get("/jenkins_job_opt/?server_ip=" + server_ip + "&server_port=" + server_port + "&job_name=" + job_name + "&jenkins_opt=" + opt, 
         function () {

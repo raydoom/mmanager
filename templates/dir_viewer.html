@@ -36,16 +36,14 @@
         <td>{{dir_info.file_size}}</td>
         <td>{{dir_info.mtime}}</td>
         <td>
-            <button class="btn btn-default btn-xs"
-                    onclick="dir_viewer('{{dir_info.file_name}}', '{{current_dir}}')">
+            <a style="text-decoration:underline; color:inherit;" href="#" onclick="dir_viewer('{{dir_info.file_name}}', '{{current_dir}}')">
                 open
-            </button>
+            </a>
         </td>
         <td>
-            <button class="btn btn-default btn-xs"
-                    onclick="#">
+            <a style="text-decoration:underline; color:inherit;" href="#">
                 download
-            </button>
+            </a>
         </td>
     </tr>
     {% endif %}
@@ -63,19 +61,15 @@
         <td>{{dir_info.file_size}}</td>
         <td>{{dir_info.mtime}}</td>
         <td>
-            <button class="btn btn-default btn-xs"
-                    onclick="text_viewer('{{dir_info.file_name}}', '{{current_dir}}')">
+            <a style="text-decoration:underline; color:inherit;" href="#" onclick="text_viewer('{{dir_info.file_name}}', '{{current_dir}}')">
                 open
-            </button>
+            </a>
         </td>
         <td>
-            <button class="btn btn-default btn-xs"
-                    onclick="file_download('{{dir_info.file_name}}', '{{current_dir}}')">
+            <a style="text-decoration:underline; color:inherit;" href="#" onclick="file_download('{{dir_info.file_name}}', '{{current_dir}}')">
                 download
-            </button>
+            </a>
         </td>
-
-
     </tr>
     {% endif %}
     {% endfor %}

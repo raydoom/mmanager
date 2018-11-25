@@ -32,21 +32,19 @@
     {% endfor %}
 </table>
 
-<nav aria-label="pager">
-  <ul class="pager">
-    <li>{% if actions_log.has_previous %}
-            <a href="?page={{ actions_log.previous_page_number }}">Previous</a>
+<div>
+  <span style="text-align:center; display:block;">
+    <a>
+        {% if actions_log.has_previous %}
+            <a style="text-decoration:underline; color:inherit;" href="?page={{ actions_log.previous_page_number }}">Previous</a>
         {% endif %}
-    </li>
-    <li>
-    <span class="current">
-            {{ actions_log.number }} / {{ actions_log.paginator.num_pages }}
-        </span>
-    </li>
-    <li>{% if actions_log.has_next %}
-            <a href="?page={{ actions_log.next_page_number }}">Next</a>
+    </a>
+    <a style="color:inherit;">&nbsp; < {{ actions_log.number }} / {{ actions_log.paginator.num_pages }} > &nbsp;</a>
+    <a>
+        {% if actions_log.has_next %}
+            <a style="text-decoration:underline; color:inherit;" href="?page={{ actions_log.next_page_number }}">Next</a>
         {% endif %}
-    </li>
-  </ul>
-</nav>
+    </a>
+  </span>
+</div>
 {% endblock %}

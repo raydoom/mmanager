@@ -24,8 +24,8 @@
         <th width="10%">status</th>
         <th width="30%">app</thw>
         <th width="20%">location</th>
-        <th width="30%">description</th>
-        <th colspan="4" width="10%">operation</th>
+        <th width="25%">description</th>
+        <th colspan="4" width="15%">operation</th>
     </tr>
     {% for job in server.jobs %}
     <tr>
@@ -44,16 +44,14 @@
         <td>{{server.ip}}</td>
         <td>{{app.description|lower}}</td>
         <td>
-            <button class="btn btn-default btn-xs"
-                    onclick="jenkins_job_opt('{{server.ip}}', '{{server.port}}' , '{{job.name}}', 'build')">
+            <a style="text-decoration:underline; color:inherit;" href="#" onclick="jenkins_job_opt('{{server.ip}}', '{{server.port}}' , '{{job.name}}', 'build')">
                 build
-            </button>
+            </a>
         </td>
         <td>
-            <button class="btn btn-default btn-xs"
-                    >
+            <a style="text-decoration:underline; color:inherit;" href="#">
                 console output
-            </button>
+            </a>
         </td>
 
     </tr>

@@ -25,8 +25,8 @@
         <th width="10%">status</th>
         <th width="30%">app</thw>
         <th width="20%">location</th>
-        <th width="30%">description</th>
-        <th colspan="4" width="10%">operation</th>
+        <th width="25%">description</th>
+        <th colspan="4" width="15%">operation</th>
     </tr>
     {% for app in server.apps %}
     <tr>
@@ -45,28 +45,24 @@
         <td>{{server.ip}}</td>
         <td>{{app.description|lower}}</td>
         <td>
-            <button class="btn btn-default btn-xs"
-                    onclick="supervisor_app_opt('{{server.ip}}', '{{server.port}}' , '{{app.name}}', 'start')">
+            <a style="text-decoration:underline; color:inherit;" href="#" onclick="supervisor_app_opt('{{server.ip}}', '{{server.port}}' , '{{app.name}}', 'start')">
                 start
-            </button>
+            </a>
         </td>
         <td>
-            <button class="btn btn-default btn-xs"
-                    onclick="supervisor_app_opt('{{server.ip}}', '{{server.port}}' , '{{app.name}}', 'restart')">
+            <a style="text-decoration:underline; color:inherit;" href="#" onclick="supervisor_app_opt('{{server.ip}}', '{{server.port}}' , '{{app.name}}', 'restart')">
                 restart
-            </button>
+            </a>
         </td>
         <td>
-            <button class="btn btn-default btn-xs"
-                    onclick="supervisor_app_opt('{{server.ip}}', '{{server.port}}' , '{{app.name}}', 'stop')">
+            <a style="text-decoration:underline; color:inherit;" href="#" onclick="supervisor_app_opt('{{server.ip}}', '{{server.port}}' , '{{app.name}}', 'stop')">
                 stop
-            </button>
+            </a>
         </td>
         <td>
-            <button class="btn btn-default btn-xs"
-                    onclick="tail_supervisor_app_log('{{server.ip}}', '{{server.port}}',  '{{app.name}}')">
+            <a style="text-decoration:underline; color:inherit;" href="/tail_supervisor_app_log/?server_ip={{server.ip}}&server_port={{server.port}}&supervisor_app={{app.name}}">
                 tail
-            </button>
+            </a>
         </td>
 
     </tr>
