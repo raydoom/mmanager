@@ -5,7 +5,7 @@ from django.db import models
 
 import xmlrpc.client, logging, time 
 
-from ..common_func import get_time_stamp
+from ..utils.common_func import get_time_stamp
 
 
 # supervisor服务器模型
@@ -29,6 +29,9 @@ class Supervisor_Server(models.Model):
 		try:
 			rpc_proxy = self.get_rpc_proxy()
 			process_infos = rpc_proxy.supervisor.getAllProcessInfo()
+			for process_info in process_infos:
+				process_info['host_ip'] = self.ip
+				process_info['host_port']= self.port
 			return process_infos
 		except Exception as e:
 			logging.error(e)
@@ -84,8 +87,10 @@ class Supervisor_Server(models.Model):
 	def tail_supervisor_app_log(self, supervisor_app, format_func):
 		offset = 0
 		func = self.get_rpc_proxy().supervisor.tailProcessLog
-		while True:
-			log, offset, ret = func(supervisor_app, offset, 1000)
-			time.sleep(0.5)
+		secs = 0
+		while secs < 60 :
+			log, offset, ret = func(supervisor_app, offset, 2000)
+			time.sleep(1)
+			secs += 1
 			for log_line in log.split('\n'):
 				yield format_func(log_line)

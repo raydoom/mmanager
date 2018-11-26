@@ -3,7 +3,7 @@ __author__ = 'ma'
 
 import time, os, logging
 
-from .models.user_log import User_Log
+from ..models.action_log_models import Action_Log
 from django.shortcuts import render, redirect
 
 # 获取格式化的当前时间
@@ -22,7 +22,7 @@ def TimeStampToTime(timestamp):
 
 # 定义格式化日志的函数
 def format_log(log):
-	return '<div>%s</div>' % (log,)
+	return '<div><a style="font-size:14px;">%s</a></div>' % (log,)
 
 # 定义登陆状态控制器装饰器函数，如果未登录，则跳转到登录页面
 def auth_controller(func):
@@ -84,6 +84,6 @@ def get_file_contents(dist, lines_per_page):
 
 # 记录日志函数
 def log_record(log_user, log_detail):
-	return (User_Log.objects.create(log_user=log_user, log_detail=log_detail))
+	return (Action_Log.objects.create(log_user=log_user, log_detail=log_detail))
 
 

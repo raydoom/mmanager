@@ -1,23 +1,35 @@
 {% extends "base.html" %}
 
-{% block topbar %}
-<li ><a href="/dockerserver/">Docker Server</a></li>
-<li ><a href="/supervisorserver/">Supervisor Server</a></li>
-<li><a href="/jenkinsserver/">Jenkins Server</a></li>
-<li class="active"><a href="/dirviewer/">Dir Viewer</a></li>
-<li ><a href="/actionslog/">Actions Log</a></li>
+{% block sidebar %}
+  <a class="list-group-item" href="/dockerserver/">Docker Server</a>
+  <a class="list-group-item" href="/supervisorserver/">Supervisor Server</a>
+  <a class="list-group-item" href="/jenkinsserver/">Jenkins Server</a>
+  <a class="list-group-item active" href="/dirviewer/">Directory Viewer</a>
+  <a class="list-group-item" href="/actionslog/">Action Log</a>
+  <a class="list-group-item" href="/settings/">Settings</a>
 {% endblock %}
 
 {% block body %}
+
+<ol class="breadcrumb">
+  <li><a href="#">Home</a></li>
+  <li class="active">Directory Viewer</li>
+</ol>
+
 <div class="page-header">
-    <h1>
-        <small>controlled by django</small>
-    </h1>
+    <h2>
+        Controlled by django
+    </h2>
 </div>
-<h2>
-    <small>{{current_dir}}</small>
-</h2>
-<table class="table">
+<h4>
+    &nbsp;{{current_dir}}
+</h4>
+<table class="table table-hover">
+    <tr>
+        <td colspan="12" data-column="0">
+            <span class="table_count">Displaying {{ dir_infos_count }} items</span>
+        </td>
+    </tr>
     <tr class="active">
         <th width="40%">name</th>
         <th width="25%">size</thw>
@@ -36,7 +48,7 @@
         <td>{{dir_info.file_size}}</td>
         <td>{{dir_info.mtime}}</td>
         <td>
-            <a style="text-decoration:underline; color:inherit;" href="#" onclick="dir_viewer('{{dir_info.file_name}}', '{{current_dir}}')">
+            <a style="text-decoration:underline; color:inherit;" href="/dirviewer/?dist={{current_dir}}{{dir_info.file_name}}">
                 open
             </a>
         </td>
@@ -61,18 +73,23 @@
         <td>{{dir_info.file_size}}</td>
         <td>{{dir_info.mtime}}</td>
         <td>
-            <a style="text-decoration:underline; color:inherit;" href="#" onclick="text_viewer('{{dir_info.file_name}}', '{{current_dir}}')">
+            <a style="text-decoration:underline; color:inherit;" href="/textviewer/?dist={{current_dir}}{{dir_info.file_name}}">
                 open
             </a>
         </td>
         <td>
-            <a style="text-decoration:underline; color:inherit;" href="#" onclick="file_download('{{dir_info.file_name}}', '{{current_dir}}')">
+            <a style="text-decoration:underline; color:inherit;" href="/filedownload/?filepath={{current_dir}}{{dir_info.file_name}}">
                 download
             </a>
         </td>
     </tr>
     {% endif %}
     {% endfor %}
+    <tr>
+        <td colspan="12" data-column="0">
+            <span class="table_count">Displaying {{ dir_infos_count }} items</span>
+        </td>
+    </tr>
 </table>
 
 {% endblock %}

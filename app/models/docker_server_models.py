@@ -5,7 +5,7 @@ from django.db import models
 
 import xmlrpc.client, docker, logging, time 
 
-from ..common_func import get_time_stamp
+from ..utils.common_func import get_time_stamp
 
 # Create your models here.
 
@@ -37,6 +37,9 @@ class Docker_Server(models.Model):
 			docker_apiclient = self.get_docker_apiclient()
 			container_info_client = docker_client.containers.list(all=1)
 			container_info_apiclient = docker_apiclient.containers(all=1)
+			for container in container_info_client:
+				container.host_ip = self.ip
+				container.host_port = self.port
 			# 利用APIClient获取docker运行的时长，添加到容器信息中，字段为apistatus
 			for container_api in container_info_apiclient:
 				for container in container_info_client:
@@ -61,17 +64,6 @@ class Docker_Server(models.Model):
 			docker_client.containers.get(container_id).restart()
 			return True
 
-	# 容器日志获取
-	# def tail_container_log(self, container_id):
-	# 	log_list = []
-	# 	func_tail_log = self.get_docker_client().containers.get(container_id).logs
-	# 	log = func_tail_log(tail=20)
-	# 	log = log.decode()
-	# 	for log_line in log.split('\n'):
-	# 		time_stamp = get_time_stamp()
-	# 		log_line = '[' + time_stamp + ']--' + log_line
-	# 		log_list.append(log_line)
-	# 	return (log_list)
 
 	# 容器日志获取
 	def tail_container_log(self, container_id, format_func):
@@ -79,10 +71,10 @@ class Docker_Server(models.Model):
 		log_old, log_new = '', ''
 		secs = 0
 		while secs < 60 :		
-			log = func_tail_log(tail=15)
+			log = func_tail_log(tail=20)
 			log = log.decode()
 			time.sleep(1)
-			secs = secs+1
+			secs += 1
 			log_old = log_new
 			log_new = log
 			for log_line in log.split('\n'):

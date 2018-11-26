@@ -1,26 +1,64 @@
 {% extends "base.html" %}
 
-{% block topbar %}
-<li ><a href="/dockerserver/">Docker Server</a></li>
-<li class="active"><a href="/supervisorserver/">Supervisor Server</a></li>
-<li><a href="/jenkinsserver/">Jenkins Server</a></li>
-<li ><a href="/dirviewer/">Dir Viewer</a></li>
-<li ><a href="/actionslog/">Actions Log</a></li>
+{% block sidebar %}
+  <a class="list-group-item" href="/dockerserver/">Docker Server</a>
+  <a class="list-group-item active" href="/supervisorserver/">Supervisor Server</a>
+  <a class="list-group-item" href="/jenkinsserver/">Jenkins Server</a>
+  <a class="list-group-item" href="/dirviewer/">Directory Viewer</a>
+  <a class="list-group-item" href="/actionslog/">Action Log</a>
+  <a class="list-group-item" href="/settings/">Settings</a>
 {% endblock %}
 
 {% block body %}
+
+<ol class="breadcrumb">
+  <li><a href="#">Home</a></li>
+  <li class="active">Supervisor Server</li>
+</ol>
+
 <div class="page-header">
-    <h1>
-        <small>controlled by supervisor</small>
-    </h1>
+    <h2>
+        Controlled by supervisor
+    </h2>
 </div>
 
-{% for server in server_all_list %}
+<table class="table table-hover">
+<caption>
 
-<h2>
-    <small>Server: {{server.ip}} </small>
-</h2>
-<table class="table">
+<form class="form-inline" style="float: right;" action="/index/" method="post">
+ {% csrf_token %}
+  <div class="form-group">
+    <p class="form-control-static">
+        <select class="form-control">
+          <option>status</option>
+          <option>app</option>
+          <option>location</option>
+        </select>
+    </p>
+    <input type="text" class="form-control" id="inputstring" placeholder="">
+  </div>
+  <button type="submit" class="btn btn-default">Filter</button>
+  <div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    More Actions <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-right">
+    <li><a href="#">start</a></li>
+    <li><a href="#">stop</a></li>
+    <li><a href="#">restart</a></li>
+    <li role="separator" class="divider"></li>
+    <li><a href="#">other</a></li>
+  </ul>
+</div>
+</form>
+
+</caption>
+
+    <tr>
+        <td colspan="12" data-column="0">
+            <span class="table_count">Displaying {{ app_count }} items</span>
+        </td>
+    </tr>
     <tr class="active">
         <th width="10%">status</th>
         <th width="30%">app</thw>
@@ -28,47 +66,43 @@
         <th width="25%">description</th>
         <th colspan="4" width="15%">operation</th>
     </tr>
-    {% for app in server.apps %}
+    {% for app in app_list %}
     <tr>
-        <td>
-            {% if app.statename == 'RUNNING' %}
-                <span style="background-color: #E0E0E0">
-                 {% elif app.statename == 'STOPPED' %}
-                <span style="background-color: #C0C0C0">
-                 {% else %}
-                <span>
-                    {% endif %}
-                    {{app.statename|lower}}
-                </span>
+        <td style="text-transform:capitalize;">
+            {{app.statename|lower}}
         </td>
         <td>{{app.name}}</td>
-        <td>{{server.ip}}</td>
+        <td>{{app.host_ip}}</td>
         <td>{{app.description|lower}}</td>
         <td>
-            <a style="text-decoration:underline; color:inherit;" href="#" onclick="supervisor_app_opt('{{server.ip}}', '{{server.port}}' , '{{app.name}}', 'start')">
+            <a style="text-decoration:underline; color:inherit;" href="/supervisor_app_opt/?server_ip={{app.host_ip}}&server_port={{app.host_port}}&supervisor_app={{app.name}}&supervisor_opt=start">
                 start
             </a>
         </td>
         <td>
-            <a style="text-decoration:underline; color:inherit;" href="#" onclick="supervisor_app_opt('{{server.ip}}', '{{server.port}}' , '{{app.name}}', 'restart')">
+            <a style="text-decoration:underline; color:inherit;" href="/supervisor_app_opt/?server_ip={{app.host_ip}}&server_port={{app.host_port}}&supervisor_app={{app.name}}&supervisor_opt=restart">
                 restart
             </a>
         </td>
         <td>
-            <a style="text-decoration:underline; color:inherit;" href="#" onclick="supervisor_app_opt('{{server.ip}}', '{{server.port}}' , '{{app.name}}', 'stop')">
+            <a style="text-decoration:underline; color:inherit;" href="/supervisor_app_opt/?server_ip={{app.host_ip}}&server_port={{app.host_port}}&supervisor_app={{app.name}}&supervisor_opt=stop">
                 stop
             </a>
         </td>
         <td>
-            <a style="text-decoration:underline; color:inherit;" href="/tail_supervisor_app_log/?server_ip={{server.ip}}&server_port={{server.port}}&supervisor_app={{app.name}}">
+            <a style="text-decoration:underline; color:inherit;" href="/tail_supervisor_app_log/?server_ip={{app.host_ip}}&server_port={{app.host_port}}&supervisor_app={{app.name}}">
                 tail
             </a>
         </td>
 
     </tr>
     {% endfor %}
+    <tr>
+        <td colspan="12" data-column="0">
+            <span class="table_count">Displaying {{ app_count }} items</span>
+        </td>
+    </tr>
 </table>
-{% endfor %}
 {% endblock %}
 </body>
 </html>

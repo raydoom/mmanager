@@ -15,33 +15,36 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from app import views
+from app.views import action_log_views, directory_viewer_views, docker_server_views, jenkins_server_views, supervisor_server_views, user_views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls,name=admin),
-    url(r'^dockerserver', views.docker_server, name='docker_server'),
-    url(r'^container_opt', views.container_option),
-    url(r'^tail_container_log', views.tail_container_log),
 
-    url(r'^supervisorserver', views.supervisor_server, name='supervisor_server'),
-    url(r'^supervisor_app_opt', views.supervisor_app_option),
-    url(r'^tail_supervisor_app_log', views.tail_supervisor_app_log),
+    url(r'^dockerserver', docker_server_views.docker_server, name='docker_server'),
+    url(r'^container_opt', docker_server_views.container_option),
+    url(r'^tail_container_log', docker_server_views.tail_container_log),
 
-    url(r'^jenkinsserver', views.jenkins_server, name='jenkins_server'),
-    url(r'^jenkins_job_opt', views.jenkins_job_opt),
+    url(r'^supervisorserver', supervisor_server_views.supervisor_server, name='supervisor_server'),
+    url(r'^supervisor_app_opt', supervisor_server_views.supervisor_app_option),
+    url(r'^tail_supervisor_app_log', supervisor_server_views.tail_supervisor_app_log),
+
+    url(r'^jenkinsserver', jenkins_server_views.jenkins_server, name='jenkins_server'),
+    url(r'^jenkins_job_opt', jenkins_server_views.jenkins_job_opt),
 
 
-    url(r'^dirviewer', views.dir_viewer),
-    url(r'^textviewer', views.text_viewer),
-    url(r'^filedownload', views.file_download),
+    url(r'^dirviewer', directory_viewer_views.dir_viewer),
+    url(r'^textviewer', directory_viewer_views.text_viewer),
+    url(r'^filedownload', directory_viewer_views.file_download),
 
-    url(r'^actionslog', views.actions_log),
+    url(r'^actionslog', action_log_views.action_log),
 
-    url(r'^login/', views.login),
-    url(r'^register/', views.register),
-	url(r'^logout/', views.logout),
+    url(r'^login/', user_views.login),
+    url(r'^register/', user_views.register),
+	url(r'^logout/', user_views.logout),
+    url(r'^passwordchange/', user_views.passwordchange),
+    url(r'^settings/', user_views.settings),
 
-    url(r'', views.docker_server),
+    url(r'', docker_server_views.docker_server),
     
 ]
 

@@ -1,50 +1,84 @@
 {% extends "base.html" %}
 
-{% block topbar %}
-<li ><a href="/dockerserver/">Docker Server</a></li>
-<li><a href="/supervisorserver/">Supervisor Server</a></li>
-<li class="active"><a href="/jenkinsserver/">Jenkins Server</a></li>
-<li ><a href="/dirviewer/">Dir Viewer</a></li>
-<li ><a href="/actionslog/">Actions Log</a></li>
+{% block sidebar %}
+  <a class="list-group-item" href="/dockerserver/">Docker Server</a>
+  <a class="list-group-item" href="/supervisorserver/">Supervisor Server</a>
+  <a class="list-group-item active" href="/jenkinsserver/">Jenkins Server</a>
+  <a class="list-group-item" href="/dirviewer/">Directory Viewer</a>
+  <a class="list-group-item" href="/actionslog/">Action Log</a>
+  <a class="list-group-item" href="/settings/">Settings</a>
 {% endblock %}
 
 {% block body %}
+
+<ol class="breadcrumb">
+  <li><a href="#">Home</a></li>
+  <li class="active">Jenkins Server</li>
+</ol>
+
 <div class="page-header">
-    <h1>
-        <small>controlled by jenkins</small>
-    </h1>
+    <h2>
+        Controlled by jenkins
+    </h2>
 </div>
 
-{% for server in server_all_list %}
-<h2>
-    <small>Server: {{server.ip}} </small>
-</h2>
-<table class="table">
+<table class="table table-hover">
+<caption>
+<form class="form-inline" style="float: right;" action="/index/" method="post">
+ {% csrf_token %}
+  <div class="form-group">
+    <p class="form-control-static">
+        <select class="form-control">
+          <option>status</option>
+          <option>app</option>
+          <option>location</option>
+        </select>
+    </p>
+    <input type="text" class="form-control" id="inputstring" placeholder="">
+  </div>
+  <button type="submit" class="btn btn-default">Filter</button>
+  <div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    More Actions <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-right">
+    <li><a href="#">start</a></li>
+    <li><a href="#">stop</a></li>
+    <li><a href="#">restart</a></li>
+    <li role="separator" class="divider"></li>
+    <li><a href="#">other</a></li>
+  </ul>
+</div>
+</form>
+</caption>
+    <tr>
+        <td colspan="12" data-column="0">
+            <span class="table_count">Displaying {{ job_count }} items</span>
+        </td>
+    </tr>
     <tr class="active">
+        <th>
+            <input type="checkbox">
+        </th>
         <th width="10%">status</th>
         <th width="30%">app</thw>
         <th width="20%">location</th>
         <th width="25%">description</th>
         <th colspan="4" width="15%">operation</th>
     </tr>
-    {% for job in server.jobs %}
+    {% for job in job_list %}
     <tr>
         <td>
-            {% if job.color == 'blue' %}
-                <span style="background-color: #E0E0E0">
-                 {% elif job.color == 'red' %}
-                <span style="background-color: #C0C0C0">
-                 {% else %}
-                <span>
-                    {% endif %}
-                    {{job.color|lower}}
-                </span>
+            <input type="checkbox">
+        </td>
+        <td style="text-transform:capitalize;">
+            {{job.color|lower}}
         </td>
         <td>{{job.name}}</td>
-        <td>{{server.ip}}</td>
+        <td>{{job.host_ip}}</td>
         <td>{{app.description|lower}}</td>
         <td>
-            <a style="text-decoration:underline; color:inherit;" href="#" onclick="jenkins_job_opt('{{server.ip}}', '{{server.port}}' , '{{job.name}}', 'build')">
+            <a style="text-decoration:underline; color:inherit;" href="/jenkins_job_opt/?server_ip={{job.host_ip}}&server_port={{job.host_port}}&job_name={{job.name}}&jenkins_opt=build">
                 build
             </a>
         </td>
@@ -56,6 +90,10 @@
 
     </tr>
     {% endfor %}
+    <tr>
+        <td colspan="12" data-column="0">
+            <span class="table_count">Displaying {{ job_count }} items</span>
+        </td>
+    </tr>
 </table>
-{% endfor %}
 {% endblock %}

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+  <a class="list-group-item" href="/dockerserver/">Docker Server</a>
+  <a class="list-group-item" href="/supervisorserver/">Supervisor Server</a>
+  <a class="list-group-item" href="/jenkinsserver/">Jenkins Server</a>
+  <a class="list-group-item" href="/dirviewer/">Directory Viewer</a>
+  <a class="list-group-item active" href="/actionslog/">Action Log</a>
+  <a class="list-group-item" href="/settings/">Settings</a>
+{% endblock %}
+
+{% block body %}
+
+<ol class="breadcrumb">
+  <li><a href="#">Home</a></li>
+  <li class="active">Action Log</li>
+</ol>
+
+<div class="page-header">
+    <h2>
+        Controlled by django
+    </h2>
+</div>
+<h2>
+    <small>Action log</small>
+</h2>
+
+<table class="table">
+    <tr>
+        <td colspan="12" data-column="0">
+            <span class="table_count">Displaying {{ action_log_count }} items</span>
+        </td>
+    </tr>
+    <tr class="active">
+        <th width="20%">time</th>
+        <th width="15%">user</thw>
+        <th width="65%">detail</th>
+    </tr>
+    {% for log in action_log %}
+    <tr>
+        <td>{{log.log_time}}</td>
+        <td>{{log.log_user}}</td>
+        <td>{{log.log_detail}}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="12" data-column="0">
+            <span class="table_count">Displaying 10 / {{ action_log_count }} items</span>
+        </td>
+    </tr>
+</table>
+
+<div>
+  <span style="text-align:center; display:block;">
+    <a>
+        {% if action_log.has_previous %}
+            <a style="text-decoration:underline; color:inherit;" href="?page={{ action_log.previous_page_number }}">Previous</a>
+        {% endif %}
+    </a>
+    <a style="color:inherit;">&nbsp; < {{ action_log.number }} / {{ action_log.paginator.num_pages }} > &nbsp;</a>
+    <a>
+        {% if action_log.has_next %}
+            <a style="text-decoration:underline; color:inherit;" href="?page={{ action_log.next_page_number }}">Next</a>
+        {% endif %}
+    </a>
+  </span>
+</div>
+{% endblock %}

@@ -3,7 +3,7 @@ __author__ = 'ma'
 
 from django.db import models
 
-from ..common_func import get_time_stamp
+from ..utils.common_func import get_time_stamp
 
 import jenkins, logging, time 
 
@@ -27,6 +27,9 @@ class Jenkins_Server(models.Model):
 	def get_all_jobs_list(self):
 		jenkins_server = self.get_jenkins_server()
 		all_jobs_list = jenkins_server.get_all_jobs()
+		for job in all_jobs_list:
+			job['host_ip'] = self.ip
+			job['host_port'] = self.port
 		return (all_jobs_list)
 
 	# 触发job构建
