@@ -1,50 +1,38 @@
-"""maops URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.11/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.conf.urls import url, include
-    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
-"""
 from django.conf.urls import url
 from django.contrib import admin
-from app.views import action_log_views, directory_viewer_views, docker_server_views, jenkins_server_views, supervisor_server_views, user_views
+from app.views import ( action_log_views, directory_viewer_views, 
+                        docker_server_views, jenkins_server_views, 
+                        supervisor_server_views, user_views
+                      )
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls,name=admin),
 
-    url(r'^dockerserver', docker_server_views.docker_server, name='docker_server'),
-    url(r'^container_opt', docker_server_views.container_option),
-    url(r'^tail_container_log', docker_server_views.tail_container_log),
+    url(r'^dockerserver', docker_server_views.Docker_Server_List.as_view(), name='docker_server_list'),
+    url(r'^container_opt', docker_server_views.Container_Option.as_view(), name='container_option'),
+    url(r'^tail_container_log', docker_server_views.Tail_Container_Log.as_view(), name='tail_container_log'),
 
-    url(r'^supervisorserver', supervisor_server_views.supervisor_server, name='supervisor_server'),
-    url(r'^supervisor_app_opt', supervisor_server_views.supervisor_app_option),
-    url(r'^tail_supervisor_app_log', supervisor_server_views.tail_supervisor_app_log),
+    url(r'^supervisorserver', supervisor_server_views.Supervisor_Server_List.as_view(), name='supervisor_server'),
+    url(r'^supervisor_app_opt', supervisor_server_views.Supervisor_App_Option.as_view(), name='supervisor_app_opt'),
+    url(r'^tail_supervisor_app_log', supervisor_server_views.Tail_Supervisor_App_Log.as_view(), name='tail_supervisor_app_log'),
 
-    url(r'^jenkinsserver', jenkins_server_views.jenkins_server, name='jenkins_server'),
-    url(r'^jenkins_job_opt', jenkins_server_views.jenkins_job_opt),
+    url(r'^jenkinsserver', jenkins_server_views.Jenkins_Server_List.as_view(), name='jenkins_server'),
+    url(r'^jenkins_job_opt', jenkins_server_views.Jenkins_Job_Opt.as_view(), name='jenkins_job_opt'),
 
 
-    url(r'^dirviewer', directory_viewer_views.dir_viewer),
-    url(r'^textviewer', directory_viewer_views.text_viewer),
-    url(r'^filedownload', directory_viewer_views.file_download),
+    url(r'^dirviewer', directory_viewer_views.Directory_Viewer.as_view(), name='directory_viewer'),
+    url(r'^textviewer', directory_viewer_views.Text_Viewer.as_view(), name='text_viewer'),
+    url(r'^filedownload', directory_viewer_views.File_Download.as_view(), name='file_download'),
 
-    url(r'^actionslog', action_log_views.action_log),
+    url(r'^actionslog', action_log_views.Action_Log_List.as_view(), name='action_log_list'),
 
-    url(r'^login/', user_views.login),
-    url(r'^register/', user_views.register),
-	url(r'^logout/', user_views.logout),
-    url(r'^passwordchange/', user_views.passwordchange),
-    url(r'^settings/', user_views.settings),
+    url(r'^login/', user_views.Login.as_view(), name='login'),
+    url(r'^register/', user_views.Register.as_view(), name='register'),
+	url(r'^logout/', user_views.Sign_Out.as_view(), name='sign_out'),
+    url(r'^passwordchange/', user_views.Change_Password.as_view(), name='change_password'),
+    url(r'^settings/', user_views.Settings.as_view(), name='settings'),
 
-    url(r'', docker_server_views.docker_server),
+    url(r'', docker_server_views.Docker_Server_List.as_view(), name='default'),
     
 ]
 

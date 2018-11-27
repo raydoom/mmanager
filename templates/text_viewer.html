@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 
+{% block sidebar %}
+  <a class="list-group-item" href="/dockerserver/">Docker Server</a>
+  <a class="list-group-item" href="/supervisorserver/">Supervisor Server</a>
+  <a class="list-group-item" href="/jenkinsserver/">Jenkins Server</a>
+  <a class="list-group-item" href="/dirviewer/">Directory Viewer</a>
+  <a class="list-group-item active" href="/actionslog/">Action Log</a>
+  <a class="list-group-item" href="/settings/">Settings</a>
+{% endblock %}
+
 {% block body %}
 
 {% for text_content in text_contents %}
@@ -7,13 +16,3 @@
 {% endfor %}
 
 {% endblock %}
-
-<!--
-<script language="JavaScript">
-
-function myrefresh() {
-    window.location.reload();
-}
-setTimeout('myrefresh()', 1000); //指定1秒刷新一次
-</script>
--->

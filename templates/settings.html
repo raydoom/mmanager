@@ -24,15 +24,18 @@
 </div>
 
 <h2>
-    <small>User profile</small>
+    <small>Settings</small>
 </h2>
 <table class="table">
+<tr class="active">
+      <th>&nbsp;user profile</th>
+</tr>
 <tr>
 	<td><li>Username：{{ userinfo.username }}<a href="/passwordchange/">&nbsp;&nbsp;&nbsp;Change password</a></li></td>
 </tr>
 <tr>
 	<td>
-	<li>Email：{{ userinfo.email }}</li>
+	<li>Email Addr：{{ userinfo.email }}</li>
 	</td>
 </tr>
 <tr>
@@ -42,7 +45,7 @@
 </tr>
 <tr>
 	<td>
-	<li>Date joined：{{ userinfo.date_joined }}</li>
+	<li>Date Joined：{{ userinfo.date_joined }}</li>
 	</td>
 </tr>
 </table>
