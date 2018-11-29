@@ -12,14 +12,31 @@ from ..utils.common_func import format_log, auth_controller, get_dir_info, get_f
 @method_decorator(auth_controller, name='dispatch')
 class Jenkins_Server_List(View):
 	def get(self, request):
+		filter_keyword = request.GET.get('filter_keyword')
+		filter_select = request.GET.get('filter_select')
 		servers = Jenkins_Server.objects.all().order_by('ip')
 		job_list = []
 		for server in servers:
 			jobs = server.get_all_jobs_list()
-			for job in jobs:
-				job_list.append(job)
+			if filter_keyword != None:
+				for job in jobs:
+					if filter_select == 'Status =' and filter_keyword.lower() == job['color'].lower():
+							job_list.append(job)
+					if filter_select == 'App' and filter_keyword in job['name']:
+							job_list.append(job)		
+					if filter_select == 'Location' and filter_keyword in job['host_ip']:
+							job_list.append(job)
+			else:
+				for job in jobs:
+					job_list.append(job)
 		job_count = len(job_list)
 		return render(request, 'jenkins_server.html', {'job_list': job_list, 'job_count': job_count})
+
+	def post(self, request):
+		filter_keyword = request.POST.get('filter_keyword')
+		filter_select = request.POST.get('filter_select')
+		prg_url = '/jenkinsserver/?filter_select=' + filter_select +'&filter_keyword=' + filter_keyword
+		return redirect(prg_url)
 
 
 # jenkins操作

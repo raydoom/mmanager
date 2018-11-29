@@ -9,6 +9,7 @@
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/app.js' %}"></script>
+    <style type="text/css">body{ font-size:13px;} </style>
 </head>
 <body>
 <div class="row"style="margin-left: 0px; margin-right: 0px">
@@ -57,16 +58,16 @@
 <div class="container-fluid">
 <div class="row" style="margin-right:1px; margin-left: 1px">
 
-<div class="col-xs-2 list-group">
-  {% block sidebar %}
-  {% endblock %}
-</div>
-    <div id="body" class="col-xs-10">
-        {% block hovor %}
-        {% endblock %}
-        {% block body %}
-        {% endblock %}
-    </div>
+  <div class="list-group col-md-2">
+    {% include 'sidebar.html' %}
+  </div>
+  <div id="body" class="col-md-10">
+    {% block hovor %}
+    {% endblock %}
+    {% block body %}
+    {% endblock %}
+  </div>
+
 </div>
 </div>
 </body>

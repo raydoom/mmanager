@@ -24,15 +24,14 @@
 
 <table class="table table-hover">
 <caption>
-
 <form class="form-inline" style="float: right;" action="/supervisorserver/" method="post">
  {% csrf_token %}
   <div class="form-group">
     <p class="form-control-static">
         <select class="form-control" name="filter_select">
-          <option>status</option>
-          <option  selected="selected">app</option>
-          <option>location</option>
+          <option>Status =</option>
+          <option  selected="selected">App</option>
+          <option>Location</option>
         </select>
     </p>
     <input type="text" class="form-control" name="filter_keyword" placeholder="">
@@ -43,15 +42,14 @@
     More Actions <span class="caret"></span>
   </button>
   <ul class="dropdown-menu dropdown-menu-right">
-    <li><a href="#">start</a></li>
-    <li><a href="#">stop</a></li>
-    <li><a href="#">restart</a></li>
+    <li><a href="#">Restart App</a></li>
+    <li><a href="#">Start App</a></li>
+    <li><a href="#">Stop App</a></li>
     <li role="separator" class="divider"></li>
-    <li><a href="#">other</a></li>
+    <li><a href="#">Other</a></li>
   </ul>
 </div>
 </form>
-
 </caption>
 
     <tr>
@@ -60,14 +58,18 @@
         </td>
     </tr>
     <tr class="active">
-        <th width="10%">status</th>
-        <th width="30%">app</thw>
-        <th width="20%">location</th>
-        <th width="25%">description</th>
-        <th colspan="4" width="15%">operation</th>
+        <th><input type="checkbox"></th>
+        <th width="10%">Status</th>
+        <th width="30%">App</thw>
+        <th width="20%">Location</th>
+        <th width="25%">Description</th>
+        <th colspan="4" width="15%">Actions</th>
     </tr>
     {% for app in app_list %}
     <tr>
+        <td>
+            <input type="checkbox">
+        </td>
         <td style="text-transform:capitalize;">
             {{app.statename|lower}}
         </td>
@@ -75,24 +77,20 @@
         <td>{{app.host_ip}}</td>
         <td>{{app.description|lower}}</td>
         <td>
-            <a style="text-decoration:underline; color:inherit;" href="/supervisor_app_opt/?server_ip={{app.host_ip}}&server_port={{app.host_port}}&supervisor_app={{app.name}}&supervisor_opt=start">
-                start
-            </a>
-        </td>
-        <td>
-            <a style="text-decoration:underline; color:inherit;" href="/supervisor_app_opt/?server_ip={{app.host_ip}}&server_port={{app.host_port}}&supervisor_app={{app.name}}&supervisor_opt=restart">
-                restart
-            </a>
-        </td>
-        <td>
-            <a style="text-decoration:underline; color:inherit;" href="/supervisor_app_opt/?server_ip={{app.host_ip}}&server_port={{app.host_port}}&supervisor_app={{app.name}}&supervisor_opt=stop">
-                stop
-            </a>
-        </td>
-        <td>
-            <a style="text-decoration:underline; color:inherit;" href="/tail_supervisor_app_log/?server_ip={{app.host_ip}}&server_port={{app.host_port}}&supervisor_app={{app.name}}">
-                tail
-            </a>
+ 
+          <!-- Split button -->
+          <div class="btn-group">
+            <a type="button" class="btn btn-default btn-sm" href="javascript:void(0);" onclick="supervisor_app_opt('{{app.host_ip}}','{{app.host_port}}','{{app.name}}','restart')">Restart</a>
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li><a href="javascript:void(0);" onclick="supervisor_app_opt('{{app.host_ip}}','{{app.host_port}}','{{app.name}}','start')">Start App</a></li>
+              <li><a href="javascript:void(0);" onclick="supervisor_app_opt('{{app.host_ip}}','{{app.host_port}}','{{app.name}}','stop')">Stop App</a></li>
+              <li role="separator" class="divider"></li>
+              <li><a href="/tail_supervisor_app_log/?server_ip={{app.host_ip}}&server_port={{app.host_port}}&supervisor_app={{app.name}}" target="_blank">Tail Log</a></li>
+            </ul>
+          </div>
         </td>
 
     </tr>

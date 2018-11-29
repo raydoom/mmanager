@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Docker Manager</title>
+    <title>mmanager</title>
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
@@ -13,9 +13,11 @@
     display: block;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 100px;
 }
 </style>
 </head>
+
 
 <form class="form-horizontal" role="form" action='/login/' method="post">
 {% csrf_token %}
@@ -32,9 +34,7 @@
         <input type="password" name="password" class="form-control" placeholder="" required>
         </br>
         <div class="checkbox">
-          <label>
-            <input type="checkbox" value="remember-me">
-            Remember me </label>
+          <label><input type="checkbox" value="remember-me">Remember me</label>
         </div>
         </br>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
@@ -47,3 +47,4 @@
   </div>
 </div>
 </form>
+</html>

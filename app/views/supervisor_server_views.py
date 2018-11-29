@@ -12,31 +12,31 @@ from ..utils.common_func import get_time_stamp, format_log, auth_controller, log
 @method_decorator(auth_controller, name='dispatch')
 class Supervisor_Server_List(View):
 	def get(self, request):
+		filter_keyword = request.GET.get('filter_keyword')
+		filter_select = request.GET.get('filter_select')
 		servers = Supervisor_Server.objects.all().order_by('ip')
 		app_list = []
 		for server in servers:
 			apps = server.get_all_process_info()
-			for app in apps:
-				app_list.append(app)
+			if filter_keyword != None:
+				for app in apps:
+					if filter_select == 'Status =' and filter_keyword.lower() == app['statename'].lower():
+							app_list.append(app)
+					if filter_select == 'App' and filter_keyword in app['name']:
+							app_list.append(app)		
+					if filter_select == 'Location' and filter_keyword in app['host_ip']:
+							app_list.append(app)
+			else:
+				for app in apps:
+					app_list.append(app)
 		app_count = len(app_list)
 		return render(request, 'supervisor_server.html', {'app_list': app_list, 'app_count': app_count})
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')
 		filter_select = request.POST.get('filter_select')
-		servers = Supervisor_Server.objects.all().order_by('ip')
-		app_list = []
-		for server in servers:
-			apps = server.get_all_process_info()
-			for app in apps:
-				if filter_select == 'status' and filter_keyword.lower() == app['statename'].lower():
-						app_list.append(app)
-				if filter_select == 'app' and filter_keyword in app['name']:
-						app_list.append(app)		
-				if filter_select == 'location' and filter_keyword in app['host_ip']:
-						app_list.append(app)
-		app_count = len(app_list)
-		return render(request, 'supervisor_server.html', {'app_list': app_list, 'app_count': app_count})
+		prg_url = '/supervisorserver/?filter_select=' + filter_select +'&filter_keyword=' + filter_keyword
+		return redirect(prg_url)
 
 # supervisor程序操作启动，停止，重启
 @method_decorator(auth_controller, name='dispatch')

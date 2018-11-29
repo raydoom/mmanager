@@ -24,17 +24,17 @@
 
 <table class="table table-hover">
 <caption>
-<form class="form-inline" style="float: right;" action="/index/" method="post">
+<form class="form-inline" style="float: right;" action="/jenkinsserver/" method="post">
  {% csrf_token %}
   <div class="form-group">
     <p class="form-control-static">
-        <select class="form-control">
-          <option>status</option>
-          <option  selected="selected">app</option>
-          <option>location</option>
+        <select class="form-control" name="filter_select">
+          <option>Status =</option>
+          <option  selected="selected">App</option>
+          <option>Location</option>
         </select>
     </p>
-    <input type="text" class="form-control" id="inputstring" placeholder="">
+    <input type="text" class="form-control" name="filter_keyword" placeholder="">
   </div>
   <button type="submit" class="btn btn-default">Filter</button>
   <div class="btn-group">
@@ -42,11 +42,10 @@
     More Actions <span class="caret"></span>
   </button>
   <ul class="dropdown-menu dropdown-menu-right">
-    <li><a href="#">start</a></li>
-    <li><a href="#">stop</a></li>
-    <li><a href="#">restart</a></li>
+    <li><a href="#">Build Job</a></li>
+    <li><a href="#">Console Output</a></li>
     <li role="separator" class="divider"></li>
-    <li><a href="#">other</a></li>
+    <li><a href="#">Other</a></li>
   </ul>
 </div>
 </form>
@@ -60,11 +59,11 @@
         <th>
             <input type="checkbox">
         </th>
-        <th width="10%">status</th>
-        <th width="30%">app</thw>
-        <th width="20%">location</th>
-        <th width="25%">description</th>
-        <th colspan="4" width="15%">operation</th>
+        <th width="10%">Status</th>
+        <th width="30%">App</thw>
+        <th width="20%">Location</th>
+        <th width="25%">Description</th>
+        <th colspan="4" width="15%">Actions</th>
     </tr>
     {% for job in job_list %}
     <tr>
@@ -78,14 +77,19 @@
         <td>{{job.host_ip}}</td>
         <td>{{app.description|lower}}</td>
         <td>
-            <a style="text-decoration:underline; color:inherit;" href="/jenkins_job_opt/?server_ip={{job.host_ip}}&server_port={{job.host_port}}&job_name={{job.name}}&jenkins_opt=build">
-                build
-            </a>
-        </td>
-        <td>
-            <a style="text-decoration:underline; color:inherit;" href="#">
-                console output
-            </a>
+
+          <!-- Split button -->
+          <div class="btn-group">
+            <a type="button" class="btn btn-default btn-sm" href="javascript:void(0);" onclick="jenkins_job_opt('{{job.host_ip}}','{{job.host_port}}','{{job.name}}','build')">Build Job</a>
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li><a href="javascript:void(0);" onclick="jenkins_job_opt('{{job.host_ip}}','{{job.host_port}}','{{job.name}}','build')">Build Job</a></li>
+              <li role="separator" class="divider"></li>
+              <li><a href="#" target="_blank">Console Output</a></li>
+            </ul>
+          </div>
         </td>
 
     </tr>
