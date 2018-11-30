@@ -2,36 +2,37 @@
 
 <ul class="nav nav-pills nav-stacked">
   <li>
-    <a data-toggle="collapse" href="#collapse1" aria-expanded="false" aria-controls="collapse1" style="color: inherit;" >
+    <a data-toggle="collapse" href="#collapse-server-action" aria-expanded="false" aria-controls="collapse-server-action" style="color: inherit;" >
             Server Action
         <span class="fa fa-chevron-right pull-right"></span>    
     </a>
-    <ul class="nav panel-collapse collapse " id="collapse1">
-      <li ><a style="background: #428bca; color: #FFF8F1; text-align: right;" href="/dockerserver/">Docker Server</a></li>
-      <li ><a style="text-align: right;" href="/supervisorserver/">Supervisor Server</a></li>
+    <ul class="nav panel-collapse collapse" id="collapse-server-action">
+      <li ><a id="nav-dockerserver" style="text-align: right;" href="/dockerserver/">Docker Server</a></li>
+      <li ><a id="nav-supervisorserver" style="text-align: right;" href="/supervisorserver/">Supervisor Server</a></li>
     </ul>
 
   </li>
 
   <li>
-    <a data-toggle="collapse" href="#collapse2" aria-expanded="false" aria-controls="collapse2" style="color: inherit;" >
+    <a data-toggle="collapse" href="#collapse-ops-manage" aria-expanded="false" aria-controls="collapse-ops-manage" style="color: inherit;" >
             Ops Manage
         <span class="fa fa-chevron-right pull-right"></span>
     </a>
-    <ul class="nav panel-collapse collapse " id="collapse2">
-      <li ><a style="text-align: right;" href="/jenkinsserver/">Jenkins Server</a></li>
-      <li ><a style="text-align: right;" href="/dirviewer/">Directory Viewer</a></li>
+    <ul class="nav panel-collapse collapse" id="collapse-ops-manage">
+      <li ><a id="nav-jenkinsserver" style="text-align: right;" href="/jenkinsserver/">Jenkins Server</a></li>
+      <li ><a id="nav-dirviewer" style="text-align: right;" href="/dirviewer/">Directory Viewer</a></li>
+      <li ><a id="nav-actionlog" style="text-align: right;" href="/actionlog/">Action Log</a></li>
     </ul>
   </li>
 
   <li>
-    <a data-toggle="collapse" href="#collapse3" aria-expanded="false" aria-controls="collapse3" style="color: inherit;" >
+    <a data-toggle="collapse" href="#collapse-setting" aria-expanded="false" aria-controls="collapse-setting" style="color: inherit;" >
             Settings
         <span class="fa fa-chevron-right pull-right"></span>
     </a>
-    <ul class="nav panel-collapse collapse " id="collapse3">
-      <li ><a style="text-align: right;" href="/jenkinsserver/">Account</a></li>
-      <li ><a style="text-align: right;" href="/dirviewer/">System</a></li>
+    <ul class="nav panel-collapse collapse" id="collapse-setting">
+      <li ><a id="nav-account" style="text-align: right;" href="/account/">Account</a></li>
+      <li ><a id="nav-system" style="text-align: right;" href="/settings/">System</a></li>
     </ul>
   </li>
 </ul>
@@ -39,5 +40,6 @@
 </nav>
 
 <style type="text/css">
-  a{ color: inherit; }
+  a{color: inherit;}
 </style>
+

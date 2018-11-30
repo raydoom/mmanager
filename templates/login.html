@@ -14,37 +14,43 @@
     margin-left: auto;
     margin-right: auto;
     margin-top: 100px;
+    width: 424px;
 }
 </style>
 </head>
 
-
-<form class="form-horizontal" role="form" action='/login/' method="post">
-{% csrf_token %}
-<div class="container">
-  <div class="row myCenter">
-    <div class="col-xs-6 col-md-4 col-center-block">
-      <form class="form-signin">
-        <h2 class="form-signin-heading">Sign in to mmanager</h2>
-        </br>
-        <p>Username</p>
-        <input type="text" name="username" class="form-control" placeholder="" required autofocus>
-        </br>
-        <p>Password</p>
-        <input type="password" name="password" class="form-control" placeholder="" required>
-        </br>
-        <div class="checkbox">
-          <label><input type="checkbox" value="remember-me">Remember me</label>
+<div class="panel panel-default col-center-block">
+  <div class="panel-heading"><span>mmanager</span></div>
+  <div class="panel-body">
+    <form class="form-horizontal" role="form" action='/login/' method="post">
+        {% csrf_token %}
+        <div class="container">
+          <div class="row myCenter">
+            <div class="col-xs-6 col-md-4">
+              <form class="form-signin">
+                <h2 class="form-signin-heading">Sign in to mmanager</h2>
+                </br>
+                <p>Username</p>
+                <input type="text" name="username" class="form-control" placeholder="" required autofocus>
+                </br>
+                <p>Password</p>
+                <input type="password" name="password" class="form-control" placeholder="" required>
+                </br>
+                <div class="checkbox">
+                  <label><input type="checkbox" value="remember-me">Remember me</label>
+                </div>
+                </br>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+                </br>
+                {% if message %}
+                    <div class="alert alert-warning">{{ message }}</div>
+                {% endif %}
+              </form>
+            </div>
+          </div>
         </div>
-        </br>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-        </br>
-        {% if message %}
-            <div class="alert alert-warning">{{ message }}</div>
-        {% endif %}
-      </form>
-    </div>
+        </form>
   </div>
 </div>
-</form>
+
 </html>

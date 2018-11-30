@@ -12,7 +12,19 @@ from ..models.action_log_models import Action_Log
 @method_decorator(auth_controller, name='dispatch')
 class Action_Log_List(View):
 	def get(self, request):
-		action_logs = Action_Log.objects.all().order_by('-log_time')
+		req_url = request.get_full_path()
+		print (req_url)
+		filter_keyword = request.GET.get('filter_keyword')
+		filter_select = request.GET.get('filter_select')
+		if filter_keyword != None:
+			if filter_select == 'User =':
+				action_logs = Action_Log.objects.filter(log_user=filter_keyword).order_by('-log_time')
+			if filter_select == 'Detail':
+				action_logs = Action_Log.objects.filter(log_detail__icontains=filter_keyword).order_by('-log_time')
+			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
+		else:
+			action_logs = Action_Log.objects.all().order_by('-log_time')
+			page_prefix = '?page='
 		paginator = Paginator(action_logs, 10)
 		page = request.GET.get('page')
 		try:
@@ -24,5 +36,10 @@ class Action_Log_List(View):
 			# If page is out of range (e.g. 9999), deliver last page of results.
 			action_log = paginator.page(paginator.num_pages)
 		action_log_count = len(action_logs)
-		return render(request, 'action_log.html', {'action_log': action_log, 'action_log_count': action_log_count})
+		return render(request, 'action_log.html', {'action_log': action_log, 'action_log_count': action_log_count, 'page_prefix': page_prefix})
 
+	def post(self, request):
+		filter_keyword = request.POST.get('filter_keyword')
+		filter_select = request.POST.get('filter_select')
+		prg_url = '/actionlog/?filter_select=' + filter_select +'&filter_keyword=' + filter_keyword
+		return redirect(prg_url)

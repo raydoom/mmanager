@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<ol class="breadcrumb">
+  <li>Home</li>
+  <li>Settings</li>
+  <li class="active">Account</li>
+</ol>
+
+<div class="page-header">
+    <h2>
+        Controlled by django
+    </h2>
+</div>
+
+
+<table class="table table-hover">
+<caption>
+<form class="form-inline" style="float: right;" action="/supervisorserver/" method="post">
+ {% csrf_token %}
+  <div class="form-group">
+    <p class="form-control-static">
+        <select class="form-control" name="filter_select">
+          <option>User Name</option>
+          <option>Email</option>
+          <option>Description</option>
+        </select>
+    </p>
+    <input type="text" class="form-control" name="filter_keyword" placeholder="">
+  </div>
+  <button type="submit" class="btn btn-default">Filter</button>
+  <div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    More Actions <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-right">
+    <li><a href="#">Edit</a></li>
+    <li><a href="#">Change Password</a></li>
+    <li><a href="#">Other</a></li>
+  </ul>
+</div>
+</form>
+</caption>
+
+    <tr>
+        <td colspan="12" data-column="0">
+            <span class="table_count">Displaying 1 items</span>
+        </td>
+    </tr>
+    <tr class="active">
+        <th><input type="checkbox"></th>
+        <th width="10%">User Name</th>
+        <th width="30%">Email</thw>
+        <th width="20%">Last Login</th>
+        <th width="25%">Description</th>
+        <th colspan="4" width="15%">Actions</th>
+    </tr>
+    <tr>
+        <td>
+            <input type="checkbox">
+        </td>
+        <td>{{ userinfo.username }}</td>
+        <td>{{ userinfo.email }}</td>
+        <td>{{ userinfo.last_login }}</td>
+        <td></td>
+        <td>
+ 
+          <!-- Split button -->
+          <div class="btn-group">
+            <a type="button" class="btn btn-default btn-sm" href="javascript:void(0);" onclick="#">Edit</a>
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li><a href="/passwordchange/">Change Password</a></li>
+            </ul>
+          </div>
+        </td>
+
+    </tr>
+    <tr>
+        <td colspan="12" data-column="0">
+            <span class="table_count">Displaying 1 items</span>
+        </td>
+    </tr>
+</table>
+
+{% endblock %}

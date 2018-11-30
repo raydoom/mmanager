@@ -24,13 +24,13 @@ urlpatterns = [
     url(r'^textviewer', directory_viewer_views.Text_Viewer.as_view(), name='text_viewer'),
     url(r'^filedownload', directory_viewer_views.File_Download.as_view(), name='file_download'),
 
-    url(r'^actionslog', action_log_views.Action_Log_List.as_view(), name='action_log_list'),
+    url(r'^actionlog', action_log_views.Action_Log_List.as_view(), name='action_log_list'),
 
     url(r'^login/', user_views.Login.as_view(), name='login'),
     url(r'^register/', user_views.Register.as_view(), name='register'),
 	url(r'^logout/', user_views.Sign_Out.as_view(), name='sign_out'),
     url(r'^passwordchange/', user_views.Change_Password.as_view(), name='change_password'),
-    url(r'^settings/', user_views.Settings.as_view(), name='settings'),
+    url(r'^account/', user_views.Account.as_view(), name='account'),
 
     url(r'', docker_server_views.Docker_Server_List.as_view(), name='default'),
     

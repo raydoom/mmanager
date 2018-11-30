@@ -53,3 +53,73 @@ function file_download(file_name, current_dir){
 
 }
 */
+
+/*window.onload = function() { 
+  $("#collapse-ops-manage").addClass("show");
+}
+
+$(document).ready(function() {
+    if(location.hash) {
+        $('a[href=' + location.hash + ']').collapse('show');
+    }
+    $(document.body).on("click", "a[data-toggle]", function(event) {
+        location.hash = this.getAttribute("href");
+    });
+});
+$(window).on('popstate', function() {
+    var anchor = location.hash || $("a[data-toggle=tab]").first().attr("href");
+    $('a[href=' + anchor + ']').collapse('show');
+});
+*/
+
+
+window.onload = function() { 
+var url = document.location.toString();
+
+if (url.search("dockerserver")>0)  {
+  $("#collapse-server-action").collapse();
+  $("#nav-dockerserver").css('background','#428bca');
+  $("#nav-dockerserver").css('color','#FFF8F1');
+}
+
+
+if (url.search("supervisorserver")>0)  {
+  $("#collapse-server-action").collapse();
+  $("#nav-supervisorserver").css('background','#428bca');
+  $("#nav-supervisorserver").css('color','#FFF8F1');
+}
+
+if (url.search("jenkinsserver")>0)  {
+  $("#collapse-ops-manage").collapse();
+  $("#nav-jenkinsserver").css('background','#428bca');
+  $("#nav-jenkinsserver").css('color','#FFF8F1');
+}
+
+if (url.search("dirviewer")>0)  {
+  $("#collapse-ops-manage").collapse();
+  $("#nav-dirviewer").css('background','#428bca');
+  $("#nav-dirviewer").css('color','#FFF8F1');
+}
+
+if (url.search("actionlog")>0)  {
+  $("#collapse-ops-manage").collapse();
+  $("#nav-actionlog").css('background','#428bca');
+  $("#nav-actionlog").css('color','#FFF8F1');
+}
+
+if (url.search("account")>0)  {
+  $("#collapse-setting").collapse();
+  $("#nav-account").css('background','#428bca');
+  $("#nav-account").css('color','#FFF8F1');
+}
+
+if (url.search("system")>0)  {
+  $("#collapse-setting").collapse();
+  $("#nav-dirviewer").css('background','#428bca');
+  $("#nav-dirviewer").css('color','#FFF8F1');
+}
+
+}
+
+
+　　

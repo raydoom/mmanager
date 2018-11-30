@@ -12,7 +12,8 @@
 {% block body %}
 
 <ol class="breadcrumb">
-  <li><a href="#">Home</a></li>
+  <li>Home</li>
+  <li>Ops Manage</li>
   <li class="active">Directory Viewer</li>
 </ol>
 
@@ -31,10 +32,10 @@
         </td>
     </tr>
     <tr class="active">
-        <th width="40%">name</th>
-        <th width="25%">size</thw>
-        <th width="25%">mtime</th>
-        <th colspan="4" width="10%">operation</th>
+        <th width="40%">Name</th>
+        <th width="20%">Size</thw>
+        <th width="25%">Mtime</th>
+        <th colspan="4" width="15%">Actions</th>
     </tr>
     {% for dir_info in dir_infos %}
     {% if dir_info.isdir == 1  %}
@@ -48,14 +49,17 @@
         <td>{{dir_info.file_size}}</td>
         <td>{{dir_info.mtime}}</td>
         <td>
-            <a style="text-decoration:underline; color:inherit;" href="/dirviewer/?dist={{current_dir}}{{dir_info.file_name}}">
-                open
-            </a>
-        </td>
-        <td>
-            <a style="text-decoration:underline; color:inherit;" href="#">
-                download
-            </a>
+
+            <!-- Split button -->
+          <div class="btn-group">
+            <a type="button" class="btn btn-default btn-sm" href="/dirviewer/?dist={{current_dir}}{{dir_info.file_name}}">Open</a>
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li><a href="/filedownload/?filepath={{current_dir}}{{dir_info.file_name}}">Download</a></li>
+            </ul>
+          </div>
         </td>
     </tr>
     {% endif %}
@@ -73,14 +77,17 @@
         <td>{{dir_info.file_size}}</td>
         <td>{{dir_info.mtime}}</td>
         <td>
-            <a style="text-decoration:underline; color:inherit;" href="/textviewer/?dist={{current_dir}}{{dir_info.file_name}}">
-                open
-            </a>
-        </td>
-        <td>
-            <a style="text-decoration:underline; color:inherit;" href="/filedownload/?filepath={{current_dir}}{{dir_info.file_name}}">
-                download
-            </a>
+
+        <!-- Split button -->
+          <div class="btn-group">
+            <a type="button" class="btn btn-default btn-sm" href="/textviewer/?dist={{current_dir}}{{dir_info.file_name}}">Open</a>
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li><a href="/filedownload/?filepath={{current_dir}}{{dir_info.file_name}}">Download</a></li>
+            </ul>
+          </div>
         </td>
     </tr>
     {% endif %}

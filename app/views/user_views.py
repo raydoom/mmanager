@@ -26,11 +26,11 @@ class Login(View):
 			return render(request, 'login.html', {"message": message})
 
 # 用户设置
-class Settings(View):
+class Account(View):
 	def get(self, request):
 		username = request.session.get('username')
 		userinfo = models.User.objects.get(username=username)
-		return render(request, 'settings.html', {'userinfo': userinfo})
+		return render(request, 'account.html', {'userinfo': userinfo})
 
 # 修改密码
 class Change_Password(View):
