@@ -50,7 +50,7 @@ class Supervisor_App_Option(View):
 		result = server.supervisor_app_opt(supervisor_app, supervisor_opt)
 		log_detail = supervisor_opt + ' <' + supervisor_app + '> on host ' + server_ip
 		log_record(request.session.get('username'), log_detail=log_detail)
-		return redirect('/supervisorserver/')
+		return HttpResponse(result)
 
 
 # 获取supervisor程序的日志

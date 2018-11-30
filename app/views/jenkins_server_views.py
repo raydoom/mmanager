@@ -51,6 +51,6 @@ class Jenkins_Job_Opt(View):
 		result = server.send_build_job(job_name)
 		log_detail = jenkins_opt + ' <' + job_name + '> on host ' + server_ip
 		log_record(request.session.get('username'), log_detail=log_detail)
-		return redirect('/jenkinsservers/')
+		return HttpResponse(result)
 
  	

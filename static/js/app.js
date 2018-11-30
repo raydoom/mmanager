@@ -1,15 +1,19 @@
-/**
+/*
  * appjs.
  */
-function reload_window() {
-    window.location.reload()
 
+function parse_result(data) {
+    if (data) {
+        toastr.success('Action Success');
+    } else {
+        toastr.error('Action Failed');
+    }
 }
 
 function container_opt(server_ip, server_port, container_id, container_name, opt) {
     $.get("/container_opt/?server_ip=" + server_ip + "&server_port=" + server_port + "&container_id=" + container_id + '&container_name=' +  container_name + "&container_opt=" + opt, 
-        function () {
-        reload_window()
+        function (data, status) {
+        parse_result(data)
                     }
     );
 }
@@ -17,7 +21,7 @@ function container_opt(server_ip, server_port, container_id, container_name, opt
 function supervisor_app_opt(server_ip, server_port, supervisor_app, opt) {
     $.get("/supervisor_app_opt/?server_ip=" + server_ip + "&server_port=" + server_port + "&supervisor_app=" + supervisor_app + "&supervisor_opt=" + opt, 
         function (data,status) {
-        reload_window()
+        parse_result(data)
                     }
     );
 }
@@ -33,8 +37,8 @@ function tail_supervisor_app_log(server_ip, server_port, supervisor_app) {
 
 function jenkins_job_opt(server_ip, server_port, job_name, opt) {
     $.get("/jenkins_job_opt/?server_ip=" + server_ip + "&server_port=" + server_port + "&job_name=" + job_name + "&jenkins_opt=" + opt, 
-        function () {
-        reload_window()
+        function (data,status) {
+        parse_result(data)
                     }
     );
 }

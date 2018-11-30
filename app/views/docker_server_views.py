@@ -56,7 +56,7 @@ class Container_Option(View):
 		result = server.container_opt(container_id, container_opt)
 		log_detail = container_opt + ' <' + container_name + '> on host ' + server_ip
 		log_record(request.session.get('username'), log_detail=log_detail)
-		return redirect('/dockerservers/')
+		return HttpResponse(result)
 
 # 获取容器日志
 @method_decorator(auth_controller, name='dispatch')
