@@ -1,15 +1,18 @@
 /*
  * appjs.
  */
-
+ 
+/*操作返回状态接收和操作结果提示*/
 function parse_result(data) {
     if (data) {
         toastr.success('Action Success');
+        console.log(data)
     } else {
         toastr.error('Action Failed');
     }
 }
 
+/*重启容器*/
 function container_opt(server_ip, server_port, container_id, container_name, opt) {
     $.get("/container_opt/?server_ip=" + server_ip + "&server_port=" + server_port + "&container_id=" + container_id + '&container_name=' +  container_name + "&container_opt=" + opt, 
         function (data, status) {
@@ -18,6 +21,7 @@ function container_opt(server_ip, server_port, container_id, container_name, opt
     );
 }
 
+/*重启supervisor管理的进程*/
 function supervisor_app_opt(server_ip, server_port, supervisor_app, opt) {
     $.get("/supervisor_app_opt/?server_ip=" + server_ip + "&server_port=" + server_port + "&supervisor_app=" + supervisor_app + "&supervisor_opt=" + opt, 
         function (data,status) {
@@ -35,6 +39,7 @@ function tail_supervisor_app_log(server_ip, server_port, supervisor_app) {
     window.open("/tail_supervisor_app_log/?server_ip=" + server_ip + "&server_port=" + server_port + "&supervisor_app=" + supervisor_app)
 }*/
 
+/*触发henkins任务构建*/
 function jenkins_job_opt(server_ip, server_port, job_name, opt) {
     $.get("/jenkins_job_opt/?server_ip=" + server_ip + "&server_port=" + server_port + "&job_name=" + job_name + "&jenkins_opt=" + opt, 
         function (data,status) {
@@ -77,52 +82,18 @@ $(window).on('popstate', function() {
 */
 
 
+
+/*控制左侧sidebar展开和标签选中状态*/
 window.onload = function() { 
 var url = document.location.toString();
+var pathname = window.location.pathname;
+var showItem =pathname.substring(1,pathname.length-1);
+var checkItem = "#nav-"+showItem;
 
-if (url.search("dockerserver")>0)  {
-  $("#collapse-server-action").collapse();
-  $("#nav-dockerserver").css('background','#428bca');
-  $("#nav-dockerserver").css('color','#FFF8F1');
-}
-
-
-if (url.search("supervisorserver")>0)  {
-  $("#collapse-server-action").collapse();
-  $("#nav-supervisorserver").css('background','#428bca');
-  $("#nav-supervisorserver").css('color','#FFF8F1');
-}
-
-if (url.search("jenkinsserver")>0)  {
-  $("#collapse-ops-manage").collapse();
-  $("#nav-jenkinsserver").css('background','#428bca');
-  $("#nav-jenkinsserver").css('color','#FFF8F1');
-}
-
-if (url.search("dirviewer")>0)  {
-  $("#collapse-ops-manage").collapse();
-  $("#nav-dirviewer").css('background','#428bca');
-  $("#nav-dirviewer").css('color','#FFF8F1');
-}
-
-if (url.search("actionlog")>0)  {
-  $("#collapse-ops-manage").collapse();
-  $("#nav-actionlog").css('background','#428bca');
-  $("#nav-actionlog").css('color','#FFF8F1');
-}
-
-if (url.search("account")>0)  {
-  $("#collapse-setting").collapse();
-  $("#nav-account").css('background','#428bca');
-  $("#nav-account").css('color','#FFF8F1');
-}
-
-if (url.search("system")>0)  {
-  $("#collapse-setting").collapse();
-  $("#nav-dirviewer").css('background','#428bca');
-  $("#nav-dirviewer").css('color','#FFF8F1');
-}
-
+  $(checkItem).parents("ul").collapse();
+  $(checkItem).css('background','#428bca');
+  $(checkItem).css('color','#FFF8F1');
+ 
 }
 
 
