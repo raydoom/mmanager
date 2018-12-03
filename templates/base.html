@@ -59,13 +59,13 @@
                         <a href="#" class="fa fa-user dropdown-toggle" id="moret" data-toggle="dropdown" role="button" aria-hapopup="true" aria-expanded="false">
                           {% if request.session.islogin %}
                           {{ request.session.username }}
-                          {% else %}s
+                          {% else %}
                           Sign in
                           {% endif %}
                           <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                          <li><a a class="fa fa-cog" href="/settings/">&nbsp; Settings</a></li>
+                          <li><a a class="fa fa-cog" href="/account/">&nbsp; Settings</a></li>
                           <li role="separator" class="divider"></li>
                           <li><a class="fa fa-sign-out" href="/logout/">&nbsp; Sign out</a></li>
                         </ul>

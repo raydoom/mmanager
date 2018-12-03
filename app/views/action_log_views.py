@@ -13,7 +13,6 @@ from ..models.action_log_models import Action_Log
 class Action_Log_List(View):
 	def get(self, request):
 		req_url = request.get_full_path()
-		print (req_url)
 		filter_keyword = request.GET.get('filter_keyword')
 		filter_select = request.GET.get('filter_select')
 		if filter_keyword != None:

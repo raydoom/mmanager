@@ -26,6 +26,7 @@ class Login(View):
 			return render(request, 'login.html', {"message": message})
 
 # 用户设置
+@method_decorator(auth_controller, name='dispatch')
 class Account(View):
 	def get(self, request):
 		username = request.session.get('username')
@@ -33,6 +34,7 @@ class Account(View):
 		return render(request, 'account.html', {'userinfo': userinfo})
 
 # 修改密码
+@method_decorator(auth_controller, name='dispatch')
 class Change_Password(View):
 	def get(self, request):
 		return render(request, 'password_change_form.html')

@@ -9,8 +9,9 @@ import docker, logging, os, configparser, json
 from ..models.docker_server_models import  Docker_Server
 from ..models.supervisor_server_models import  Supervisor_Server
 from ..models.jenkins_server_models import  Jenkins_Server
-
-
+from ..utils.common_func import auth_controller, log_record
+# 所有服务器列表
+@method_decorator(auth_controller, name='dispatch')
 class Server_List(View):
 	def get(self, request):
 		filter_keyword = request.GET.get('filter_keyword')

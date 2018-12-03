@@ -1,18 +1,8 @@
 {% extends "base.html" %}
 
-{% block sidebar %}
-  <a class="list-group-item" href="/dockerserver/">Docker Server</a>
-  <a class="list-group-item" href="/supervisorserver/">Supervisor Server</a>
-  <a class="list-group-item active" href="/jenkinsserver/">Jenkins Server</a>
-  <a class="list-group-item" href="/dirviewer/">Directory Viewer</a>
-  <a class="list-group-item" href="/actionslog/">Action Log</a>
-  <a class="list-group-item" href="/settings/">Settings</a>
-{% endblock %}
-
 {% block body %}
 
 <ol class="breadcrumb">
-  <li>Home</li>
   <li>Ops Manage</li>
   <li class="active">Jenkins Server</li>
 </ol>
@@ -37,7 +27,7 @@
     </p>
     <input type="text" class="form-control" name="filter_keyword" placeholder="">
   </div>
-  <button type="submit" class="btn btn-default">Filter</button>
+  <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> Filter</button>
   <div class="btn-group">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     More Actions <span class="caret"></span>

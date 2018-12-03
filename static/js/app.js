@@ -12,7 +12,7 @@ function parse_result(data) {
     }
 }
 
-/*重启容器*/
+/*重启容器按钮点击事件*/
 function container_opt(server_ip, server_port, container_id, container_name, opt) {
     $.get("/container_opt/?server_ip=" + server_ip + "&server_port=" + server_port + "&container_id=" + container_id + '&container_name=' +  container_name + "&container_opt=" + opt, 
         function (data, status) {
@@ -21,7 +21,7 @@ function container_opt(server_ip, server_port, container_id, container_name, opt
     );
 }
 
-/*重启supervisor管理的进程*/
+/*重启supervisor管理的进程按钮点击事件*/
 function supervisor_app_opt(server_ip, server_port, supervisor_app, opt) {
     $.get("/supervisor_app_opt/?server_ip=" + server_ip + "&server_port=" + server_port + "&supervisor_app=" + supervisor_app + "&supervisor_opt=" + opt, 
         function (data,status) {
@@ -39,7 +39,7 @@ function tail_supervisor_app_log(server_ip, server_port, supervisor_app) {
     window.open("/tail_supervisor_app_log/?server_ip=" + server_ip + "&server_port=" + server_port + "&supervisor_app=" + supervisor_app)
 }*/
 
-/*触发henkins任务构建*/
+/*触发henkins任务构建按钮点击事件*/
 function jenkins_job_opt(server_ip, server_port, job_name, opt) {
     $.get("/jenkins_job_opt/?server_ip=" + server_ip + "&server_port=" + server_port + "&job_name=" + job_name + "&jenkins_opt=" + opt, 
         function (data,status) {

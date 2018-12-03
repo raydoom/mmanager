@@ -3,7 +3,6 @@
 {% block body %}
 
 <ol class="breadcrumb">
-  <li>Home</li>
   <li>Setting</li>
   <li class="active">Server List</li>
 </ol>
@@ -29,7 +28,8 @@
     </p>
     <input type="text" class="form-control" name="filter_keyword" placeholder="">
   </div>
-  <button type="submit" class="btn btn-default">Filter</button>
+  <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> Filter</button>
+  <button class="btn btn-default"><a class="fa fa-plus" href="/addserver/"> Add Server</a></button>
   <div class="btn-group">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     More Actions <span class="caret"></span>
