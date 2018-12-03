@@ -2,7 +2,9 @@ from django.conf.urls import url
 from django.contrib import admin
 from app.views import ( action_log_views, directory_viewer_views, 
                         docker_server_views, jenkins_server_views, 
-                        supervisor_server_views, user_views
+                        supervisor_server_views, user_views,
+                        server_list_views
+
                       )
 
 urlpatterns = [
@@ -31,6 +33,9 @@ urlpatterns = [
 	url(r'^logout/', user_views.Sign_Out.as_view(), name='sign_out'),
     url(r'^passwordchange/', user_views.Change_Password.as_view(), name='change_password'),
     url(r'^account/', user_views.Account.as_view(), name='account'),
+    url(r'^serverlist/', server_list_views.Server_List.as_view(), name='server_list'),
+
+
 
     url(r'', docker_server_views.Docker_Server_List.as_view(), name='default'),
     
