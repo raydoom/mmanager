@@ -31,7 +31,7 @@ urlpatterns = [
     url(r'^login/', user_views.Login.as_view(), name='login'),
     url(r'^register/', user_views.Register.as_view(), name='register'),
 	url(r'^logout/', user_views.Sign_Out.as_view(), name='sign_out'),
-    url(r'^passwordchange/', user_views.Change_Password.as_view(), name='change_password'),
+    url(r'^changepassword/', user_views.Change_Password.as_view(), name='change_password'),
     url(r'^account/', user_views.Account.as_view(), name='account'),
     url(r'^serverlist/', server_list_views.Server_List.as_view(), name='server_list'),
 

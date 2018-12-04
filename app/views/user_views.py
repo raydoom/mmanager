@@ -37,7 +37,7 @@ class Account(View):
 @method_decorator(auth_controller, name='dispatch')
 class Change_Password(View):
 	def get(self, request):
-		return render(request, 'password_change_form.html')
+		return render(request, 'change_password.html')
 
 	def post(self, request):
 		username = request.session.get('username')
@@ -46,14 +46,15 @@ class Change_Password(View):
 		confirm_new_password = request.POST.get('confirm_new_password')
 		if new_password != confirm_new_password:
 			message = 'confirm_new_password is not match'
-			return render(request, 'password_change_form.html', {"message": message})
+			return render(request, 'change_password.html', {"message": message})
 		if authenticate(username=username, password=old_password):
 			models.User.objects.filter(username=username).update(password=make_password(new_password, None, 'pbkdf2_sha256'))
-			return render(request, 'password_change_done.html')
+			message = 'Password Successfully Changed'
+			return render(request, 'change_password.html', {"message": message})
 		else:
 			message = 'Old password is wrong'
-			return render(request, 'password_change_form.html', {"message": message})
-		return render(request, 'password_change_form.html')
+			return render(request, 'change_password.html', {"message": message})
+		return render(request, 'change_password.html')
 
 
 # 用户退出
