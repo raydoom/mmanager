@@ -34,7 +34,12 @@ urlpatterns = [
     url(r'^changepassword/', user_views.Change_Password.as_view(), name='change_password'),
     url(r'^account/', user_views.Account.as_view(), name='account'),
     url(r'^serverlist/', server_list_views.Server_List.as_view(), name='server_list'),
+    url(r'^users/', user_views.Users.as_view(), name='users'),
+    url(r'^createuser/', user_views.Create_User.as_view(), name='create_user'),
+    url(r'^deleteuser/', user_views.Delete_User.as_view(), name='delete_user'),
 
+    url(r'^addserver/', server_list_views.Add_Server.as_view(), name='add_server'),
+    url(r'^deleteserver/', server_list_views.Delete_Server.as_view(), name='delete_server'),
 
 
     url(r'', docker_server_views.Docker_Server_List.as_view(), name='default'),

@@ -17,18 +17,21 @@ class Jenkins_Server_List(View):
 		servers = Jenkins_Server.objects.all().order_by('ip')
 		job_list = []
 		for server in servers:
-			jobs = server.get_all_jobs_list()
-			if filter_keyword != None:
-				for job in jobs:
-					if filter_select == 'Status =' and filter_keyword.lower() == job['color'].lower():
-							job_list.append(job)
-					if filter_select == 'App' and filter_keyword in job['name']:
-							job_list.append(job)		
-					if filter_select == 'Location' and filter_keyword in job['host_ip']:
-							job_list.append(job)
-			else:
-				for job in jobs:
-					job_list.append(job)
+			try:
+				jobs = server.get_all_jobs_list()
+				if filter_keyword != None:
+					for job in jobs:
+						if filter_select == 'Status =' and filter_keyword.lower() == job['color'].lower():
+								job_list.append(job)
+						if filter_select == 'App' and filter_keyword in job['name']:
+								job_list.append(job)		
+						if filter_select == 'Location' and filter_keyword in job['host_ip']:
+								job_list.append(job)						
+				else:
+					for job in jobs:
+						job_list.append(job)
+			except Exception as e:
+				logging.error(e)
 		job_count = len(job_list)
 		return render(request, 'jenkins_server.html', {'job_list': job_list, 'job_count': job_count})
 

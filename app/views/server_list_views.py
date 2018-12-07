@@ -10,6 +10,7 @@ from ..models.docker_server_models import  Docker_Server
 from ..models.supervisor_server_models import  Supervisor_Server
 from ..models.jenkins_server_models import  Jenkins_Server
 from ..utils.common_func import auth_controller, log_record
+
 # 所有服务器列表
 @method_decorator(auth_controller, name='dispatch')
 class Server_List(View):
@@ -20,12 +21,27 @@ class Server_List(View):
 		server_list_filter = []
 		for server in Docker_Server.objects.all().order_by('ip'):
 			server.type = 'docker'
+			result = server.get_all_container_info()
+			if result == None:
+				server.status = 'Disconnected'
+			else:
+				server.status = 'Connected'
 			server_list.append(server)
 		for server in Supervisor_Server.objects.all().order_by('ip'):
 			server.type = 'supervisor'
+			result = server.get_all_process_info()
+			if result == None:
+				server.status = 'Disconnected'
+			else:
+				server.status = 'Connected'
 			server_list.append(server)
 		for server in Jenkins_Server.objects.all().order_by('ip'):
 			server.type = 'jenkins'
+			result = server.get_all_jobs_list()
+			if result == None:
+				server.status = 'Disconnected'
+			else:
+				server.status = 'Connected'
 			server_list.append(server)
 		if filter_keyword != None:
 			for server in server_list:
@@ -47,3 +63,41 @@ class Server_List(View):
 		filter_select = request.POST.get('filter_select')
 		prg_url = '/serverlist/?filter_select=' + filter_select +'&filter_keyword=' + filter_keyword
 		return redirect(prg_url)
+
+# 添加服务器
+@method_decorator(auth_controller, name='dispatch')
+class Add_Server(View):
+	def get(self, request):
+		return render(request, 'add_server.html')
+
+	def post(self, request):
+		hostname = request.POST.get('hostname')
+		server_type = request.POST.get('server_type')
+		ip = request.POST.get('ip')
+		port = request.POST.get('port')
+		apiversion = request.POST.get('apiversion')
+		username = request.POST.get('username')
+		password = request.POST.get('password')
+		description = request.POST.get('description')
+		if server_type == 'Docker':
+			Docker_Server.objects.create(hostname=hostname, ip=ip, port=int(port), apiversion=apiversion, username=username, password=password, description=description)
+		if server_type == 'Supervisor':
+			Supervisor_Server.objects.create(hostname=hostname, ip=ip, port=int(port), apiversion=apiversion, username=username, password=password, description=description)
+		if server_type == 'Jenkins':
+			Jenkins_Server.objects.create(hostname=hostname, ip=ip, port=int(port), apiversion=apiversion, username=username, password=password, description=description)
+		return redirect('/serverlist/')
+
+# 删除服务器
+@method_decorator(auth_controller, name='dispatch')
+class Delete_Server(View):
+	def get(self, request):
+		server_type = request.GET.get('servertype')
+		ip = request.GET.get('ip')
+		port = request.GET.get('port')
+		if server_type == 'docker':
+			Docker_Server.objects.filter(ip=ip, port=int(port)).delete()
+		if server_type == 'supervisor':
+			Supervisor_Server.objects.filter(ip=ip, port=int(port)).delete()
+		if server_type == 'jenkins':
+			Jenkins_Server.objects.filter(ip=ip, port=int(port)).delete()
+		return redirect('/serverlist/')

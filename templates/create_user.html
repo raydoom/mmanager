@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<ol class="breadcrumb">
+  <li>Admin</li>
+  <li class="active">Create User</li>
+</ol>
+
+<div class="page-header">
+  <h2>Controlled by django</h2>
+</div>
+
+<div class="static_page">
+  <h3  class="modal-header">Create User</h3>
+  <div class="modal-body">
+    <form class="form-horizontal" role="form" action='/createuser/' method="post">
+      {% csrf_token %}
+        <div class="row">
+          <div class="col-sm-6 col-md-5">
+              <p><strong>User Name </strong><span class="fa fa-asterisk"></span></p>
+              <input type="text" name="username" class="form-control" placeholder="" required autofocus>
+              </br>
+              <p><strong>Email</strong></p>
+              <input type="text" name="email" class="form-control" placeholder="" autofocus>
+              </br>
+              <p><strong>Is Superuser </strong><span class="fa fa-asterisk"></span></p>
+              <select class="form-control" name="is_superuser">
+                <option>True</option>
+                <option  selected="selected">False</option>
+              </select>
+              </br>
+              <p><strong>Password </strong><span class="fa fa-asterisk"></span></p>
+              <input type="password" name="password" class="form-control" placeholder="" required>
+              </br>
+              <p><strong>Confirm Password </strong><span class="fa fa-asterisk"></span></p>
+              <input type="password" name="confirm_password" class="form-control" placeholder="" required>
+              </br>
+              <p><strong>Description</strong></p>
+              <input type="text" name="description" class="form-control" placeholder="">
+              </br>
+              {% if message %}
+                  <div class="alert alert-warning">{{ message }}</div>
+              {% endif %}
+              </br>
+          </div>
+          <div class="col-sm-6">
+            <h3>Description:</h3>
+            <p>Create a new user and set related properties</p>
+          </div>
+        </div>
+      <div class="modal-footer"><button class="btn btn-primary" type="submit">Submit</button></div>
+  </form>
+</div>
+</div>
+{% endblock %}

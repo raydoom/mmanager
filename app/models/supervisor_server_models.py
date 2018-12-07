@@ -13,8 +13,10 @@ class Supervisor_Server(models.Model):
 	hostname = models.CharField(max_length=50, verbose_name=u"主机名", unique=True)
 	ip = models.GenericIPAddressField(u"主机IP", max_length=15)
 	port = models.IntegerField(u'supervisorRPC端口')
+	apiversion = models.CharField(max_length=50, verbose_name=u"API版本", default='1.21', blank=True)
 	username = models.CharField(max_length=50, verbose_name=u"supervisor用户名", default='', blank=True)
 	password = models.CharField(max_length=50, verbose_name=u"supervisor密码", default='', blank=True)
+	description = models.CharField(max_length=128, verbose_name=u"描述", default='', blank=True)
 
 	def __str__(self):
 		return self.hostname
@@ -35,8 +37,7 @@ class Supervisor_Server(models.Model):
 			return process_infos
 		except Exception as e:
 			logging.error(e)
-			process_infos = None
-			return process_infos 
+			return None 
 
 	# 启动指定supervisor管理的进程
 	def start_process(self, supervisor_app):

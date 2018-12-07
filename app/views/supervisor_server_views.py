@@ -17,18 +17,21 @@ class Supervisor_Server_List(View):
 		servers = Supervisor_Server.objects.all().order_by('ip')
 		app_list = []
 		for server in servers:
-			apps = server.get_all_process_info()
-			if filter_keyword != None:
-				for app in apps:
-					if filter_select == 'Status =' and filter_keyword.lower() == app['statename'].lower():
-							app_list.append(app)
-					if filter_select == 'App' and filter_keyword in app['name']:
-							app_list.append(app)		
-					if filter_select == 'Location' and filter_keyword in app['host_ip']:
-							app_list.append(app)
-			else:
-				for app in apps:
-					app_list.append(app)
+			try:
+				apps = server.get_all_process_info()
+				if filter_keyword != None:
+					for app in apps:
+						if filter_select == 'Status =' and filter_keyword.lower() == app['statename'].lower():
+								app_list.append(app)
+						if filter_select == 'App' and filter_keyword in app['name']:
+								app_list.append(app)		
+						if filter_select == 'Location' and filter_keyword in app['host_ip']:
+								app_list.append(app)
+				else:
+					for app in apps:
+						app_list.append(app)
+			except Exception as e:
+				logging.error(e)		
 		app_count = len(app_list)
 		return render(request, 'supervisor_server.html', {'app_list': app_list, 'app_count': app_count})
 

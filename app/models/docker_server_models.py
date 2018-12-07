@@ -7,7 +7,6 @@ import xmlrpc.client, docker, logging, time
 
 from ..utils.common_func import get_time_stamp
 
-# Create your models here.
 
 # docker服务器模型
 class Docker_Server(models.Model):
@@ -17,6 +16,7 @@ class Docker_Server(models.Model):
 	apiversion = models.CharField(max_length=50, verbose_name=u"API版本", default='1.21', blank=True)
 	username = models.CharField(max_length=50, verbose_name=u"docker用户名", default='', blank=True)
 	password = models.CharField(max_length=50, verbose_name=u"docker密码", default='', blank=True)
+	description = models.CharField(max_length=128, verbose_name=u"描述", default='', blank=True)
 	def __str__(self):
 		return self.hostname
 

@@ -13,8 +13,10 @@ class Jenkins_Server(models.Model):
 	hostname = models.CharField(max_length=50, verbose_name=u"主机名", unique=True)
 	ip = models.GenericIPAddressField(u"主机IP", max_length=15)
 	port = models.IntegerField(u'jenkins端口')
+	apiversion = models.CharField(max_length=50, verbose_name=u"API版本", default='1.21', blank=True)
 	username = models.CharField(max_length=50, verbose_name=u"jenkins用户名", default='', blank=True)
 	password = models.CharField(max_length=50, verbose_name=u"jenkins密码", default='', blank=True)
+	description = models.CharField(max_length=128, verbose_name=u"描述", default='', blank=True)
 
 	def __str__(self):
 		return self.hostname
@@ -25,12 +27,16 @@ class Jenkins_Server(models.Model):
 
 	# 获取jenkins的jobs列表
 	def get_all_jobs_list(self):
-		jenkins_server = self.get_jenkins_server()
-		all_jobs_list = jenkins_server.get_all_jobs()
-		for job in all_jobs_list:
-			job['host_ip'] = self.ip
-			job['host_port'] = self.port
-		return (all_jobs_list)
+		try:
+			jenkins_server = self.get_jenkins_server()
+			all_jobs_list = jenkins_server.get_all_jobs()
+			for job in all_jobs_list:
+				job['host_ip'] = self.ip
+				job['host_port'] = self.port
+			return (all_jobs_list)
+		except Exception as e:
+			logging.error(e)
+			return None
 
 	# 触发job构建
 	def send_build_job(self, job_name):

@@ -48,9 +48,10 @@
     </tr>
     <tr class="active">
         <th><input type="checkbox"></th>
-        <th width="10%">Host Name</th>
-        <th width="30%">IP</thw>
-        <th width="20%">Port</th>
+        <th width="15%">Status</th>
+        <th width="15%">Host Name</th>
+        <th width="15%">IP</thw>
+        <th width="15%">Port</th>
         <th width="25%">Type</th>
         <th colspan="4" width="15%">Actions</th>
     </tr>
@@ -58,6 +59,9 @@
     <tr>
         <td>
             <input type="checkbox">
+        </td>
+        <td>
+            {{server.status}}
         </td>
         <td>
             {{server.hostname}}
@@ -74,8 +78,7 @@
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-            
-              <li><a href="/tail_container_log/?server_ip={{container.host_ip}}&server_port={{container.host_port}}&container_id={{container.id}}" target="_blank">Delete</a></li>
+              <li><a style="color: red;" href="/deleteserver/?ip={{server.ip}}&port={{server.port}}&servertype={{server.type}}">Delete Server</a></li>
             </ul>
           </div>
 

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<ol class="breadcrumb">
+  <li>Admin</li>
+  <li class="active">Add Server</li>
+</ol>
+
+<div class="page-header">
+  <h2>Controlled by django</h2>
+</div>
+
+<div class="static_page">
+  <h3  class="modal-header">Add Server</h3>
+  <div class="modal-body">
+    <form class="form-horizontal" role="form" action='/addserver/' method="post">
+      {% csrf_token %}
+        <div class="row">
+          <div class="col-sm-6 col-md-5">
+              <p><strong>Host Name </strong><span class="fa fa-asterisk"></span></p>
+              <input type="text" name="hostname" class="form-control" placeholder="" required autofocus>
+              </br>
+              <p><strong>Server Type</strong><span class="fa fa-asterisk"></span></p>
+              <select class="form-control" name="server_type">
+                <option>Docker</option>
+                <option>Supervisor</option>
+                <option>Jenkins</option>
+              </select>
+              </br>
+              <p><strong>Ip Addr</strong> </strong><span class="fa fa-asterisk"></span></p>
+              <input type="text" name="ip" class="form-control" placeholder="" required autofocus>
+              </br>
+              <p><strong>Port</strong> </strong><span class="fa fa-asterisk"></span></p>
+              <input type="text" name="port" class="form-control" placeholder="" required autofocus>
+              </br>
+              <p><strong>Api Version</strong></p>
+              <input type="text" name="apiversion" class="form-control" placeholder="" autofocus>
+              </br>
+              <p><strong>User Name </strong></p>
+              <input type="text" name="username" class="form-control" placeholder="" autofocus>
+              </br>
+              <p><strong>Password </strong></span></p>
+              <input type="password" name="password" class="form-control" placeholder="">
+              </br>
+              </br>
+              <p><strong>Description</strong></p>
+              <input type="text" name="description" class="form-control" placeholder="">
+              </br>
+              {% if message %}
+                  <div class="alert alert-warning">{{ message }}</div>
+              {% endif %}
+              </br>
+          </div>
+          <div class="col-sm-6">
+            <h3>Description:</h3>
+            <p>Add new server and set related properties</p>
+          </div>
+        </div>
+      <div class="modal-footer"><button class="btn btn-primary" type="submit">Submit</button></div>
+  </form>
+</div>
+</div>
+{% endblock %}

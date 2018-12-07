@@ -21,18 +21,22 @@ class Docker_Server_List(View):
 		servers = Docker_Server.objects.all().order_by('ip')
 		container_list = []
 		for server in servers:
-			containers = server.get_all_container_info()
-			if filter_keyword != None:
-				for container in containers:
-					if filter_select == 'Status =' and filter_keyword.lower() == container.status.lower():
-							container_list.append(container)
-					if filter_select == 'App' and filter_keyword in container.name:
-							container_list.append(container)		
-					if filter_select == 'Location' and filter_keyword in container.host_ip:
-							container_list.append(container)
-			else:
-				for container in containers:
-					container_list.append(container)
+			try:
+				containers = server.get_all_container_info()
+				if filter_keyword != None:
+				
+					for container in containers:
+						if filter_select == 'Status =' and filter_keyword.lower() == container.status.lower():
+								container_list.append(container)
+						if filter_select == 'App' and filter_keyword in container.name:
+								container_list.append(container)		
+						if filter_select == 'Location' and filter_keyword in container.host_ip:
+								container_list.append(container)
+				else:
+					for container in containers:
+						container_list.append(container)
+			except Exception as e:
+				logging.error(e)
 		container_count = len(container_list)
 		return render(request, 'docker_server.html', {'container_list': container_list, 'container_count': container_count})
 
