@@ -49,10 +49,11 @@
     <tr class="active">
         <th><input type="checkbox"></th>
         <th width="15%">Status</th>
-        <th width="15%">Host Name</th>
+        <th width="10%">Host Name</th>
         <th width="15%">IP</thw>
-        <th width="15%">Port</th>
-        <th width="25%">Type</th>
+        <th width="10%">Port</th>
+        <th width="15%">Type</th>
+        <th width="20%">Description</th>
         <th colspan="4" width="15%">Actions</th>
     </tr>
     {% for server in server_list %}
@@ -69,6 +70,7 @@
         <td>{{server.ip}}</td>
         <td>{{server.port}}</td>
         <td>{{server.type}}</td>
+        <td>{{server.description}}</td>
         <td>
           
           <!-- Split button -->

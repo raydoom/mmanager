@@ -26,6 +26,11 @@ class Server_List(View):
 				server.status = 'Disconnected'
 			else:
 				server.status = 'Connected'
+				result_running = 0
+				for i in result:
+					if i.status == 'running':
+						result_running +=1
+				server.description = str(len(result)) + ' containers, ' + str(result_running) + ' running'
 			server_list.append(server)
 		for server in Supervisor_Server.objects.all().order_by('ip'):
 			server.type = 'supervisor'
@@ -34,6 +39,11 @@ class Server_List(View):
 				server.status = 'Disconnected'
 			else:
 				server.status = 'Connected'
+				result_running = 0
+				for i in result:
+					if i['statename'] == 'RUNNING':
+						result_running +=1
+				server.description = str(len(result)) + ' apps, ' + str(result_running) + ' running'
 			server_list.append(server)
 		for server in Jenkins_Server.objects.all().order_by('ip'):
 			server.type = 'jenkins'
@@ -42,6 +52,11 @@ class Server_List(View):
 				server.status = 'Disconnected'
 			else:
 				server.status = 'Connected'
+				result_blue = 0
+				for i in result:
+					if i['color'] == 'blue':
+						result_blue +=1
+				server.description = str(len(result)) + ' jobs, ' + str(result_blue) + ' blue'
 			server_list.append(server)
 		if filter_keyword != None:
 			for server in server_list:
