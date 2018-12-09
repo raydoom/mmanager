@@ -92,16 +92,16 @@ class Users(View):
 		filter_select = request.GET.get('filter_select')
 		if filter_keyword != None:
 			if filter_select == 'User Name =':
-				user_lists = User_Info.objects.filter(username=filter_keyword)
+				user_lists = User_Info.objects.filter(username=filter_keyword).order_by("username")
 			if filter_select == 'Email':
-				user_lists = User_Info.objects.filter(email__icontains=filter_keyword)
+				user_lists = User_Info.objects.filter(email__icontains=filter_keyword).order_by("username")
 			if filter_select == 'Superuser':
-				user_lists = User_Info.objects.filter(is_superuser=filter_keyword)
+				user_lists = User_Info.objects.filter(is_superuser=filter_keyword).order_by("username")
 			if filter_select == 'Description':
-				user_lists = User_Info.objects.filter(description__icontains=filter_keyword)
+				user_lists = User_Info.objects.filter(description__icontains=filter_keyword).order_by("username")
 			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
 		else:
-			user_lists = User_Info.objects.all()
+			user_lists = User_Info.objects.all().order_by("username")
 			page_prefix = '?page='
 		paginator = Paginator(user_lists, 10)
 		page = request.GET.get('page')
