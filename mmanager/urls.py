@@ -4,7 +4,6 @@ from app.views import ( action_log_views, directory_viewer_views,
                         docker_server_views, jenkins_server_views, 
                         supervisor_server_views, user_views,
                         server_list_views
-
                       )
 
 urlpatterns = [
@@ -22,7 +21,7 @@ urlpatterns = [
     url(r'^jenkins_job_opt', jenkins_server_views.Jenkins_Job_Opt.as_view(), name='jenkins_job_opt'),
 
 
-    url(r'^dirviewer', directory_viewer_views.Directory_Viewer.as_view(), name='directory_viewer'),
+    url(r'^directoryviewer', directory_viewer_views.Directory_Viewer.as_view(), name='directory_viewer'),
     url(r'^textviewer', directory_viewer_views.Text_Viewer.as_view(), name='text_viewer'),
     url(r'^filedownload', directory_viewer_views.File_Download.as_view(), name='file_download'),
 
