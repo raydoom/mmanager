@@ -84,14 +84,29 @@ class Supervisor_Server(models.Model):
 			self.restart_process(supervisor_app)
 			return True
 
+	# # supervisor管理的进程日志获取
+	# def tail_supervisor_app_log(self, supervisor_app, format_func):
+	# 	offset = 0
+	# 	func = self.get_rpc_proxy().supervisor.tailProcessLog
+	# 	secs = 0
+	# 	while secs < 60 :
+	# 		log, offset, ret = func(supervisor_app, offset, 2000)
+	# 		time.sleep(1)
+	# 		secs += 1
+	# 		for log_line in log.split('\n'):
+	# 			yield format_func(log_line)
+
 	# supervisor管理的进程日志获取
-	def tail_supervisor_app_log(self, supervisor_app, format_func):
+	def tail_supervisor_app_log(self, supervisor_app):
 		offset = 0
-		func = self.get_rpc_proxy().supervisor.tailProcessLog
-		secs = 0
-		while secs < 60 :
-			log, offset, ret = func(supervisor_app, offset, 2000)
-			time.sleep(1)
-			secs += 1
-			for log_line in log.split('\n'):
-				yield format_func(log_line)
+		func = self.get_rpc_proxy().supervisor.tailProcessStdoutLog
+		while True:
+			log, offset, ret = func(supervisor_app, offset, 1000)
+			time.sleep(0.5)
+			if log != '':
+				log = get_time_stamp()+log 
+				print (log)
+				yield (log)
+			# for log in log.split('\n'):
+			# 	yield (log)
+			# 	print (log)

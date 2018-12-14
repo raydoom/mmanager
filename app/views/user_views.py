@@ -7,7 +7,7 @@ from django.contrib.auth.hashers import make_password, check_password
 import logging, os, configparser, json
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from ..models.user_info_models import User_Info, Role, Permission
+from ..models.user_info_models import User_Info
 from ..utils.common_func import auth_controller, log_record
 
 

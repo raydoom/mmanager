@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<ol class="breadcrumb">
+  <li>Docker Server</li>
+  <li class="active">Container Console</li>
+</ol>
+
+<div class="page-header">
+  <h2>Container Console</h2>
+</div>
+
+    <script type="text/javascript">//<![CDATA[
+    $(function () {
+        window.onload=function () {
+            if (window.s) {
+                window.s.close()
+            }
+            /*创建socket连接*/
+            var socket = new WebSocket("ws://{{wsurl}}");
+            socket.onopen = function () {
+                console.log('WebSocket open');//成功连接上Websocket
+            };
+            socket.onmessage = function (e) {
+                console.log('message: ' + e.data);//打印出服务端返回过来的数据
+                $('#shellcontainer').append('<p style="word-break: break-all;">' + e.data + '</p>');
+                $('#shellcontainer').append('[root@localhost]# <input type="text" id="message" value="ls" autofocus="autofocus" />');
+                var now = new Date(); //实现自动滚动到底部
+                var div = document.getElementById('shellcontainer'); //实现自动滚动到底部
+                div.scrollTop = div.scrollHeight; //实现自动滚动到底部
+                
+
+            };
+            // Call onopen directly if socket is already open
+            if (socket.readyState == WebSocket.OPEN) socket.onopen();
+            window.s = socket;
+        };
+
+        //按下回车键时发送命令到后台
+        document.onkeydown=function(event){
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+        if(e && e.keyCode==13){
+         if (!window.s) {
+                alert("websocket未连接.");
+            } else {
+                window.s.send($('#message').val());//通过websocket发送数据
+            };
+        }};
+
+        //关闭websocket连接
+        $('#close_websocket').click(function () {
+            if (window.s) {
+                window.s.close();//关闭websocket
+                console.log('websocket已关闭');
+            }
+        });
+
+    });
+
+    //]]></script>
+
+<h5>{{container_id}}@{{server_ip}}</h5>
+<div class="panel panel-default">
+    <div class="panel-body">
+      <div style=" height:500px; overflow:auto;" id="shellcontainer">
+[root@localhost]# <input type="text" id="message" value="ls"/>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

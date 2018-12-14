@@ -3,6 +3,7 @@ from django.http import HttpResponse, StreamingHttpResponse
 from django.views import View
 from django.utils.decorators import method_decorator
 import xmlrpc.client, logging, os, configparser, json
+from dwebsocket import require_websocket, accept_websocket
 
 from ..models.supervisor_server_models import Supervisor_Server
 from ..utils.common_func import get_time_stamp, format_log, auth_controller, log_record
@@ -66,3 +67,21 @@ class Tail_Supervisor_App_Log(View):
 		server = Supervisor_Server.objects.filter(ip=server_ip).first()
 		log = server.tail_supervisor_app_log(supervisor_app, format_log)
 		return StreamingHttpResponse(log) # 使用StreamingHttpResponse返回yield对象，实现实时浏览日志
+
+# 获取supervisor程序的日志
+@auth_controller
+@accept_websocket
+def tail_supervisor_app_log(request):
+	global log_generator
+	if not request.is_websocket():
+		server_ip = request.GET.get('server_ip')
+		server_port = int(request.GET.get('server_port'))
+		supervisor_app = request.GET.get('supervisor_app')
+		wsurl = request.get_host()+request.path
+		server = Supervisor_Server.objects.filter(ip=server_ip).first()
+		log_generator = server.tail_supervisor_app_log(supervisor_app)
+		return render(request, 'tail_log.html', {'wsurl': wsurl})
+	else:
+		for log in log_generator:
+			print (log)
+			request.websocket.send(log)

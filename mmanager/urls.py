@@ -11,11 +11,12 @@ urlpatterns = [
 
     url(r'^dockerserver', docker_server_views.Docker_Server_List.as_view(), name='docker_server_list'),
     url(r'^container_opt', docker_server_views.Container_Option.as_view(), name='container_option'),
-    url(r'^tail_container_log', docker_server_views.Tail_Container_Log.as_view(), name='tail_container_log'),
+    url(r'^containerconsole', docker_server_views.container_console, name='container_console'),
+    url(r'^tail_container_log', docker_server_views.tail_container_log, name='tail_container_log'),
 
     url(r'^supervisorserver', supervisor_server_views.Supervisor_Server_List.as_view(), name='supervisor_server'),
     url(r'^supervisor_app_opt', supervisor_server_views.Supervisor_App_Option.as_view(), name='supervisor_app_opt'),
-    url(r'^tail_supervisor_app_log', supervisor_server_views.Tail_Supervisor_App_Log.as_view(), name='tail_supervisor_app_log'),
+    url(r'^tail_supervisor_app_log', supervisor_server_views.tail_supervisor_app_log, name='tail_supervisor_app_log'),
 
     url(r'^jenkinsserver', jenkins_server_views.Jenkins_Server_List.as_view(), name='jenkins_server'),
     url(r'^jenkins_job_opt', jenkins_server_views.Jenkins_Job_Opt.as_view(), name='jenkins_job_opt'),
@@ -40,7 +41,8 @@ urlpatterns = [
     url(r'^addserver/', server_list_views.Add_Server.as_view(), name='add_server'),
     url(r'^deleteserver/', server_list_views.Delete_Server.as_view(), name='delete_server'),
 
-
+    #url(r'^taillog', supervisor_server_views.tail_log),
+    
     url(r'', docker_server_views.Docker_Server_List.as_view(), name='default'),
     
 ]

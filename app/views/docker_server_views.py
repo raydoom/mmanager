@@ -4,8 +4,9 @@ from django.views import View
 from django.utils.decorators import method_decorator
 # from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from dwebsocket import require_websocket, accept_websocket
 
-import docker, logging, os, configparser, json
+import docker, logging, os, configparser, json, time
 
 from ..models.docker_server_models import  Docker_Server
 
@@ -62,14 +63,60 @@ class Container_Option(View):
 		log_record(request.session.get('username'), log_detail=log_detail)
 		return HttpResponse(result)
 
+# # 获取容器日志
+# @method_decorator(auth_controller, name='dispatch')
+# class Tail_Container_Log(View):
+# 	@accept_websocket
+# 	def get(self, request):
+# 		server_ip = request.GET.get('server_ip')
+# 		server_port = int(request.GET.get('server_port'))
+# 		container_id = request.GET.get('container_id')	
+# 		server = Docker_Server.objects.filter(ip=server_ip).first()
+# 		log = server.tail_container_log(container_id)
+# 		return StreamingHttpResponse(log)
+# 		#return render(request, 'tail.html', {'log': log})
+
 # 获取容器日志
-@method_decorator(auth_controller, name='dispatch')
-class Tail_Container_Log(View):
-	def get(self, request):
+@auth_controller
+@accept_websocket
+def tail_container_log(request):
+	global log_generator
+	if not request.is_websocket():
 		server_ip = request.GET.get('server_ip')
 		server_port = int(request.GET.get('server_port'))
 		container_id = request.GET.get('container_id')	
+		wsurl = request.get_host()+request.path
 		server = Docker_Server.objects.filter(ip=server_ip).first()
-		log = server.tail_container_log(container_id, format_log)
-		return StreamingHttpResponse(log)
-		#return render(request, 'tail.html', {'log': log})
+		log_generator = server.tail_container_logs(container_id)
+		return render(request, 'tail_log.html', {'wsurl': wsurl, 'container_id': container_id, 'server_ip': server_ip})
+	else:
+		for log in log_generator:
+			print (log)
+			request.websocket.send(log)
+
+# 容器命令行
+@auth_controller
+@accept_websocket
+def container_console(request):
+	global container_id
+	global server_cmd
+	if not request.is_websocket():
+		server_ip = request.GET.get('server_ip')
+		server_port = int(request.GET.get('server_port'))
+		container_id = request.GET.get('container_id')	
+		wsurl = request.get_host()+request.path
+		server_cmd = Docker_Server.objects.filter(ip=server_ip).first()
+		return render(request, 'container_console.html', {'wsurl': wsurl, 'container_id': container_id, 'server_ip': server_ip})
+	else:
+		for cmd in request.websocket:
+			cmd = cmd.decode()
+			print (cmd)
+			result = server_cmd.exec_cmd(container_id, cmd)[1].decode()
+			request.websocket.send(str(result))
+
+
+
+
+
+
+

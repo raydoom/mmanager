@@ -65,25 +65,35 @@ class Docker_Server(models.Model):
 			return True
 
 
-	# 容器日志获取
-	def tail_container_log(self, container_id, format_func):
-		func_tail_log = self.get_docker_client().containers.get(container_id).logs
-		log_old, log_new = '', ''
-		secs = 0
-		while secs < 60 :		
-			log = func_tail_log(tail=20)
-			log = log.decode()
-			time.sleep(1)
-			secs += 1
-			log_old = log_new
-			log_new = log
-			for log_line in log.split('\n'):
-				time_stamp = get_time_stamp()
-				log_line = '[' + time_stamp + ']--' + log_line
-				duplicate_flag = 0
-				for log_old_line in log_old.split('\n'):
-					log_old_line = '[' + time_stamp + ']--' + log_old_line
-					if log_line == log_old_line:
-						duplicate_flag = 1
-				if duplicate_flag == 0:
-					yield format_func(log_line)
+	# # 容器日志获取
+	# def tail_container_log(self, container_id, format_func):
+	# 	func_tail_log = self.get_docker_client().containers.get(container_id).logs
+	# 	log_old, log_new = '', ''
+	# 	secs = 0
+	# 	while secs < 60 :		
+	# 		log = func_tail_log(tail=20)
+	# 		log = log.decode()
+	# 		time.sleep(1)
+	# 		secs += 1
+	# 		log_old = log_new
+	# 		log_new = log
+	# 		for log_line in log.split('\n'):
+	# 			time_stamp = get_time_stamp()
+	# 			log_line = '[' + time_stamp + ']--' + log_line
+	# 			duplicate_flag = 0
+	# 			for log_old_line in log_old.split('\n'):
+	# 				log_old_line = '[' + time_stamp + ']--' + log_old_line
+	# 				if log_line == log_old_line:
+	# 					duplicate_flag = 1
+	# 			if duplicate_flag == 0:
+	# 				yield format_func(log_line)
+
+	# 容器日志获取，返回迭代器，使用for log in logs方式取出日志数据
+	def tail_container_logs(self, container_id):
+		logs = self.get_docker_client().containers.get(container_id).logs(stream=True,tail=20,follow=True)
+		return logs
+
+	# 容器内执行命令
+	def exec_cmd(self, container_id, cmd):
+		container = self.get_docker_client().containers.get(container_id)
+		return (container.exec_run(cmd=cmd))

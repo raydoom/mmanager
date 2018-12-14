@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<ol class="breadcrumb">
+  <li>Docker Server</li>
+  <li class="active">Tail Log</li>
+</ol>
+
+<div class="page-header">
+  <h2>Tail Log</h2>
+</div>
+
+    <script type="text/javascript">//<![CDATA[
+ $(function () {
+        window.onload=function () {
+            if (window.s) {
+                window.s.close()
+            }
+            /*创建socket连接*/
+            var socket = new WebSocket("ws://{{wsurl}}");
+            socket.onopen = function () {
+                console.log('WebSocket open');//成功连接上Websocket
+            };
+            socket.onmessage = function (e) {
+                console.log('message: ' + e.data);//打印出服务端返回过来的数据
+                $('#messagecontainer').append('<p style="word-break: break-all;">' + e.data + '</p>');
+                var now = new Date(); //实现自动滚动到底部
+                var div = document.getElementById('messagecontainer'); //实现自动滚动到底部
+                div.scrollTop = div.scrollHeight; //实现自动滚动到底部
+            };
+            // Call onopen directly if socket is already open
+            if (socket.readyState == WebSocket.OPEN) socket.onopen();
+            window.s = socket;
+        };
+        $('#send_message').click(function () {
+            //如果未连接到websocket
+            if (!window.s) {
+                alert("websocket未连接.");
+            } else {
+                window.s.send($('#message').val());//通过websocket发送数据
+            }
+        });
+        $('#close_websocket').click(function () {
+            if (window.s) {
+                window.s.close();//关闭websocket
+                console.log('websocket已关闭');
+            }
+        });
+
+    });
+    //]]></script>
+
+<h5>{{container_id}}@{{server_ip}}</h5>
+
+<button type="button" class="btn btn-default btn-sm" id="connect_websocket">start</button>
+<button type="button" class="btn btn-default btn-sm" id="close_websocket">stop</button>
+<button type="button" class="btn btn-default btn-sm" id="close_websocket">refresh</button>
+
+
+<div class="panel panel-default">
+  	<div class="panel-body">
+		<div id="messagecontainer" style=" height:500px; overflow:auto">
+		</div>
+	</div>
+</div>
+
+{% endblock %}
