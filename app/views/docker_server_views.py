@@ -84,14 +84,16 @@ def tail_container_log(request):
 	if not request.is_websocket():
 		server_ip = request.GET.get('server_ip')
 		server_port = int(request.GET.get('server_port'))
-		container_id = request.GET.get('container_id')	
+		container_id = request.GET.get('container_id')
+		container_name = request.GET.get('container_name')
 		wsurl = request.get_host()+request.path
 		server = Docker_Server.objects.filter(ip=server_ip).first()
 		log_generator = server.tail_container_logs(container_id)
-		return render(request, 'tail_log.html', {'wsurl': wsurl, 'container_id': container_id, 'server_ip': server_ip})
+		return render(request, 'tail_log.html', {'wsurl': wsurl, 'container_name': container_name, 'server_ip': server_ip})
 	else:
 		for log in log_generator:
-			print (log)
+			if request.websocket.is_closed(): #检测客户端心跳，如果客户端关闭，则停止读取和发送日志
+				break
 			request.websocket.send(log)
 
 # 容器命令行
@@ -103,10 +105,11 @@ def container_console(request):
 	if not request.is_websocket():
 		server_ip = request.GET.get('server_ip')
 		server_port = int(request.GET.get('server_port'))
-		container_id = request.GET.get('container_id')	
+		container_id = request.GET.get('container_id')
+		container_name = request.GET.get('container_name')	
 		wsurl = request.get_host()+request.path
 		server_cmd = Docker_Server.objects.filter(ip=server_ip).first()
-		return render(request, 'container_console.html', {'wsurl': wsurl, 'container_id': container_id, 'server_ip': server_ip})
+		return render(request, 'container_console.html', {'wsurl': wsurl, 'container_name': container_name, 'server_ip': server_ip})
 	else:
 		for cmd in request.websocket:
 			cmd = cmd.decode()

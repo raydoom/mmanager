@@ -83,5 +83,16 @@ def tail_supervisor_app_log(request):
 		return render(request, 'tail_log.html', {'wsurl': wsurl})
 	else:
 		for log in log_generator:
-			print (log)
+			if request.websocket.is_closed(): #检测客户端心跳，如果客户端关闭，则停止读取和发送日志
+				break
 			request.websocket.send(log)
+
+
+
+
+
+
+
+
+
+			

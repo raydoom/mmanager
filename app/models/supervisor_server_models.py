@@ -105,7 +105,6 @@ class Supervisor_Server(models.Model):
 			time.sleep(0.5)
 			if log != '':
 				log = get_time_stamp()+log 
-				print (log)
 				yield (log)
 			# for log in log.split('\n'):
 			# 	yield (log)

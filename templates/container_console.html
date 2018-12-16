@@ -25,10 +25,14 @@
             socket.onmessage = function (e) {
                 console.log('message: ' + e.data);//打印出服务端返回过来的数据
                 $('#shellcontainer').append('<p style="word-break: break-all;">' + e.data + '</p>');
-                $('#shellcontainer').append('[root@localhost]# <input type="text" id="message" value="ls" autofocus="autofocus" />');
+                $('#message').removeAttr('autofocus')
+                $('#message').attr('disabled','disabled')
+                $('#message').attr('id','')
+                $('#shellcontainer').append('[root@localhost]# <input type="text" id="message" value="ls"/>');
                 var now = new Date(); //实现自动滚动到底部
                 var div = document.getElementById('shellcontainer'); //实现自动滚动到底部
                 div.scrollTop = div.scrollHeight; //实现自动滚动到底部
+                $('#message').attr('autofocus','autofocus');
                 
 
             };
@@ -60,12 +64,14 @@
 
     //]]></script>
 
-<h5>{{container_id}}@{{server_ip}}</h5>
+<h5>{{container_name}}@{{server_ip}}</h5>
 <div class="panel panel-default">
     <div class="panel-body">
+    <pre style="background: white;">
       <div style=" height:500px; overflow:auto;" id="shellcontainer">
 [root@localhost]# <input type="text" id="message" value="ls"/>
     </div>
+    </pre>
   </div>
 </div>
 

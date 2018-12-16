@@ -71,13 +71,13 @@
  
           <!-- Split button -->
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="javascript:void(0);" onclick="supervisor_app_opt('{{app.host_ip}}','{{app.host_port}}','{{app.name}}','restart')">Restart</a>
+            <a type="button" class="btn btn-default btn-sm" href="javascript:;" onclick="supervisor_app_opt('{{app.host_ip}}','{{app.host_port}}','{{app.name}}','restart')">Restart</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="javascript:void(0);" onclick="supervisor_app_opt('{{app.host_ip}}','{{app.host_port}}','{{app.name}}','start')">Start App</a></li>
-              <li><a href="javascript:void(0);" onclick="supervisor_app_opt('{{app.host_ip}}','{{app.host_port}}','{{app.name}}','stop')">Stop App</a></li>
+              <li><a href="javascript:;" onclick="supervisor_app_opt('{{app.host_ip}}','{{app.host_port}}','{{app.name}}','start')">Start App</a></li>
+              <li><a href="javascript:;" onclick="supervisor_app_opt('{{app.host_ip}}','{{app.host_port}}','{{app.name}}','stop')">Stop App</a></li>
               <li role="separator" class="divider"></li>
               <li><a href="/tail_supervisor_app_log/?server_ip={{app.host_ip}}&server_port={{app.host_port}}&supervisor_app={{app.name}}" target="_blank">Tail Log</a></li>
             </ul>
