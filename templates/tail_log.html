@@ -3,7 +3,7 @@
 {% block body %}
 
 <ol class="breadcrumb">
-  <li>Docker Server</li>
+  <li>Server Action</li>
   <li class="active">Tail Log</li>
 </ol>
 
@@ -51,7 +51,7 @@
     });
     //]]></script>
 
-<h5>{{container_name}}@{{server_ip}}</h5>
+<h5>{{name}}@{{server_ip}}</h5>
 
 <button type="button" class="btn btn-default btn-sm" id="connect_websocket">start</button>
 <button type="button" class="btn btn-default btn-sm" id="close_websocket">stop</button>

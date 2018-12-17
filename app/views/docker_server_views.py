@@ -109,7 +109,7 @@ def container_console(request):
 		container_name = request.GET.get('container_name')	
 		wsurl = request.get_host()+request.path
 		server_cmd = Docker_Server.objects.filter(ip=server_ip).first()
-		return render(request, 'container_console.html', {'wsurl': wsurl, 'container_name': container_name, 'server_ip': server_ip})
+		return render(request, 'container_console.html', {'wsurl': wsurl, 'name': container_name, 'server_ip': server_ip})
 	else:
 		for cmd in request.websocket:
 			cmd = cmd.decode()
