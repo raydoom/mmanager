@@ -18,7 +18,7 @@
                 window.s.close()
             }
             /*创建socket连接*/
-            var socket = new WebSocket("ws://{{wsurl}}");
+            var socket = new WebSocket("{{wsurl}}");
             socket.onopen = function () {
                 console.log('WebSocket open');//成功连接上Websocket
             };

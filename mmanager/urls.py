@@ -16,7 +16,7 @@ urlpatterns = [
 
     url(r'^supervisorserver', supervisor_server_views.Supervisor_Server_List.as_view(), name='supervisor_server'),
     url(r'^supervisor_app_opt', supervisor_server_views.Supervisor_App_Option.as_view(), name='supervisor_app_opt'),
-    url(r'^tail_supervisor_app_log', supervisor_server_views.tail_supervisor_app_log, name='tail_supervisor_app_log'),
+    url(r'^tail_supervisor_app_log', supervisor_server_views.Tail_Supervisor_App_Log.as_view(), name='tail_supervisor_app_log'),
 
     url(r'^jenkinsserver', jenkins_server_views.Jenkins_Server_List.as_view(), name='jenkins_server'),
     url(r'^jenkins_job_opt', jenkins_server_views.Jenkins_Job_Opt.as_view(), name='jenkins_job_opt'),

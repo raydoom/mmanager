@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, StreamingHttpResponse
 from django.views import View
 from django.utils.decorators import method_decorator
-import xmlrpc.client, logging, os, configparser, json
+import xmlrpc.client, logging, os, configparser, json, time
 from dwebsocket import require_websocket, accept_websocket
 
 from ..models.supervisor_server_models import Supervisor_Server
@@ -68,24 +68,28 @@ class Tail_Supervisor_App_Log(View):
 		log = server.tail_supervisor_app_log(supervisor_app, format_log)
 		return StreamingHttpResponse(log) # 使用StreamingHttpResponse返回yield对象，实现实时浏览日志
 
-# 获取supervisor程序的日志
-@auth_controller
-@accept_websocket
-def tail_supervisor_app_log(request):
-	global log_generator
-	if not request.is_websocket():
-		server_ip = request.GET.get('server_ip')
-		server_port = int(request.GET.get('server_port'))
-		supervisor_app = request.GET.get('supervisor_app')
-		wsurl = request.get_host()+request.path
-		server = Supervisor_Server.objects.filter(ip=server_ip).first()
-		log_generator = server.tail_supervisor_app_log(supervisor_app)
-		return render(request, 'tail_log.html', {'wsurl': wsurl})
-	else:
-		for log in log_generator:
-			if request.websocket.is_closed(): #检测客户端心跳，如果客户端关闭，则停止读取和发送日志
-				break
-			request.websocket.send(log)
+# # 获取supervisor程序的日志
+# @auth_controller
+# @accept_websocket
+# def tail_supervisor_app_log(request):
+# 	global log_generator
+# 	global server
+# 	global supervisor_app
+# 	if not request.is_websocket():
+# 		server_ip = request.GET.get('server_ip')
+# 		server_port = int(request.GET.get('server_port'))
+# 		supervisor_app = request.GET.get('supervisor_app')
+# 		wsurl = 'ws://' + request.get_host()+request.path
+# 		server = Supervisor_Server.objects.filter(ip=server_ip).first()
+# 		log_generator = server.tail_supervisor_app_log(supervisor_app)
+# 		return render(request, 'tail_log.html', {'wsurl': wsurl, 'name': supervisor_app, 'server_ip': server_ip})
+# 	else:
+# 		#for log in log_generator:
+# 			#if request.websocket.is_closed(): #检测客户端心跳，如果客户端关闭，则停止读取和发送日志
+# 				#break
+# 		request.websocket.send('log')
+# 		time.sleep(1)
+
 
 
 
