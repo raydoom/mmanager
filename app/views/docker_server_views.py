@@ -97,8 +97,7 @@ def tail_container_log(request):
 				break
 			while channel.recv_ready():
 				recvfromssh = channel.recv(16371)
-				log = recvfromssh
-				print (log.decode())
+				log = recvfromssh.decode()
 				request.websocket.send(log)
 
 # 容器命令行
