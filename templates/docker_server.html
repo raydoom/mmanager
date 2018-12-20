@@ -61,25 +61,25 @@
             <input type="checkbox">
         </td>
         <td style="text-transform:capitalize;">
-            {{container.status|lower}}
+            {{container.statename|lower}}
         </td>
         <td>{{container.name}}</td>
         <td>{{container.host_ip}}</td>
-        <td>{{container.apistatus|lower}}</td>
+        <td>{{container.status|lower}}, created {{container.created|lower}}</td>
         <td>
           
           <!-- Split button -->
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="javascript:;" onclick="container_opt('{{container.host_ip}}','{{container.host_port}}','{{container.id}}','{{container.name}}','restart')">Restart</a>
+            <a type="button" class="btn btn-default btn-sm" href="javascript:;" onclick="container_opt('{{container.host_ip}}','{{container.host_port}}','{{container.container_id}}','{{container.name}}','restart')">Restart</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="javascript:;" onclick="container_opt('{{container.host_ip}}','{{container.host_port}}','{{container.id}}','{{container.name}}','start')">Start Container</a></li>
-              <li><a href="javascript:;" onclick="container_opt('{{container.host_ip}}','{{container.host_port}}','{{container.id}}','{{container.name}}','stop')">Stop Container</a></li>
+              <li><a href="javascript:;" onclick="container_opt('{{container.host_ip}}','{{container.host_port}}','{{container.container_id}}','{{container.name}}','start')">Start Container</a></li>
+              <li><a href="javascript:;" onclick="container_opt('{{container.host_ip}}','{{container.host_port}}','{{container.container_id}}','{{container.name}}','stop')">Stop Container</a></li>
               <li role="separator" class="divider"></li>
-              <li><a href="/containerconsole/?server_ip={{container.host_ip}}&server_port={{container.host_port}}&container_id={{container.id}}&container_name={{container.name}}" target="_blank">Container Console</a></li>
-              <li><a href="/tail_container_log/?server_ip={{container.host_ip}}&server_port={{container.host_port}}&container_id={{container.id}}&container_name={{container.name}}" target="_blank">Tail Log</a></li>
+              <li><a href="/containerconsole/?server_ip={{container.host_ip}}&server_port={{container.host_port}}&container_id={{container.container_id}}&container_name={{container.name}}" target="_blank">Container Console</a></li>
+              <li><a href="/tail_container_log/?server_ip={{container.host_ip}}&server_port={{container.host_port}}&container_id={{container.container_id}}&container_name={{container.name}}" target="_blank">Tail Log</a></li>
             </ul>
           </div>
 

@@ -7,6 +7,7 @@ from django.utils.decorators import method_decorator
 import docker, logging, os, configparser, json
 
 from ..models.docker_server_models import  Docker_Server
+from ..models.server import Server, ServerType
 from ..models.supervisor_server_models import  Supervisor_Server
 from ..models.jenkins_server_models import  Jenkins_Server
 from ..utils.common_func import auth_controller, log_record
@@ -19,29 +20,30 @@ class Server_List(View):
 		filter_select = request.GET.get('filter_select')
 		server_list = []
 		server_list_filter = []
-		for server in Docker_Server.objects.all().order_by('ip'):
+		for server in  ServerType.objects.get(server_type='docker').server_set.all().order_by('ip'):
 			server.type = 'docker'
-			result = server.get_all_container_info()
-			if result == None:
-				server.status = 'Disconnected'
-			else:
+			try:
+				result = server.get_container_list()
 				server.status = 'Connected'
 				result_running = 0
 				for i in result:
-					if i.status == 'running':
+					if i.statename == 'running':
 						result_running +=1
 				server.description = str(len(result)) + ' containers, ' + str(result_running) + ' running'
+			except Exception as e:
+				logging.error(e)
+				server.status = 'Disonnected'
 			server_list.append(server)
-		for server in Supervisor_Server.objects.all().order_by('ip'):
+		for server in  ServerType.objects.get(server_type='supervisor').server_set.all().order_by('ip'):
 			server.type = 'supervisor'
-			result = server.get_all_process_info()
+			result = server.get_process_list()
 			if result == None:
 				server.status = 'Disconnected'
 			else:
 				server.status = 'Connected'
 				result_running = 0
 				for i in result:
-					if i['statename'] == 'RUNNING':
+					if i.statename == 'RUNNING':
 						result_running +=1
 				server.description = str(len(result)) + ' apps, ' + str(result_running) + ' running'
 			server_list.append(server)
@@ -94,10 +96,13 @@ class Add_Server(View):
 		username = request.POST.get('username')
 		password = request.POST.get('password')
 		description = request.POST.get('description')
-		if server_type == 'Docker':
-			Docker_Server.objects.create(hostname=hostname, ip=ip, port=int(port), apiversion=apiversion, username=username, password=password, description=description)
-		if server_type == 'Supervisor':
-			Supervisor_Server.objects.create(hostname=hostname, ip=ip, port=int(port), apiversion=apiversion, username=username, password=password, description=description)
+		if server_type == 'Docker' or server_type == 'Supervisor':
+			server_type_get = ServerType.objects.get(server_type=server_type.lower())
+			new_server = Server(hostname=hostname, ip=ip, port=int(port), username=username, password=password, description=description)
+			new_server.save()
+			new_server.server_type.add(server_type_get)
+			new_server.save()
+
 		if server_type == 'Jenkins':
 			Jenkins_Server.objects.create(hostname=hostname, ip=ip, port=int(port), apiversion=apiversion, username=username, password=password, description=description)
 		return redirect('/serverlist/')
@@ -109,10 +114,9 @@ class Delete_Server(View):
 		server_type = request.GET.get('servertype')
 		ip = request.GET.get('ip')
 		port = request.GET.get('port')
-		if server_type == 'docker':
-			Docker_Server.objects.filter(ip=ip, port=int(port)).delete()
-		if server_type == 'supervisor':
-			Supervisor_Server.objects.filter(ip=ip, port=int(port)).delete()
+		if server_type == 'docker' or server_type == 'supervisor':
+			ServerType.objects.get(server_type=server_type).server_set.all().filter(ip=ip, port=int(port)).delete()
+
 		if server_type == 'jenkins':
 			Jenkins_Server.objects.filter(ip=ip, port=int(port)).delete()
 		return redirect('/serverlist/')

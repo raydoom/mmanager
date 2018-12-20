@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ma'
 
-import time, os, logging
+import time, os, logging, paramiko
 
 from ..models.action_log_models import Action_Log
 from django.shortcuts import render, redirect
@@ -86,4 +86,15 @@ def get_file_contents(dist, lines_per_page):
 def log_record(log_user, log_detail):
 	return (Action_Log.objects.create(log_user=log_user, log_detail=log_detail))
 
-
+# ssh远程执行命令
+def exec_command_over_ssh(ip='', port='22', username='', password='', cmd='')
+	try:
+		ssh_client = paramiko.SSHClient()
+		ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+		ssh_client.connect(ip, port, username, password)
+		std_in, std_out, std_err = ssh_client.exec_command(cmd)
+		ssh_client.close()
+		return ([std_in, std_out, std_err])
+	except Exception as e:
+		logging.error(e)
+		return None

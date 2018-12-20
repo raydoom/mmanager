@@ -5,7 +5,8 @@ from django.utils.decorators import method_decorator
 import xmlrpc.client, logging, os, configparser, json, time
 from dwebsocket import require_websocket, accept_websocket
 
-from ..models.supervisor_server_models import Supervisor_Server
+from ..models.server import Server, ServerType
+from ..models.process import Process
 from ..utils.common_func import get_time_stamp, format_log, auth_controller, log_record
 
 
@@ -15,11 +16,11 @@ class Supervisor_Server_List(View):
 	def get(self, request):
 		filter_keyword = request.GET.get('filter_keyword')
 		filter_select = request.GET.get('filter_select')
-		servers = Supervisor_Server.objects.all().order_by('ip')
+		servers = ServerType.objects.get(server_type='supervisor').server_set.all().order_by('ip')
 		app_list = []
 		for server in servers:
 			try:
-				apps = server.get_all_process_info()
+				apps = server.get_process_list()
 				if filter_keyword != None:
 					for app in apps:
 						if filter_select == 'Status =' and filter_keyword.lower() == app['statename'].lower():
@@ -50,8 +51,14 @@ class Supervisor_App_Option(View):
 		server_port = int(request.GET.get('server_port'))
 		supervisor_app = request.GET.get('supervisor_app')
 		supervisor_opt = request.GET.get('supervisor_opt')
-		server = Supervisor_Server.objects.filter(ip=server_ip).first()
-		result = server.supervisor_app_opt(supervisor_app, supervisor_opt)
+		server = ServerType.objects.get(server_type='supervisor').server_set.all().get(ip=server_ip, port=int(server_port))
+		process = Process()
+		process.host_ip = server.ip
+		process._host_port = server.port
+		process.host_username = server.username
+		process.host_password = server.password
+		process.name = supervisor_app
+		result = process.supervisor_app_opt(supervisor_opt)
 		log_detail = supervisor_opt + ' <' + supervisor_app + '> on host ' + server_ip
 		log_record(request.session.get('username'), log_detail=log_detail)
 		return HttpResponse(result)

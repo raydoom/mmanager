@@ -8,7 +8,8 @@ from dwebsocket import require_websocket, accept_websocket
 
 import docker, logging, os, configparser, json, time
 
-from ..models.docker_server_models import  Docker_Server
+from ..models.server import Server, ServerType
+from ..models.container import Container
 
 from ..utils.common_func import format_log, auth_controller, get_dir_info, get_file_contents, log_record
 
@@ -19,20 +20,19 @@ class Docker_Server_List(View):
 	def get(self, request):
 		filter_keyword = request.GET.get('filter_keyword')
 		filter_select = request.GET.get('filter_select')
-		servers = Docker_Server.objects.all().order_by('ip')
+		servers = ServerType.objects.get(server_type='docker').server_set.all().order_by('ip')
 		container_list = []
 		for server in servers:
 			try:
-				containers = server.get_all_container_info()
+				containers = server.get_container_list()
 				if filter_keyword != None:
-				
 					for container in containers:
 						if filter_select == 'Status =' and filter_keyword.lower() == container.status.lower():
-								container_list.append(container)
+							container_list.append(container)
 						if filter_select == 'App' and filter_keyword in container.name:
-								container_list.append(container)		
+							container_list.append(container)		
 						if filter_select == 'Location' and filter_keyword in container.host_ip:
-								container_list.append(container)
+							container_list.append(container)
 				else:
 					for container in containers:
 						container_list.append(container)
@@ -40,7 +40,6 @@ class Docker_Server_List(View):
 				logging.error(e)
 		container_count = len(container_list)
 		return render(request, 'docker_server.html', {'container_list': container_list, 'container_count': container_count})
-
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')
 		filter_select = request.POST.get('filter_select')
@@ -57,8 +56,14 @@ class Container_Option(View):
 		container_id = request.GET.get('container_id')
 		container_name = request.GET.get('container_name')
 		container_opt = request.GET.get('container_opt')
-		server = Docker_Server.objects.filter(ip=server_ip).first()
-		result = server.container_opt(container_id, container_opt)
+		server = ServerType.objects.get(server_type='docker').server_set.all().get(ip=server_ip, port=int(server_port))
+		container = Container()
+		container.host_ip = server.ip
+		container._host_port = server.port
+		container.host_username = server.username
+		container.host_password = server.password
+		container.container_id = container_id
+		result = container.container_opt(container_opt)
 		log_detail = container_opt + ' <' + container_name + '> on host ' + server_ip
 		log_record(request.session.get('username'), log_detail=log_detail)
 		return HttpResponse(result)
