@@ -68,38 +68,38 @@ class Container_Option(View):
 		log_record(request.session.get('username'), log_detail=log_detail)
 		return HttpResponse(result)
 
-# # 获取容器日志
-# @method_decorator(auth_controller, name='dispatch')
-# class Tail_Container_Log(View):
-# 	@accept_websocket
-# 	def get(self, request):
-# 		server_ip = request.GET.get('server_ip')
-# 		server_port = int(request.GET.get('server_port'))
-# 		container_id = request.GET.get('container_id')	
-# 		server = Docker_Server.objects.filter(ip=server_ip).first()
-# 		log = server.tail_container_log(container_id)
-# 		return StreamingHttpResponse(log)
-# 		#return render(request, 'tail.html', {'log': log})
-
 # 获取容器日志
 @auth_controller
 @accept_websocket
 def tail_container_log(request):
-	global log_generator
+	global channel
 	if not request.is_websocket():
 		server_ip = request.GET.get('server_ip')
 		server_port = int(request.GET.get('server_port'))
 		container_id = request.GET.get('container_id')
 		container_name = request.GET.get('container_name')
+		server = ServerType.objects.get(server_type='docker').server_set.all().get(ip=server_ip, port=int(server_port))
+		container = Container()
+		container.host_ip = server.ip
+		container._host_port = server.port
+		container.host_username = server.username
+		container.host_password = server.password
+		container.container_id = container_id
+		channel = container.tail_container_logs()
 		wsurl = 'ws://' + request.get_host() + request.path
-		server = Docker_Server.objects.filter(ip=server_ip).first()
-		log_generator = server.tail_container_logs(container_id)
+
 		return render(request, 'tail_log.html', {'wsurl': wsurl, 'name': container_name, 'server_ip': server_ip})
 	else:
-		for log in log_generator:
+		while True:
 			if request.websocket.is_closed(): #检测客户端心跳，如果客户端关闭，则停止读取和发送日志
+				print ('websocket is closed')
+				channel.close()
 				break
-			request.websocket.send(log)
+			while channel.recv_ready():
+				recvfromssh = channel.recv(16371)
+				log = recvfromssh
+				print (log.decode())
+				request.websocket.send(log)
 
 # 容器命令行
 @auth_controller

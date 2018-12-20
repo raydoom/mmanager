@@ -87,7 +87,7 @@ def log_record(log_user, log_detail):
 	return (Action_Log.objects.create(log_user=log_user, log_detail=log_detail))
 
 # ssh远程执行命令
-def exec_command_over_ssh(ip='', port='22', username='', password='', cmd='')
+def exec_command_over_ssh(ip='', port='22', username='', password='', cmd=''):
 	try:
 		ssh_client = paramiko.SSHClient()
 		ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())

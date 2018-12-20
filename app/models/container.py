@@ -31,3 +31,20 @@ class Container:
 		except Exception as e:
 			logging.error(e)
 			return None 
+	def tail_container_logs(self):
+		cmd = 'docker logs -f --tail=10 ' + self.container_id
+		try:
+			ssh_client = paramiko.SSHClient()
+			ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+			ssh_client.connect(self.host_ip, self.host_port, self.host_username, self.host_password)
+			# open channel pipeline
+			transport = ssh_client.get_transport()
+			channel = transport.open_session()
+			channel.get_pty()
+			# out command into pipeline
+			channel.exec_command(cmd)
+			return channel
+		except Exception as e:
+			logging.error(e)
+			return None 
+
