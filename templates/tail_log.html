@@ -23,7 +23,6 @@
                 console.log('WebSocket open');//成功连接上Websocket
             };
             socket.onmessage = function (e) {
-                console.log('message: ' + e.data);//打印出服务端返回过来的数据
                 $('#messagecontainer').append('<p style="word-break: break-all;">' + e.data + '</p>');
                 var now = new Date(); //实现自动滚动到底部
                 var div = document.getElementById('messagecontainer'); //实现自动滚动到底部
@@ -39,11 +38,10 @@
 
 <h5>{{name}}@{{server_ip}}</h5>
 
-<div class="panel panel-default">
-  	<div class="panel-body">
-		<div id="messagecontainer" style=" height:500px; overflow:auto">
-		</div>
-	</div>
+<div>
+    <pre style="background: white;">
+	   <div id="messagecontainer" style="height:500px; overflow:auto">
+    </pre>
 </div>
 
 {% endblock %}

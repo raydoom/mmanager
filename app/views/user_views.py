@@ -27,6 +27,10 @@ class Login(View):
 				request.session['username'] = username
 				request.session['is_superuser'] = user.is_superuser
 				return redirect("/index/")
+			else:
+				message = 'username or password error!'
+				return render(request, 'login.html', {"message": message})
+
 		else:
 			message = 'username or password error!'
 			return render(request, 'login.html', {"message": message})

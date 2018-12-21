@@ -40,71 +40,71 @@ class Supervisor_Server(models.Model):
 			return None 
 
 	# 启动指定supervisor管理的进程
-	def start_process(self, supervisor_app):
+	def start_process(self, process_name):
 		rpc_proxy = self.get_rpc_proxy()
-		if self.check_status(supervisor_app, 0): # 0为状态码，表示app处于STOPPED状态 
-			return rpc_proxy.supervisor.startProcess(supervisor_app)
+		if self.check_status(process_name, 0): # 0为状态码，表示app处于STOPPED状态 
+			return rpc_proxy.supervisor.startProcess(process_name)
 		return True
 
 	# 停止指定supervisor管理的进程
-	def stop_process(self, supervisor_app):
+	def stop_process(self, process_name):
 		rpc_proxy = self.get_rpc_proxy()
-		if self.check_status(supervisor_app, 10, 20): # 10为状态码，表示app处于STARTING状态，20表示app处于RUNNING状态 
-			return rpc_proxy.supervisor.stopProcess(supervisor_app)
+		if self.check_status(process_name, 10, 20): # 10为状态码，表示app处于STARTING状态，20表示app处于RUNNING状态 
+			return rpc_proxy.supervisor.stopProcess(process_name)
 		return True
 
 	# 重启指定supervisor管理的进程
-	def restart_process(self, supervisor_app):
+	def restart_process(self, process_name):
 		rpc_proxy = self.get_rpc_proxy()
-		if self.check_status(supervisor_app, 0):
-			return rpc_proxy.supervisor.startProcess(supervisor_app)
-		if self.check_status(supervisor_app, 10, 20):
-			rpc_proxy.supervisor.stopProcess(supervisor_app)
-			return rpc_proxy.supervisor.startProcess(supervisor_app)
+		if self.check_status(process_name, 0):
+			return rpc_proxy.supervisor.startProcess(process_name)
+		if self.check_status(process_name, 10, 20):
+			rpc_proxy.supervisor.stopProcess(process_name)
+			return rpc_proxy.supervisor.startProcess(process_name)
 		return True
 
 	# 检查指定supervisor管理的进程状态
-	def check_status(self, supervisor_app, *args):
+	def check_status(self, process_name, *args):
 		rpc_proxy = self.get_rpc_proxy()
-		process_info = rpc_proxy.supervisor.getProcessInfo(supervisor_app)
+		process_info = rpc_proxy.supervisor.getProcessInfo(process_name)
 		state = process_info.get('state')
 		if state not in args:
 			return False
 		return True
 
 	# supervisor管理的进程操作
-	def supervisor_app_opt(self,supervisor_app, supervisor_opt):
+	def process_opt(self,process_name, supervisor_opt):
 		if supervisor_opt == 'start':
-			self.start_process(supervisor_app)
+			self.start_process(process_name)
 			return True
 		if supervisor_opt == 'stop':
-			self.stop_process(supervisor_app)
+			self.stop_process(process_name)
 			return True
 		if supervisor_opt == 'restart':
-			self.restart_process(supervisor_app)
+			self.restart_process(process_name)
 			return True
 
 	# supervisor管理的进程日志获取
-	def tail_supervisor_app_log(self, supervisor_app, format_func):
+	def tail_process_name_log1(self, process_name, format_func):
 		offset = 0
 		func = self.get_rpc_proxy().supervisor.tailProcessLog
 		secs = 0
 		while secs < 60 :
-			log, offset, ret = func(supervisor_app, offset, 2000)
+			log, offset, ret = func(process_name, offset, 2000)
 			time.sleep(1)
 			secs += 1
 			for log_line in log.split('\n'):
 				yield format_func(log_line)
 
 	# # supervisor管理的进程日志获取
-	# def tail_supervisor_app_log(self, supervisor_app):
+	# def tail_process_name_log(self, process_name):
 	# 	offset = 0
 	# 	func = self.get_rpc_proxy().supervisor.tailProcessLog
-	# 	log, offset, ret = func(supervisor_app, -100, 1000)
+	# 	log, offset, ret = func(process_name, -100, 1000)
 	# 	for log_line in log.split('\n'):
 
 	# 		print (log)
 	# 	return 0
 
-	# def tail_supervisor_app_log_func(self, supervisor_app, offset):
-	# 	return self.get_rpc_proxy().supervisor.tailProcessLog(supervisor_app, offset, 1000)
+	# def tail_process_name_log_func(self, process_name, offset):
+	# 	return self.get_rpc_proxy().supervisor.tailProcessLog(process_name, offset, 1000)

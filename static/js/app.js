@@ -22,8 +22,8 @@ function container_opt(server_ip, server_port, container_id, container_name, opt
 }
 
 /*重启supervisor管理的进程按钮点击事件*/
-function supervisor_app_opt(server_ip, server_port, supervisor_app, opt) {
-    $.get("/supervisor_app_opt/?server_ip=" + server_ip + "&server_port=" + server_port + "&supervisor_app=" + supervisor_app + "&supervisor_opt=" + opt, 
+function process_opt(server_ip, server_port, process_name, opt) {
+    $.get("/process_opt/?server_ip=" + server_ip + "&server_port=" + server_port + "&process_name=" + process_name + "&process_opt=" + opt, 
         function (data,status) {
         parse_result(data)
                     }
@@ -35,8 +35,8 @@ function supervisor_app_opt(server_ip, server_port, supervisor_app, opt) {
 }
 */
 /*
-function tail_supervisor_app_log(server_ip, server_port, supervisor_app) {
-    window.open("/tail_supervisor_app_log/?server_ip=" + server_ip + "&server_port=" + server_port + "&supervisor_app=" + supervisor_app)
+function tail_process_name_log(server_ip, server_port, process_name) {
+    window.open("/tail_process_name_log/?server_ip=" + server_ip + "&server_port=" + server_port + "&process_name=" + process_name)
 }*/
 
 /*触发henkins任务构建按钮点击事件*/

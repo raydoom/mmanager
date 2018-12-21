@@ -3,27 +3,25 @@ __author__ = 'ma'
 
 import paramiko
 
+from ..utils.common_func import exec_command_over_ssh, get_channel_over_ssh
+
 
 class Process:
 	host_ip = ''
 	host_port = 22
 	host_username = ''
 	host_password = ''
-	host_port = 22
 	statename = ''
 	name = ''
 	description = ''
 
 
-	def supervisor_app_opt(self, supervisor_opt):
-		cmd = 'supervisorctl ' +  supervisor_opt + ' ' + self.name
-		try:
-			ssh_client = paramiko.SSHClient()
-			ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-			ssh_client.connect(self.host_ip, self.host_port, self.host_username, self.host_password)
-			std_in, std_out, std_err = ssh_client.exec_command(cmd)
-			ssh_client.close()
-			return (std_in, std_out, std_err)
-		except Exception as e:
-			logging.error(e)
-			return None
+	def process_opt(self, process_opt):
+		cmd = 'supervisorctl ' +  process_opt + ' ' + self.name
+		stdin, stdout, stderr = exec_command_over_ssh(self.host_ip, self.host_port, self.host_username, self.host_password, cmd)
+		return (stdin, stdout, stderr)
+
+	def tail_process_logs(self):
+		cmd = 'supervisorctl tail -f ' + self.process_name		
+		channel = get_channel_over_ssh(self.host_ip, self.host_port, self.host_username, self.host_password, cmd)
+		return (channel)

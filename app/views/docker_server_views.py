@@ -11,7 +11,7 @@ import docker, logging, os, configparser, json, time
 from ..models.server import Server, ServerType
 from ..models.container import Container
 
-from ..utils.common_func import format_log, auth_controller, get_dir_info, get_file_contents, log_record
+from ..utils.common_func import format_log, auth_controller, get_dir_info, get_file_contents, log_record, get_time_stamp
 
 
 # 获取docker服务器及容器列表，根据选项和关键字过滤
@@ -91,14 +91,18 @@ def tail_container_log(request):
 		return render(request, 'tail_log.html', {'wsurl': wsurl, 'name': container_name, 'server_ip': server_ip})
 	else:
 		while True:
-			if request.websocket.is_closed(): #检测客户端心跳，如果客户端关闭，则停止读取和发送日志
-				print ('websocket is closed')
-				channel.close()
-				break
-			while channel.recv_ready():
-				recvfromssh = channel.recv(16371)
-				log = recvfromssh.decode()
-				request.websocket.send(log)
+			try:
+				if request.websocket.is_closed(): #检测客户端心跳，如果客户端关闭，则停止读取和发送日志
+					print ('websocket is closed')
+					channel.close()
+					break
+				if channel.recv_ready():
+					recvfromssh = channel.recv(16371)
+					log = recvfromssh.decode()
+					request.websocket.send(log)
+				time.sleep(0.5)
+			except Exception as e:
+				logging.error(e)
 
 # 容器命令行
 @auth_controller

@@ -93,8 +93,25 @@ def exec_command_over_ssh(ip='', port='22', username='', password='', cmd=''):
 		ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 		ssh_client.connect(ip, port, username, password)
 		std_in, std_out, std_err = ssh_client.exec_command(cmd)
+		std_out = std_out.read()
 		ssh_client.close()
-		return ([std_in, std_out, std_err])
+		return (std_in, std_out, std_err)
 	except Exception as e:
 		logging.error(e)
 		return None
+
+def get_channel_over_ssh(ip='', port='22', username='', password='', cmd=''):
+	try:
+		ssh_client = paramiko.SSHClient()
+		ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+		ssh_client.connect(ip, port, username, password)
+		# open channel pipeline
+		transport = ssh_client.get_transport()
+		channel = transport.open_session()
+		channel.get_pty()
+		# out command into pipeline
+		channel.exec_command(cmd)
+		return channel
+	except Exception as e:
+		logging.error(e)
+		return None 

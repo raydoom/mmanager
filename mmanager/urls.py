@@ -1,3 +1,5 @@
+# urls.py
+
 from django.conf.urls import url
 from django.contrib import admin
 from app.views import ( action_log_views, directory_viewer_views, 
@@ -15,8 +17,8 @@ urlpatterns = [
     url(r'^tail_container_log', docker_server_views.tail_container_log, name='tail_container_log'),
 
     url(r'^supervisorserver', supervisor_server_views.Supervisor_Server_List.as_view(), name='supervisor_server'),
-    url(r'^supervisor_app_opt', supervisor_server_views.Supervisor_App_Option.as_view(), name='supervisor_app_opt'),
-    url(r'^tail_supervisor_app_log', supervisor_server_views.Tail_Supervisor_App_Log.as_view(), name='tail_supervisor_app_log'),
+    url(r'^process_opt', supervisor_server_views.process_option.as_view(), name='process_opt'),
+    url(r'^tail_process_log', supervisor_server_views.tail_process_log, name='tail_process_log'),
 
     url(r'^jenkinsserver', jenkins_server_views.Jenkins_Server_List.as_view(), name='jenkins_server'),
     url(r'^jenkins_job_opt', jenkins_server_views.Jenkins_Job_Opt.as_view(), name='jenkins_job_opt'),
