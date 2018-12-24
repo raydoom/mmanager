@@ -126,10 +126,9 @@ def send_data_over_websocket(request, channel):
 				break
 			if channel.recv_ready():
 				recvfromssh = channel.recv(16371)
-				log = recvfromssh.decode(encoding='UTF-8').encode(encoding='UTF-8')
-				request.websocket.send(str(log))
-			else:
-				request.websocket.send('')
+				log = recvfromssh.decode(encoding='UTF-8')
+				request.websocket.send(log)
+			request.websocket.send('')
 			time.sleep(0.5)
 		except Exception as e:
 			logging.error(e)

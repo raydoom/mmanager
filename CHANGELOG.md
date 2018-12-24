@@ -3,7 +3,7 @@
 
 ### 2018/12/24
 - 使用paramiko的channal模块实现实时查看container和process日志
-- 修复日志查看功能中，客户端关闭后，服务端无法关闭相应线程的问题
+- 修复日志查看功能中，客户端关闭后，服务端无法关闭相应线程的问题(process)
 
 ### 2018/12/20
 - 使用docker-py和supervisor的api的最后一个版本
