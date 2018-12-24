@@ -115,3 +115,22 @@ def get_channel_over_ssh(ip='', port='22', username='', password='', cmd=''):
 	except Exception as e:
 		logging.error(e)
 		return None 
+
+# 将日志发送到websocket目标页面
+def send_data_over_websocket(request, channel):
+	while True:
+		try:
+			if request.websocket.is_closed(): # 检测客户端心跳，如果客户端关闭，则停止读取和发送日志
+				print ('websocket is closed')
+				channel.close()
+				break
+			if channel.recv_ready():
+				recvfromssh = channel.recv(16371)
+				log = recvfromssh.decode(encoding='UTF-8').encode(encoding='UTF-8')
+				request.websocket.send(str(log))
+			else:
+				request.websocket.send('')
+			time.sleep(0.5)
+		except Exception as e:
+			logging.error(e)
+

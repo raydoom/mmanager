@@ -45,7 +45,7 @@ class Server_List(View):
 				for i in result:
 					if i.statename == 'RUNNING':
 						result_running +=1
-				server.description = str(len(result)) + ' apps, ' + str(result_running) + ' running'
+				server.description = str(len(result)) + ' processes, ' + str(result_running) + ' running'
 			server_list.append(server)
 		for server in Jenkins_Server.objects.all().order_by('ip'):
 			server.type = 'jenkins'

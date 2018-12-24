@@ -11,18 +11,22 @@
   <h2>Tail Log</h2>
 </div>
 
+
 <script type="text/javascript">
+var wsurl="ws://"+window.location.host+window.location.pathname+window.location.search
+console.log(wsurl)
+
  $(function () {
         window.onload=function () {
             if (window.s) {
                 window.s.close()
             }
             /*创建socket连接*/
-            var socket = new WebSocket("{{wsurl}}");
+            var socket = new WebSocket(wsurl);
             socket.onopen = function () {
                 console.log('WebSocket open');//成功连接上Websocket
             };
-            socket.onmessage = function (e) {
+            socket.onmessage = function (e)  {
                 $('#messagecontainer').append('<p style="word-break: break-all;">' + e.data + '</p>');
                 var now = new Date(); //实现自动滚动到底部
                 var div = document.getElementById('messagecontainer'); //实现自动滚动到底部

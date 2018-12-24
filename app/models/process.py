@@ -22,6 +22,6 @@ class Process:
 		return (stdin, stdout, stderr)
 
 	def tail_process_logs(self):
-		cmd = 'supervisorctl tail -f ' + self.process_name		
+		cmd = 'supervisorctl tail -f ' + self.process_name	
 		channel = get_channel_over_ssh(self.host_ip, self.host_port, self.host_username, self.host_password, cmd)
 		return (channel)

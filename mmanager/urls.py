@@ -1,6 +1,7 @@
 # urls.py
 
 from django.conf.urls import url
+from django.views.generic.base import RedirectView
 from django.contrib import admin
 from app.views import ( action_log_views, directory_viewer_views, 
                         docker_server_views, jenkins_server_views, 
@@ -10,6 +11,7 @@ from app.views import ( action_log_views, directory_viewer_views,
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls,name=admin),
+    url(r'^favicon.ico$', RedirectView.as_view(url='/static/img/favicon.ico')),
 
     url(r'^dockerserver', docker_server_views.Docker_Server_List.as_view(), name='docker_server_list'),
     url(r'^container_opt', docker_server_views.Container_Option.as_view(), name='container_option'),
@@ -17,7 +19,7 @@ urlpatterns = [
     url(r'^tail_container_log', docker_server_views.tail_container_log, name='tail_container_log'),
 
     url(r'^supervisorserver', supervisor_server_views.Supervisor_Server_List.as_view(), name='supervisor_server'),
-    url(r'^process_opt', supervisor_server_views.process_option.as_view(), name='process_opt'),
+    url(r'^process_opt', supervisor_server_views.Process_Option.as_view(), name='process_opt'),
     url(r'^tail_process_log', supervisor_server_views.tail_process_log, name='tail_process_log'),
 
     url(r'^jenkinsserver', jenkins_server_views.Jenkins_Server_List.as_view(), name='jenkins_server'),
@@ -42,8 +44,6 @@ urlpatterns = [
 
     url(r'^addserver/', server_list_views.Add_Server.as_view(), name='add_server'),
     url(r'^deleteserver/', server_list_views.Delete_Server.as_view(), name='delete_server'),
-
-    #url(r'^taillog', supervisor_server_views.tail_log),
     
     url(r'', docker_server_views.Docker_Server_List.as_view(), name='default'),
     

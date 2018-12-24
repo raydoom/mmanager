@@ -21,7 +21,7 @@
     <p class="form-control-static">
         <select class="form-control" name="filter_select">
           <option>Status =</option>
-          <option  selected="selected">App</option>
+          <option  selected="selected">Name</option>
           <option>Location</option>
         </select>
     </p>
@@ -33,9 +33,9 @@
     More Actions <span class="caret"></span>
   </button>
   <ul class="dropdown-menu dropdown-menu-right">
-    <li><a href="#">Restart App</a></li>
-    <li><a href="#">Start App</a></li>
-    <li><a href="#">Stop App</a></li>
+    <li><a href="#">Restart Process</a></li>
+    <li><a href="#">Start Process</a></li>
+    <li><a href="#">Stop Process</a></li>
     <li role="separator" class="divider"></li>
     <li><a href="#">Other</a></li>
   </ul>
@@ -45,41 +45,41 @@
 
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ app_count }} items</span>
+            <span class="table_count">Displaying {{ process_count }} items</span>
         </td>
     </tr>
     <tr class="active">
         <th><input type="checkbox"></th>
         <th width="10%">Status</th>
-        <th width="30%">App</thw>
+        <th width="30%">Name</thw>
         <th width="20%">Location</th>
         <th width="25%">Description</th>
         <th colspan="4" width="15%">Actions</th>
     </tr>
-    {% for app in app_list %}
+    {% for process in process_list %}
     <tr>
         <td>
             <input type="checkbox">
         </td>
         <td style="text-transform:capitalize;">
-            {{app.statename|lower}}
+            {{process.statename|lower}}
         </td>
-        <td>{{app.name}}</td>
-        <td>{{app.host_ip}}</td>
-        <td>{{app.description|lower}}</td>
+        <td>{{process.name}}</td>
+        <td>{{process.host_ip}}</td>
+        <td>{{process.description|lower}}</td>
         <td>
  
           <!-- Split button -->
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="javascript:;" onclick="process_opt('{{app.host_ip}}','{{app.host_port}}','{{app.name}}','restart')">Restart</a>
+            <a type="button" class="btn btn-default btn-sm" href="javascript:;" onclick="process_opt('{{process.host_ip}}','{{process.host_port}}','{{process.name}}','restart')">Restart</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="javascript:;" onclick="process_opt('{{app.host_ip}}','{{app.host_port}}','{{app.name}}','start')">Start App</a></li>
-              <li><a href="javascript:;" onclick="process_opt('{{app.host_ip}}','{{app.host_port}}','{{app.name}}','stop')">Stop App</a></li>
+              <li><a href="javascript:;" onclick="process_opt('{{process.host_ip}}','{{process.host_port}}','{{process.name}}','start')">Start Process</a></li>
+              <li><a href="javascript:;" onclick="process_opt('{{process.host_ip}}','{{process.host_port}}','{{process.name}}','stop')">Stop Process</a></li>
               <li role="separator" class="divider"></li>
-              <li><a href="/tail_process_log/?server_ip={{app.host_ip}}&server_port={{app.host_port}}&process_name={{app.name}}" target="_blank">Tail Log</a></li>
+              <li><a href="/tail_process_log/?server_ip={{process.host_ip}}&server_port={{process.host_port}}&process_name={{process.name}}" target="_blank">Tail Log</a></li>
             </ul>
           </div>
         </td>
@@ -88,7 +88,7 @@
     {% endfor %}
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ app_count }} items</span>
+            <span class="table_count">Displaying {{ process_count }} items</span>
         </td>
     </tr>
 </table>

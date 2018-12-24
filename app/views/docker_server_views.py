@@ -6,12 +6,12 @@ from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from dwebsocket import require_websocket, accept_websocket
 
-import docker, logging, os, configparser, json, time
+import docker, logging, os, configparser, json, time, threading
 
 from ..models.server import Server, ServerType
 from ..models.container import Container
 
-from ..utils.common_func import format_log, auth_controller, get_dir_info, get_file_contents, log_record, get_time_stamp
+from ..utils.common_func import format_log, auth_controller, get_dir_info, get_file_contents, log_record, get_time_stamp, send_data_over_websocket
 
 
 # 获取docker服务器及容器列表，根据选项和关键字过滤
@@ -29,7 +29,7 @@ class Docker_Server_List(View):
 					for container in containers:
 						if filter_select == 'Status =' and filter_keyword.lower() == container.status.lower():
 							container_list.append(container)
-						if filter_select == 'App' and filter_keyword in container.name:
+						if filter_select == 'Name' and filter_keyword in container.name:
 							container_list.append(container)		
 						if filter_select == 'Location' and filter_keyword in container.host_ip:
 							container_list.append(container)
@@ -68,12 +68,17 @@ class Container_Option(View):
 		log_record(request.session.get('username'), log_detail=log_detail)
 		return HttpResponse(result)
 
-# 获取容器日志
+# 实时查看容器日志
 @auth_controller
 @accept_websocket
 def tail_container_log(request):
-	global channel
 	if not request.is_websocket():
+		server_ip = request.GET.get('server_ip')
+		server_port = int(request.GET.get('server_port'))
+		container_id = request.GET.get('container_id')
+		container_name = request.GET.get('container_name')
+		return render(request, 'tail_log.html', {'name': container_name, 'server_ip': server_ip})
+	else: 
 		server_ip = request.GET.get('server_ip')
 		server_port = int(request.GET.get('server_port'))
 		container_id = request.GET.get('container_id')
@@ -81,28 +86,15 @@ def tail_container_log(request):
 		server = ServerType.objects.get(server_type='docker').server_set.all().get(ip=server_ip, port=int(server_port))
 		container = Container()
 		container.host_ip = server.ip
-		container._host_port = server.port
+		container.host_port = server.port
 		container.host_username = server.username
 		container.host_password = server.password
 		container.container_id = container_id
 		channel = container.tail_container_logs()
-		wsurl = 'ws://' + request.get_host() + request.path
-
-		return render(request, 'tail_log.html', {'wsurl': wsurl, 'name': container_name, 'server_ip': server_ip})
-	else:
-		while True:
-			try:
-				if request.websocket.is_closed(): #检测客户端心跳，如果客户端关闭，则停止读取和发送日志
-					print ('websocket is closed')
-					channel.close()
-					break
-				if channel.recv_ready():
-					recvfromssh = channel.recv(16371)
-					log = recvfromssh.decode()
-					request.websocket.send(log)
-				time.sleep(0.5)
-			except Exception as e:
-				logging.error(e)
+		# 为每个websocket连接开启独立线程
+		t = threading.Thread(target=send_data_over_websocket, args=(request,channel))
+		t.start()
+		t.join()
 
 # 容器命令行
 @auth_controller
