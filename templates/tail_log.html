@@ -30,6 +30,16 @@ console.log(wsurl)
                 $('#messagecontainer').append('<p style="word-break: break-all;">' + e.data + '</p>');
                 var now = new Date(); //实现自动滚动到底部
                 var div = document.getElementById('messagecontainer'); //实现自动滚动到底部
+                               
+/*                var t = div.scrollTop;
+                var h = div.scrollHeight;
+                var w = div.scrollWidth;
+                console.log(t+' '+ w+'  '+h)
+
+                if (!(div.scrollHeight-t>400))
+                    {div.scrollTop = div.scrollHeight;}*/
+
+
                 div.scrollTop = div.scrollHeight; //实现自动滚动到底部
             };
             // Call onopen directly if socket is already open

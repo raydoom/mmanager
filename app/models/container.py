@@ -22,8 +22,8 @@ class Container:
 
 	def container_opt(self, container_opt):
 		cmd = 'docker ' +  container_opt + ' ' + self.container_id
-		stdin, stdout, stderr = exec_command_over_ssh(self.host_ip, self.host_port, self.host_username, self.host_password, cmd)
-		return (stdin, stdout, stderr)
+		stdout = exec_command_over_ssh(self.host_ip, self.host_port, self.host_username, self.host_password, cmd)
+		return (stdout)
 
 	def tail_container_logs(self):
 		cmd = 'docker logs -f --tail=10 ' + self.container_id

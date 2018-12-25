@@ -2,12 +2,13 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, StreamingHttpResponse
 from django.views import View
 from django.utils.decorators import method_decorator
-import xmlrpc.client, logging, os, configparser, json, time, threading
+import logging, json, time, threading
 from dwebsocket import require_websocket, accept_websocket
 
 from ..models.server import Server, ServerType
 from ..models.process import Process
 from ..utils.common_func import get_time_stamp, format_log, auth_controller, log_record, send_data_over_websocket
+from ..utils.get_application_list import get_process_list
 
 
 # 获取supervisor服务器及程序列表，根据选项和关键字过滤
@@ -18,22 +19,20 @@ class Supervisor_Server_List(View):
 		filter_select = request.GET.get('filter_select')
 		servers = ServerType.objects.get(server_type='supervisor').server_set.all().order_by('ip')
 		process_list = []
-		for server in servers:
-			try:
-				processes = server.get_process_list()
-				if filter_keyword != None:
-					for process in processes:
-						if filter_select == 'Status =' and filter_keyword.lower() == process.statename.lower():
-								process_list.append(process)
-						if filter_select == 'Name' and filter_keyword in process.name:
-								process_list.append(process)		
-						if filter_select == 'Location' and filter_keyword in process.host_ip:
-								process_list.append(process)
-				else:
-					for process in processes:
-						process_list.append(process)
-			except Exception as e:
-				logging.error(e)		
+		try:
+			processes = get_process_list(servers)
+			if filter_keyword != None:
+				for process in processes:
+					if filter_select == 'Status =' and filter_keyword.lower() == process.statename.lower():
+							process_list.append(process)
+					if filter_select == 'Name' and filter_keyword in process.name:
+							process_list.append(process)		
+					if filter_select == 'Location' and filter_keyword in process.host_ip:
+							process_list.append(process)
+			else:
+				process_list = processes
+		except Exception as e:
+			logging.error(e)		
 		process_count = len(process_list)
 		return render(request, 'supervisor_server.html', {'process_list': process_list, 'process_count': process_count})
 

@@ -1,5 +1,7 @@
 # Change Log
 
+### 2018/12/25
+- 对paramiko连接服务器获取process和container进行多线程优化，加快处理速度
 
 ### 2018/12/24
 - 使用paramiko的channal模块实现实时查看container和process日志

@@ -2,17 +2,15 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, StreamingHttpResponse
 from django.views import View
 from django.utils.decorators import method_decorator
-# from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from dwebsocket import require_websocket, accept_websocket
 
-import docker, logging, os, configparser, json, time, threading
+import logging, os, json, time, threading
 
 from ..models.server import Server, ServerType
 from ..models.container import Container
 
 from ..utils.common_func import format_log, auth_controller, get_dir_info, get_file_contents, log_record, get_time_stamp, send_data_over_websocket
-
+from ..utils.get_application_list import get_container_list
 
 # 获取docker服务器及容器列表，根据选项和关键字过滤
 @method_decorator(auth_controller, name='dispatch')
@@ -22,22 +20,20 @@ class Docker_Server_List(View):
 		filter_select = request.GET.get('filter_select')
 		servers = ServerType.objects.get(server_type='docker').server_set.all().order_by('ip')
 		container_list = []
-		for server in servers:
-			try:
-				containers = server.get_container_list()
-				if filter_keyword != None:
-					for container in containers:
-						if filter_select == 'Status =' and filter_keyword.lower() == container.status.lower():
-							container_list.append(container)
-						if filter_select == 'Name' and filter_keyword in container.name:
-							container_list.append(container)		
-						if filter_select == 'Location' and filter_keyword in container.host_ip:
-							container_list.append(container)
-				else:
-					for container in containers:
+		try:
+			containers = get_container_list(servers)
+			if filter_keyword != None:
+				for container in containers:
+					if filter_select == 'Status =' and filter_keyword.lower() == container.statename.lower():
 						container_list.append(container)
-			except Exception as e:
-				logging.error(e)
+					if filter_select == 'Name' and filter_keyword in container.name:
+						container_list.append(container)		
+					if filter_select == 'Location' and filter_keyword in container.host_ip:
+						container_list.append(container)
+			else:
+				container_list = containers
+		except Exception as e:
+			logging.error(e)
 		container_count = len(container_list)
 		return render(request, 'docker_server.html', {'container_list': container_list, 'container_count': container_count})
 	def post(self, request):

@@ -18,8 +18,8 @@ class Process:
 
 	def process_opt(self, process_opt):
 		cmd = 'supervisorctl ' +  process_opt + ' ' + self.name
-		stdin, stdout, stderr = exec_command_over_ssh(self.host_ip, self.host_port, self.host_username, self.host_password, cmd)
-		return (stdin, stdout, stderr)
+		stdout = exec_command_over_ssh(self.host_ip, self.host_port, self.host_username, self.host_password, cmd)
+		return (stdout)
 
 	def tail_process_logs(self):
 		cmd = 'supervisorctl tail -f ' + self.process_name	

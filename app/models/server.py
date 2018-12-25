@@ -29,7 +29,7 @@ class Server(models.Model):
 	def get_container_list(self):
 		container_list = []
 		cmd = 'docker ps -a | grep -v IMAGE'
-		stdin, stdout, stderr = exec_command_over_ssh(self.ip, self.port, self.username, self.password, cmd)
+		stdout = exec_command_over_ssh(self.ip, self.port, self.username, self.password, cmd)
 		container_infos = stdout.decode().split('\n')
 		for i in range(0,len(container_infos)-1):
 			container_info = re.split('  +', container_infos[i])
@@ -56,7 +56,7 @@ class Server(models.Model):
 	def get_process_list(self):
 		process_list = []
 		cmd = 'supervisorctl status'
-		stdin, stdout, stderr = exec_command_over_ssh(self.ip, self.port, self.username, self.password, cmd)
+		stdout = exec_command_over_ssh(self.ip, self.port, self.username, self.password, cmd)
 		process_lists = stdout.decode().split('\n')
 		for i in range(0,len(process_lists)-1):
 			process_info = re.split('  +', process_lists[i])
