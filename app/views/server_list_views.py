@@ -6,11 +6,10 @@ from django.utils.decorators import method_decorator
 
 import docker, logging, os, configparser, json
 
-from ..models.docker_server_models import  Docker_Server
 from ..models.server import Server, ServerType
-from ..models.supervisor_server_models import  Supervisor_Server
 from ..models.jenkins_server_models import  Jenkins_Server
 from ..utils.common_func import auth_controller, log_record
+from ..utils.get_application_list import get_container_list, get_process_list
 
 # 所有服务器列表
 @method_decorator(auth_controller, name='dispatch')
@@ -21,9 +20,12 @@ class Server_List(View):
 		server_list = []
 		server_list_filter = []
 		for server in  ServerType.objects.get(server_type='docker').server_set.all().order_by('ip'):
-			server.type = 'docker'
+			# get_container_list只能接受列表参数，无法接受单个对象作为参数，生成只含一个server对象的列表server_list_odd
+			server_list_odd = []
+			server_list_odd.append(server)
+			server.type = server.server_type.first()
 			try:
-				result = server.get_container_list()
+				result = get_container_list(server_list_odd)
 				server.status = 'Connected'
 				result_running = 0
 				for i in result:
@@ -33,32 +35,39 @@ class Server_List(View):
 			except Exception as e:
 				logging.error(e)
 				server.status = 'Disonnected'
+				server.description = 'none'
 			server_list.append(server)
 		for server in  ServerType.objects.get(server_type='supervisor').server_set.all().order_by('ip'):
-			server.type = 'supervisor'
-			result = server.get_process_list()
-			if result == None:
-				server.status = 'Disconnected'
-			else:
+			server_list_odd = []
+			server_list_odd.append(server)
+			server.type = server.server_type.first()
+			try:
+				result = get_process_list(server_list_odd)
 				server.status = 'Connected'
 				result_running = 0
 				for i in result:
 					if i.statename == 'RUNNING':
 						result_running +=1
 				server.description = str(len(result)) + ' processes, ' + str(result_running) + ' running'
+			except Exception as e:
+				logging.error(e)
+				server.status = 'Disonnected'	
+				server.description = 'none'			
 			server_list.append(server)
 		for server in Jenkins_Server.objects.all().order_by('ip'):
 			server.type = 'jenkins'
-			result = server.get_all_jobs_list()
-			if result == None:
-				server.status = 'Disconnected'
-			else:
+			try:
+				result = server.get_all_jobs_list()
 				server.status = 'Connected'
 				result_blue = 0
 				for i in result:
 					if i['color'] == 'blue':
 						result_blue +=1
 				server.description = str(len(result)) + ' jobs, ' + str(result_blue) + ' blue'
+			except Exception as e:
+				logging.error(e)
+				server.status = 'Disonnected'	
+				server.description = 'none'
 			server_list.append(server)
 		if filter_keyword != None:
 			for server in server_list:

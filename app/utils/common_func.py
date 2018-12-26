@@ -142,7 +142,7 @@ def send_data_over_websocket(request, channel):
 				break
 			if channel.recv_ready():
 				recvfromssh = channel.recv(16371)
-				log = recvfromssh.decode(encoding='UTF-8')
+				log = recvfromssh
 				request.websocket.send(log)
 			request.websocket.send('')
 			time.sleep(0.5)
