@@ -13,34 +13,37 @@
 
 
 <script type="text/javascript">
-var wsurl="ws://"+window.location.host+window.location.pathname+window.location.search
-console.log(wsurl)
-
- $(function () {
+$(function () {
         window.onload=function () {
             if (window.s) {
                 window.s.close()
             }
             /*创建socket连接*/
+            var wsurl="ws://"+window.location.host+window.location.pathname+window.location.search
             var socket = new WebSocket(wsurl);
             socket.onopen = function () {
                 console.log('WebSocket open');//成功连接上Websocket
             };
             socket.onmessage = function (e)  {
+                //获取messagecontainer相关参数，根据参数设置自动滚动显示
+                window.viewH =$("#messagecontainer").height(),//可见高度
+                window.contentH =$("#messagecontainer").get(0).scrollHeight,//内容高度
+                window.scrollTop =$("#messagecontainer").scrollTop();//滚动高度 
+
+                //判断是否存在滚动条，当第一次出现滚动条时，开始自动滚动内容 
+                var message_container=document.getElementById("messagecontainer"); 
+                if(message_container.scrollHeight<=message_container.clientHeight){
+                window.viewH =1,//可见高度
+                window.contentH =1,//内容高度
+                window.scrollTop =1;//滚动高度 
+                }
                 $('#messagecontainer').append('<p style="word-break: break-all;">' + e.data + '</p>');
-                var now = new Date(); //实现自动滚动到底部
-                var div = document.getElementById('messagecontainer'); //实现自动滚动到底部
-                               
-/*                var t = div.scrollTop;
-                var h = div.scrollHeight;
-                var w = div.scrollWidth;
-                console.log(t+' '+ w+'  '+h)
-
-                if (!(div.scrollHeight-t>400))
-                    {div.scrollTop = div.scrollHeight;}*/
-
-
-                div.scrollTop = div.scrollHeight; //实现自动滚动到底部
+                    //当滚动到距离底部1%时，自动滚动，否则不自动滚动
+                    if(scrollTop/(contentH -viewH) >= 0.99){ 
+                        var now = new Date(); //实现自动滚动到底部
+                        var div = document.getElementById('messagecontainer'); //实现自动滚动到底部
+                        div.scrollTop = div.scrollHeight; //实现自动滚动到底部
+                        }
             };
             // Call onopen directly if socket is already open
             if (socket.readyState == WebSocket.OPEN) socket.onopen();
