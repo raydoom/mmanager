@@ -21,7 +21,7 @@ class Docker_Server_List(View):
 		servers = ServerType.objects.get(server_type='docker').server_set.all().order_by('ip')
 		container_list = []
 		try:
-			containers = get_container_list(servers)
+			containers = get_container_lists(servers)
 			if filter_keyword != None:
 				for container in containers:
 					if filter_select == 'Status =' and filter_keyword.lower() == container.statename.lower():

@@ -25,7 +25,7 @@ class Server_List(View):
 			server_list_odd.append(server)
 			server.type = server.server_type.first()
 			try:
-				result = get_container_list(server_list_odd)
+				result = get_container_lists(server_list_odd)
 				server.status = 'Connected'
 				result_running = 0
 				for i in result:
@@ -42,7 +42,7 @@ class Server_List(View):
 			server_list_odd.append(server)
 			server.type = server.server_type.first()
 			try:
-				result = get_process_list(server_list_odd)
+				result = get_process_lists(server_list_odd)
 				server.status = 'Connected'
 				result_running = 0
 				for i in result:

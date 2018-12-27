@@ -20,7 +20,7 @@ class Supervisor_Server_List(View):
 		servers = ServerType.objects.get(server_type='supervisor').server_set.all().order_by('ip')
 		process_list = []
 		try:
-			processes = get_process_list(servers)
+			processes = get_process_lists(servers)
 			if filter_keyword != None:
 				for process in processes:
 					if filter_select == 'Status =' and filter_keyword.lower() == process.statename.lower():
