@@ -128,7 +128,7 @@ def container_console(request):
 		# 连接错误，返回
 		if 'Error' in init_recieve:
 			logging.error(init_recieve)
-			request.websocket.send(' container is not running or not support shell...')
+			request.websocket.send(' container is not running or not support shell... ')
 			time.sleep(60)
 			return 0
 		channel.send('\n')
