@@ -8,7 +8,7 @@ from dwebsocket import require_websocket, accept_websocket
 from ..models.server import Server, ServerType
 from ..models.process import Process
 from ..utils.common_func import get_time_stamp, format_log, auth_controller, log_record, send_data_over_websocket
-from ..utils.get_application_list import get_process_list
+from ..utils.get_application_list import get_process_lists
 
 
 # 获取supervisor服务器及程序列表，根据选项和关键字过滤

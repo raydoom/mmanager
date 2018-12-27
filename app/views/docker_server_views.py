@@ -10,7 +10,7 @@ from ..models.server import Server, ServerType
 from ..models.container import Container
 
 from ..utils.common_func import format_log, auth_controller, get_dir_info, get_file_contents, log_record, get_time_stamp, send_data_over_websocket, shell_output_sender, shell_input_reciever
-from ..utils.get_application_list import get_container_list
+from ..utils.get_application_list import get_container_lists
 
 # 获取docker服务器及容器列表，根据选项和关键字过滤
 @method_decorator(auth_controller, name='dispatch')

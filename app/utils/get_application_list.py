@@ -26,7 +26,7 @@ class MyThread(threading.Thread):
 			return None
 
 # 获取所有服务器上的container信息，返回container列表
-def get_container_list(servers):
+def get_container_lists(servers):
 	container_list = []
 	t_list = []
 	results = []
@@ -44,7 +44,7 @@ def get_container_list(servers):
 	return (container_list)
 
 # 获取所有服务器上的process信息，返回process列表
-def get_process_list(servers):
+def get_process_lists(servers):
 	process_list = []
 	t_list = []
 	results = []

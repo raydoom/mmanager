@@ -9,7 +9,7 @@ import logging, os, configparser, json
 from ..models.server import Server, ServerType
 from ..models.jenkins_server_models import  Jenkins_Server
 from ..utils.common_func import auth_controller, log_record
-from ..utils.get_application_list import get_container_list, get_process_list
+from ..utils.get_application_list import get_container_lists, get_process_lists
 
 # 所有服务器列表
 @method_decorator(auth_controller, name='dispatch')
