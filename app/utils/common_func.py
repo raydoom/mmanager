@@ -160,7 +160,6 @@ def shell_output_sender(request, channel):
 		if channel.recv_ready():
 			recvfromssh = channel.recv(16371)
 			request.websocket.send(recvfromssh)
-		#request.websocket.send('aaa')
 		time.sleep(0.1)
 
 # 接受页面输入并发送到容器shell

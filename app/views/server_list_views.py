@@ -4,7 +4,7 @@ from django.views import View
 from django.utils.decorators import method_decorator
 # from django.contrib.auth.decorators import login_required
 
-import docker, logging, os, configparser, json
+import logging, os, configparser, json
 
 from ..models.server import Server, ServerType
 from ..models.jenkins_server_models import  Jenkins_Server

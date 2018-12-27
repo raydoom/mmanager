@@ -12,8 +12,6 @@
 #### 所需组件
 
 - python 3.6
-- django 2.1.3（python模块）
-- docker 3.5.1（python模块）
 - paramiko 2.4.2（python模块）
 - dwebsocket 0.5.10（python模块）
 - pymysql 0.9.2（python模块）
