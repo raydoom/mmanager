@@ -114,11 +114,23 @@ def container_console(request):
 		container.host_username = server.username
 		container.host_password = server.password
 		container.container_id = container_id
-		init_cmd = 'docker exec -it ' + container_id + ' bash\n'
 		channel = container.container_shell()
+		init_cmd = 'docker exec -it ' + container_id + ' bash\n'
 		channel.send(init_cmd)
 		time.sleep(1)
-		channel.recv(16371)
+		init_recieve = channel.recv(16371).decode()
+		# 不支持bash的容器，用sh进行连接
+		if 'executable file not found' in init_recieve:
+			init_cmd = 'docker exec -it ' + container_id + ' sh\n'
+			channel.send(init_cmd)
+			time.sleep(1)
+			init_recieve = channel.recv(16371).decode()
+		# 连接错误，返回
+		if 'Error' in init_recieve:
+			logging.error(init_recieve)
+			request.websocket.send(' container is not running or not support shell...')
+			time.sleep(60)
+			return 0
 		channel.send('\n')
 		# th_reciever为接收用户输入线程 
 		# th_sender为将shell输出发送到web端线程
