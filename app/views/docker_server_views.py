@@ -120,8 +120,8 @@ def container_console(request):
 		time.sleep(1)
 		channel.recv(16371)
 		channel.send('\n')
-
-		# th_reciever # th_sender
+		# th_reciever为接收用户输入线程 
+		# th_sender为将shell输出发送到web端线程
 		th_sender = threading.Thread(target=shell_output_sender, args=(request,channel))
 		th_sender.start()
 		th_reciever = threading.Thread(target=shell_input_reciever, args=(request,channel))
