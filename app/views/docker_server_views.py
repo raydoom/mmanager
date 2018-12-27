@@ -9,7 +9,7 @@ import logging, os, json, time, threading
 from ..models.server import Server, ServerType
 from ..models.container import Container
 
-from ..utils.common_func import format_log, auth_controller, get_dir_info, get_file_contents, log_record, get_time_stamp, send_data_over_websocket
+from ..utils.common_func import format_log, auth_controller, get_dir_info, get_file_contents, log_record, get_time_stamp, send_data_over_websocket, shell_output_sender, shell_input_reciever
 from ..utils.get_application_list import get_container_list
 
 # 获取docker服务器及容器列表，根据选项和关键字过滤
@@ -92,26 +92,42 @@ def tail_container_log(request):
 		t.start()
 		t.join()
 
-# 容器命令行
+# 容器命令行实现
 @auth_controller
 @accept_websocket
 def container_console(request):
-	global container_id
-	global server_cmd
 	if not request.is_websocket():
 		server_ip = request.GET.get('server_ip')
 		server_port = int(request.GET.get('server_port'))
 		container_id = request.GET.get('container_id')
-		container_name = request.GET.get('container_name')	
-		wsurl = 'ws://' + request.get_host() + request.path
-		server_cmd = Docker_Server.objects.filter(ip=server_ip).first()
-		return render(request, 'container_console.html', {'wsurl': wsurl, 'name': container_name, 'server_ip': server_ip})
+		container_name = request.GET.get('container_name')
+		return render(request, 'container_console.html', {'name': container_name, 'server_ip': server_ip})
 	else:
-		for cmd in request.websocket:
-			cmd = cmd.decode()
-			print (cmd)
-			result = server_cmd.exec_cmd(container_id, cmd)[1].decode()
-			request.websocket.send(str(result))
+		server_ip = request.GET.get('server_ip')
+		server_port = int(request.GET.get('server_port'))
+		container_id = request.GET.get('container_id')
+		container_name = request.GET.get('container_name')
+		server = ServerType.objects.get(server_type='docker').server_set.all().get(ip=server_ip, port=int(server_port))
+		container = Container()
+		container.host_ip = server.ip
+		container.host_port = server.port
+		container.host_username = server.username
+		container.host_password = server.password
+		container.container_id = container_id
+		init_cmd = 'docker exec -it ' + container_id + ' bash\n'
+		channel = container.container_shell()
+		channel.send(init_cmd)
+		time.sleep(1)
+		channel.recv(16371)
+		channel.send('\n')
+
+		# th_reciever # th_sender
+		th_sender = threading.Thread(target=shell_output_sender, args=(request,channel))
+		th_sender.start()
+		th_reciever = threading.Thread(target=shell_input_reciever, args=(request,channel))
+		th_reciever.start()
+		th_sender.join()
+		th_reciever.join()
 
 
 

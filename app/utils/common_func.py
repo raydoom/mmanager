@@ -116,6 +116,7 @@ def exec_command_over_ssh(ip='', port='22', username='', password='', cmd=''):
 		logging.error(e)
 		return None
 
+# 获取paramiko的channel.exec_command对象
 def get_channel_over_ssh(ip='', port='22', username='', password='', cmd=''):
 	try:
 		ssh_client = paramiko.SSHClient()
@@ -149,4 +150,26 @@ def send_data_over_websocket(request, channel):
 		except Exception as e:
 			logging.error(e)
 
+# 发送容器shell的输出结果到web页面
+def shell_output_sender(request, channel):
+	while True:
+		if request.websocket.is_closed(): # 检测客户端心跳，如果客户端关闭，则停止读取和发送日志
+			print ('websocket is closed')
+			channel.close()
+			break
+		if channel.recv_ready():
+			recvfromssh = channel.recv(16371)
+			request.websocket.send(recvfromssh)
+		#request.websocket.send('aaa')
+		time.sleep(0.1)
 
+# 接受页面输入并发送到容器shell
+def shell_input_reciever(request, channel):
+	while True:
+		if request.websocket.is_closed(): # 检测客户端心跳，如果客户端关闭，则停止读取和发送日志
+			print ('websocket is closed')
+			channel.close()
+			break
+		for msg in request.websocket:
+			cmd = msg.decode()
+			channel.send(cmd)

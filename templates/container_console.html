@@ -11,68 +11,40 @@
   <h2>Container Console</h2>
 </div>
 
-    <script type="text/javascript">//<![CDATA[
-    $(function () {
-        window.onload=function () {
-            if (window.s) {
-                window.s.close()
-            }
-            /*创建socket连接*/
-            var socket = new WebSocket("{{wsurl}}");
-            socket.onopen = function () {
-                console.log('WebSocket open');//成功连接上Websocket
-            };
-            socket.onmessage = function (e) {
-                console.log('message: ' + e.data);//打印出服务端返回过来的数据
-                $('#shellcontainer').append('<p style="word-break: break-all;">' + e.data + '</p>');
-                $('#message').removeAttr('autofocus')
-                $('#message').attr('disabled','disabled')
-                $('#message').attr('id','')
-                $('#shellcontainer').append('[root@localhost]# <input type="text" id="message" value="ls"/>');
-                var now = new Date(); //实现自动滚动到底部
-                var div = document.getElementById('shellcontainer'); //实现自动滚动到底部
-                div.scrollTop = div.scrollHeight; //实现自动滚动到底部
-                $('#message').attr('autofocus','autofocus');
-                
+    <script>
+            var schema = window.location.protocol=='https:' ? 'wss:' : 'ws:';
+            var wsurl=schema+"//"+window.location.host+window.location.pathname+window.location.search
+            var socket = new WebSocket(wsurl);
 
-            };
-            // Call onopen directly if socket is already open
-            if (socket.readyState == WebSocket.OPEN) socket.onopen();
-            window.s = socket;
-        };
+  socket.onopen = function () {
 
-        //按下回车键时发送命令到后台
-        document.onkeydown=function(event){
-        var e = event || window.event || arguments.callee.caller.arguments[0];
-        if(e && e.keyCode==13){
-         if (!window.s) {
-                alert("websocket未连接.");
-            } else {
-                window.s.send($('#message').val());//通过websocket发送数据
-            };
-        }};
+    var term = new Terminal();
+    term.open(document.getElementById('terms'));
 
-        //关闭websocket连接
-        $('#close_websocket').click(function () {
-            if (window.s) {
-                window.s.close();//关闭websocket
-                console.log('websocket已关闭');
-            }
-        });
-
+    term.on('data', function (data) {
+      console.log(data);
+      socket.send(data);
     });
 
-    //]]></script>
+    socket.onmessage = function (msg) {
+      console.log(msg);
+      console.log(msg.data);
+      term.write(msg.data);
+    };
+    socket.onerror = function (e) {
+      console.log(e);
+    };
 
-<h5>{{container_name}}@{{server_ip}}</h5>
-<div class="panel panel-default">
-    <div class="panel-body">
-    <pre style="background: white;">
-      <div style=" height:500px; overflow:auto;" id="shellcontainer">
-[root@localhost]# <input type="text" id="message" value="ls"/>
-    </div>
-    </pre>
-  </div>
+    socket.onclose = function (e) {
+      console.log(e);
+      term.destroy();
+    };
+  };
+
+</script>
+
+<div id='terms'>
+    
 </div>
 
 {% endblock %}

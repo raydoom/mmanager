@@ -19,7 +19,8 @@ $(function () {
                 window.s.close()
             }
             /*创建socket连接*/
-            var wsurl="ws://"+window.location.host+window.location.pathname+window.location.search
+            var schema = window.location.protocol=='https:' ? 'wss:' : 'ws:';
+            var wsurl=schema+"//"+window.location.host+window.location.pathname+window.location.search
             var socket = new WebSocket(wsurl);
             socket.onopen = function () {
                 console.log('WebSocket open');//成功连接上Websocket
