@@ -129,3 +129,41 @@ class Delete_Server(View):
 		if server_type == 'jenkins':
 			Jenkins_Server.objects.filter(ip=ip, port=int(port)).delete()
 		return redirect('/serverlist/')
+
+# 编辑服务器
+@method_decorator(auth_controller, name='dispatch')
+class Edit_Server(View):
+	def get(self, request):
+		server_type = request.GET.get('servertype')
+		ip = request.GET.get('ip')
+		port = request.GET.get('port')
+		if server_type == 'docker' or server_type == 'supervisor':		
+			server = ServerType.objects.get(server_type=server_type).server_set.get(ip=ip,port=int(port))
+			server_type = server.server_type.all().first().server_type.capitalize()
+			return render(request, 'edit_server.html', {'server': server, 'server_type': server_type})
+		if server_type == 'jenkins':
+			return HttpResponse('...')
+
+	def post(self, request):
+		hostname = request.POST.get('hostname')
+		server_type = request.POST.get('server_type')
+		ip = request.POST.get('ip')
+		port = request.POST.get('port')
+		apiversion = request.POST.get('apiversion','')
+		username = request.POST.get('username')
+		password = request.POST.get('password')
+		description = request.POST.get('description')
+		if server_type == 'Docker' or server_type == 'Supervisor':
+			server_type_get = ServerType.objects.get(server_type=server_type.lower())
+			obj = ServerType.objects.get(server_type=server_type_get).server_set.all().filter(ip=ip, port=int(port)).first()
+			obj.hostname=hostname
+			obj.ip=ip
+			obj.port=int(port)
+			obj.username=username
+			obj.description = description
+			if password != '':
+				obj.password = password
+			obj.save()
+		if server_type == 'Jenkins':
+			pass
+		return redirect('/serverlist/')

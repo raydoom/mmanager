@@ -43,6 +43,7 @@ urlpatterns = [
     url(r'^deleteuser/', user_views.Delete_User.as_view(), name='delete_user'),
 
     url(r'^addserver/', server_list_views.Add_Server.as_view(), name='add_server'),
+    url(r'^editserver/', server_list_views.Edit_Server.as_view(), name='edit_server'),
     url(r'^deleteserver/', server_list_views.Delete_Server.as_view(), name='delete_server'),
     
     url(r'', docker_server_views.Docker_Server_List.as_view(), name='default'),
