@@ -34,7 +34,11 @@ class Supervisor_Server_List(View):
 		except Exception as e:
 			logging.error(e)		
 		process_count = len(process_list)
-		return render(request, 'supervisor_server.html', {'process_list': process_list, 'process_count': process_count})
+		if filter_keyword == None:
+			filter_keyword = ''
+		if filter_select == None:
+			filter_select = ''
+		return render(request, 'supervisor_server.html', {'process_list': process_list, 'process_count': process_count, 'filter_keyword': filter_keyword, 'filter_select': filter_select})
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')

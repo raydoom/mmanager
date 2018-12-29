@@ -35,7 +35,11 @@ class Docker_Server_List(View):
 		except Exception as e:
 			logging.error(e)
 		container_count = len(container_list)
-		return render(request, 'docker_server.html', {'container_list': container_list, 'container_count': container_count})
+		if filter_keyword == None:
+			filter_keyword = ''
+		if filter_select == None:
+			filter_select = ''
+		return render(request, 'docker_server.html', {'container_list': container_list, 'container_count': container_count, 'filter_keyword': filter_keyword, 'filter_select': filter_select})
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')
 		filter_select = request.POST.get('filter_select')
