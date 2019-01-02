@@ -77,7 +77,7 @@ class Server_List(View):
 					server_list_filter.append(server)
 				if filter_select == 'Port =' and int(filter_keyword) == server.port:
 					server_list_filter.append(server)
-				if filter_select == 'Type =' and filter_keyword == server.type:
+				if filter_select == 'Type =' and filter_keyword == str(server.type):
 					server_list_filter.append(server)
 			server_list = server_list_filter
 		server_count = len(server_list)
