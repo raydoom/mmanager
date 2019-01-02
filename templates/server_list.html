@@ -20,13 +20,13 @@
   <div class="form-group">
     <p class="form-control-static">
         <select class="form-control" name="filter_select">
-          <option>Host Name</option>
-          <option>IP</option>
-          <option>Port =</option>
-          <option>Type =</option>
+          <option {% if filter_select == "Host Name" or filter_select == "" %} selected="selected" {% endif %}>Host Name</option>
+          <option {% if filter_select == "IP" %} selected="selected" {% endif %}>IP</option>
+          <option {% if filter_select == "Port =" %} selected="selected" {% endif %}>Port =</option>
+          <option {% if filter_select == "Type =" %} selected="selected" {% endif %}>Type =</option>
         </select>
     </p>
-    <input type="text" class="form-control" name="filter_keyword" placeholder="">
+    <input type="text" class="form-control" name="filter_keyword" value="{{filter_keyword}}" placeholder="">
   </div>
   <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> Filter</button>
   <button class="btn btn-default"><a class="fa fa-plus" href="/addserver/"> Add Server</a></button>

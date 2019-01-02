@@ -23,7 +23,7 @@ class Jenkins_Server_List(View):
 					for job in jobs:
 						if filter_select == 'Status =' and filter_keyword.lower() == job['color'].lower():
 								job_list.append(job)
-						if filter_select == 'App' and filter_keyword in job['name']:
+						if filter_select == 'Name' and filter_keyword in job['name']:
 								job_list.append(job)		
 						if filter_select == 'Location' and filter_keyword in job['host_ip']:
 								job_list.append(job)						
@@ -33,7 +33,11 @@ class Jenkins_Server_List(View):
 			except Exception as e:
 				logging.error(e)
 		job_count = len(job_list)
-		return render(request, 'jenkins_server.html', {'job_list': job_list, 'job_count': job_count})
+		if filter_keyword == None:
+			filter_keyword = ''
+		if filter_select == None:
+			filter_select = ''
+		return render(request, 'jenkins_server.html', {'job_list': job_list, 'job_count': job_count, 'filter_keyword': filter_keyword, 'filter_select': filter_select})
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')

@@ -20,13 +20,13 @@
   <div class="form-group">
     <p class="form-control-static">
         <select class="form-control" name="filter_select">
-          <option>User Name =</option>
-          <option>Email</option>
-          <option>Superuser</option>
+          <option {% if filter_select == "User Name =" or filter_select == "" %} selected="selected" {% endif %}>User Name =</option>
+          <option {% if filter_select == "Email" %} selected="selected" {% endif %}>Email</option>
+          <option {% if filter_select == "Superuser" %} selected="selected" {% endif %}>Superuser</option>
           <option>Description</option>
         </select>
     </p>
-    <input type="text" class="form-control" name="filter_keyword" placeholder="">
+    <input type="text" class="form-control" name="filter_keyword" value="{{filter_keyword}}" placeholder="">
   </div>
   <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> Filter</button>
   <button class="btn btn-default"><a class="fa fa-plus" href="/createuser/"> Create User</a></button>

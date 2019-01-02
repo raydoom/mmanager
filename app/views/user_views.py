@@ -118,7 +118,11 @@ class Users(View):
 			# If page is out of range (e.g. 9999), deliver last page of results.
 			user_list = paginator.page(paginator.num_pages)
 		user_list_count = len(user_lists)
-		return render(request, 'users.html', {'user_list': user_list, 'user_list_count': user_list_count, 'page_prefix': page_prefix})
+		if filter_keyword == None:
+			filter_keyword = ''
+		if filter_select == None:
+			filter_select = ''
+		return render(request, 'users.html', {'user_list': user_list, 'user_list_count': user_list_count, 'page_prefix': page_prefix, 'filter_keyword': filter_keyword, 'filter_select': filter_select})
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')
