@@ -95,6 +95,3 @@ var checkItem = "#nav-"+showItem;
   $(checkItem).css('color','#FFF8F1');
  
 }
-
-
-　　

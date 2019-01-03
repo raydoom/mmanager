@@ -43,11 +43,6 @@ class Account(View):
 		userinfo = User_Info.objects.get(username=username)
 		return render(request, 'account.html', {'userinfo': userinfo})
 
-# 添加用户
-@method_decorator(auth_controller, name='dispatch')
-class Add_User(View):
-	def get(self, request):
-		return render(request, 'account.html', {'userinfo': userinfo})
 
 # 修改密码
 @method_decorator(auth_controller, name='dispatch')
@@ -130,7 +125,7 @@ class Users(View):
 		prg_url = '/users/?filter_select=' + filter_select +'&filter_keyword=' + filter_keyword
 		return redirect(prg_url)
 
-# 修改密码
+# 创建用户
 @method_decorator(auth_controller, name='dispatch')
 class Create_User(View):
 	def get(self, request):

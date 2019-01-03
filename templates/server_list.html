@@ -47,7 +47,7 @@
         </td>
     </tr>
     <tr class="active">
-        <th><input type="checkbox"></th>
+        <th><input type="checkbox" name="check_all" id="check_all" onclick="checkAll()"></th>
         <th width="15%">Status</th>
         <th width="10%">Host Name</th>
         <th width="15%">IP</thw>
@@ -58,15 +58,9 @@
     </tr>
     {% for server in server_list %}
     <tr>
-        <td>
-            <input type="checkbox">
-        </td>
-        <td>
-            {{server.status}}
-        </td>
-        <td>
-            {{server.hostname}}
-        </td>
+        <td><input type="checkbox" name="check_item"></td>
+        <td>{{server.status}}</td>
+        <td>{{server.hostname}}</td>
         <td>{{server.ip}}</td>
         <td>{{server.port}}</td>
         <td>{{server.type}}</td>
@@ -96,5 +90,17 @@
 
 </table>
 
+<script> 
+//复选框的全选、取消全选功能
+function checkAll() {
+var all=document.getElementById('check_all');//获取到点击全选的那个复选框的id
+var one=document.getElementsByName('check_item');//获取到复选框的名称
+//因为获得的是数组，所以要循环 为每一个checked赋值
+for(var i=0;i<one.length;i++){
+one[i].checked=all.checked; //直接赋值不就行了嘛
+}
+}
+</script>
 
 {% endblock %}
+

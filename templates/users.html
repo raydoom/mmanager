@@ -47,14 +47,16 @@
         </td>
     </tr>
     <tr class="active">
+        <th><input type="checkbox" name="check_all" id="check_all" onclick="checkAll()"></th>
         <th width="15%">User Name</th>
-        <th width="15%">Email</thw>
+        <th width="20%">Email</thw>
         <th width="15%">Superuser</thw>
-        <th width="30%">Description</th>
+        <th width="35%">Description</th>
         <th width="15%">Action</th>
     </tr>
     {% for user in user_list %}
     <tr>
+        <td><input type="checkbox" name="check_item"></td>
         <td>{{user.username}}</td>
         <td>{{user.email}}</td>
         <td>{{user.is_superuser}}</td>
@@ -97,4 +99,17 @@
     </a>
   </span>
 </div>
+
+<script> 
+//复选框的全选、取消全选功能
+function checkAll() {
+var all=document.getElementById('check_all');//获取到点击全选的那个复选框的id
+var one=document.getElementsByName('check_item');//获取到复选框的名称
+//因为获得的是数组，所以要循环 为每一个checked赋值
+for(var i=0;i<one.length;i++){
+one[i].checked=all.checked; //直接赋值不就行了嘛
+}
+}
+</script>
+
 {% endblock %}
