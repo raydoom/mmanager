@@ -65,22 +65,47 @@ def get_dir_info(path):
 		dir_infos.append(dir_info)
 	return (dir_infos)
 
-# 获取文件最后lines_per_page行的内容
-def get_file_contents(dist, lines_per_page):
+# 获取文件lines_per_page行的内容
+def get_file_contents(dist, lines_per_page, page, filter_keyword):
 	file = dist
+	total_pages = 1
 	contents_list = []
 	try:
 		with open(file, 'r' , encoding='utf-8' ) as file_to_read: # 
-			lines = file_to_read.readlines()
-			if lines_per_page > len(lines):
-				lines_per_page = len(lines)
-			lines_reversed = lines[::-1] #对读取到的行进行反序排列
-			for i in range(0, lines_per_page):
-				contents_list.append(lines_reversed[i])
+			if filter_keyword != '':
+				line_filtered = []
+				lines = file_to_read.readlines()
+				lines_reversed = lines[::-1] #对读取到的行进行反序排列
+				for i in range(0,len(lines_reversed)):
+					if filter_keyword in lines_reversed[i]:
+						line_filtered.append(lines_reversed[i])
+				if len(line_filtered) == 0: # 如果结果为空，直接返回
+					return ([], 0)
+				if lines_per_page > len(line_filtered):
+					lines_per_page = len(line_filtered)
+				line_end = page*lines_per_page
+				if page*lines_per_page >= len(line_filtered):
+					line_end = len(line_filtered) 
+				for i in range((page-1)*lines_per_page, line_end):
+					contents_list.append(line_filtered[i])
+				total_pages = (len(line_filtered)//lines_per_page) + 1				
+			else:
+				lines = file_to_read.readlines()
+				if len(lines) == 0: # 如果结果为空，直接返回
+					return ([], 0)
+				if lines_per_page > len(lines):
+					lines_per_page = len(lines)
+				lines_reversed = lines[::-1] #对读取到的行进行反序排列
+				line_end = page*lines_per_page
+				if page*lines_per_page >= len(lines):
+					line_end = len(lines) 
+				for i in range((page-1)*lines_per_page, line_end):
+					contents_list.append(lines_reversed[i])
+				total_pages = (len(lines)//lines_per_page) + 1
 	except Exception as e:
 		logging.error(e)
 		contents_list = ['Can not open file']	
-	return (contents_list)
+	return (contents_list, total_pages)
 
 
 # 记录日志函数
