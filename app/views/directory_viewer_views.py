@@ -19,7 +19,7 @@ dir_root = conf_dir.get('dir_info', 'dir_root')
 lines_per_page = int(conf_dir.get('dir_info', 'lines_per_page'))
 
 
-## 本地日志目录浏览
+# 本地日志目录浏览
 @method_decorator(auth_controller, name='dispatch')
 class Directory_Viewer(View):
 	def get(self, request):
