@@ -44,8 +44,6 @@
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
                   <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#my-nav" aria-expanded="false">
-                    <span class="sr-only">sw</span>
-                    <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                   </button>
@@ -54,10 +52,6 @@
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="my-nav">
-                  <ul class="nav navbar-nav">
-<!--                     {% block topbar %}
-                    {% endblock %} -->
-                  </ul>
                   <ul class="nav navbar-nav navbar-right">
                       <li class="dropdown">
                         <a href="#" class="fa fa-user dropdown-toggle" id="moret" data-toggle="dropdown" role="button" aria-hapopup="true" aria-expanded="false">
@@ -87,8 +81,6 @@
     {% include 'sidebar.html' %}
   </div>
   <div id="body" class="col-md-10">
-    {% block hovor %}
-    {% endblock %}
     {% block body %}
     {% endblock %}
   </div>
