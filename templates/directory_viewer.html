@@ -13,22 +13,27 @@
     </h2>
 </div>
 
-<div>
-    <table class="table" style="word-break:break-all; word-wrap:break-all;">
-      <tr class="active">
-        <th>
-          Path: {{current_dir}}
-        </th>
-        <tr>
-          <td></td>
-        </tr>
-      </tr>
-    </table>
-</div> 
 <table class="table table-hover">
+    <caption>
+      <form class="form-inline" style="float: right;" action="/directoryviewer/" method="post">
+       {% csrf_token %}
+        <div class="form-group">
+          <p class="form-control-static">
+              <select class="form-control" name="filter_select">
+                <option>Name</option>
+                <option>Size</option>
+                <option>Mtime</option>
+              </select>
+          </p>
+          <input type="text" class="form-control" name="filter_keyword" value="{{filter_keyword}}" placeholder="">
+          <input type="hidden" class="form-control" name="dist" value="{{current_directory}}" placeholder="">
+        </div>
+        <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> Filter</button>
+      </form>
+    </caption>
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ dir_infos_count }} items</span>
+            <span class="table_count">Displaying {{ dir_infos_count }} items <code style="font-size: 13px;">Path: {{current_dir}}</span>
         </td>
     </tr>
     <tr class="active">

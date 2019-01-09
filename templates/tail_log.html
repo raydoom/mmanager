@@ -38,7 +38,7 @@ $(function () {
                 window.contentH =1,//内容高度
                 window.scrollTop =1;//滚动高度 
                 }
-                $('#messagecontainer').append('<p style="word-break: break-all;">' + e.data + '</p>');
+                $('#messagecontainer').append(e.data);
                     //当滚动到距离底部1%时，自动滚动，否则不自动滚动
                     if(scrollTop/(contentH -viewH) >= 0.99){ 
                         var now = new Date(); //实现自动滚动到底部
@@ -54,12 +54,7 @@ $(function () {
     });
 </script>
 
-<h5>{{name}}@{{server_ip}}</h5>
-
-<div>
-    <pre style="background: white;">
-	   <div id="messagecontainer" style="height:500px; overflow:auto">
-    </pre>
-</div>
-
+<h5><code style="font-size: 13px;">{{name}}@{{server_ip}}</code></h5>
+<pre id="messagecontainer" style="background: white;height:500px; overflow:auto">
+</pre>
 {% endblock %}
