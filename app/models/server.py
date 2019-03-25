@@ -25,7 +25,7 @@ class Server(models.Model):
 
 	def __str__(self):
 		return self.hostname
-
+	# 获取容器列表
 	def get_container_list(self):
 		container_list = []
 		cmd = 'docker ps -a | grep -v IMAGE'
@@ -53,14 +53,15 @@ class Server(models.Model):
 			container_list.append(container)
 		return (container_list)
 
+	# 获取supervisor进程列表
 	def get_process_list(self):
 		process_list = []
 		cmd = 'supervisorctl status'
 		stdout = exec_command_over_ssh(self.ip, self.port, self.username, self.password, cmd)
-		process_lists = stdout.decode().split('\n')
-		for i in range(0,len(process_lists)-1):
-			process_info = re.split('  +', process_lists[i])
-			for j in range(0, len(process_lists[i])):
+		process_infos = stdout.decode().split('\n')
+		for i in range(0,len(process_infos)-1):
+			process_info = re.split('  +', process_infos[i])
+			for j in range(0, len(process_infos[i])):
 				 process = Process()
 				 process.host_ip = self.ip 
 				 process.host_port = self.port
