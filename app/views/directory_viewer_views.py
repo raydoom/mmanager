@@ -6,18 +6,15 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import logging, os, configparser, json
 from dwebsocket import require_websocket, accept_websocket
 
-from ..utils.common_func import auth_controller, get_dir_info, get_file_contents, log_record
+from app.utils.common_func import auth_controller, get_dir_info, get_file_contents, log_record
 from django.conf import settings
+from app.utils.config_info_formater import ConfigInfo
 
 
-# 获取cconfig.ini中的配置项
-CONF_DIRS=(settings.BASE_DIR+'/config')
-conf_dir = configparser.ConfigParser()
-conf_dir.read(CONF_DIRS+'/config.ini')
-
-dir_root = conf_dir.get('dir_info', 'dir_root')
-lines_per_page = int(conf_dir.get('dir_info', 'lines_per_page'))
-
+# 获取配置文件按信息
+config = ConfigInfo()
+dir_root = config.config_info.get('dir_info').get('dir_root')
+lines_per_page = int(config.config_info.get('dir_info').get('lines_per_page'))
 
 # 本地日志目录浏览
 @method_decorator(auth_controller, name='dispatch')
