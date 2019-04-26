@@ -37,6 +37,8 @@
     </script>
 </head>
 <body>
+
+<!-- navbar start-->
 <div class="row"style="margin-left: 0px; margin-right: 0px">
     <div class="col-md-12">
         <nav class="navbar navbar-default"><!-- /navbar -->
@@ -74,9 +76,10 @@
             </nav><!-- /navbar -->
     </div>
 </div>
+<!-- navbar end-->
+
 <div class="container-fluid">
 <div class="row" style="margin-right:1px; margin-left: 1px">
-
   <div class="list-group col-md-2">
     {% include 'sidebar.html' %}
   </div>
@@ -84,8 +87,19 @@
     {% block body %}
     {% endblock %}
   </div>
+</div>
+</div>
 
+<!-- footer start-->
+<div id =“footer”> 
+<hr>
+<footer> 
+<p style="text-align: center; font-size: 13px">
+Copyright © 2018 mmanager
+</p> 
+</footer> 
 </div>
-</div>
+<!-- footer end-->
+
 </body>
 </html>
