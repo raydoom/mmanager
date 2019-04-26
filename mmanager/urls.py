@@ -13,8 +13,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls,name=admin),
     url(r'^favicon.ico$', RedirectView.as_view(url='/static/img/favicon.ico')),
 
-    url(r'^dockerserver/', docker_server_views.Docker_Server_List.as_view(), name='docker_server_list'),
-    url(r'^container_opt/', docker_server_views.Container_Option.as_view(), name='container_option'),
+    url(r'^dockerserver/', docker_server_views.ContainerListView.as_view(), name='container_list'),
+    url(r'^container_opt/', docker_server_views.ContainerOptionView.as_view(), name='container_option'),
     url(r'^containerconsole/', docker_server_views.container_console, name='container_console'),
     url(r'^tail_container_log/', docker_server_views.tail_container_log, name='tail_container_log'),
 
@@ -46,7 +46,7 @@ urlpatterns = [
     url(r'^editserver/', server_list_views.Edit_Server.as_view(), name='edit_server'),
     url(r'^deleteserver/', server_list_views.Delete_Server.as_view(), name='delete_server'),
     
-    url(r'', docker_server_views.Docker_Server_List.as_view(), name='default'),
+    url(r'', docker_server_views.ContainerListView.as_view(), name='default'),
     
 ]
 

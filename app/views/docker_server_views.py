@@ -1,3 +1,5 @@
+# coding=utf8
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, StreamingHttpResponse
 from django.views import View
@@ -6,17 +8,18 @@ from dwebsocket import require_websocket, accept_websocket
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import logging, os, json, time, threading
 
-from ..models.server import Server, ServerType
-from ..models.container import Container
+from app.models.server import Server, ServerType
+from app.models.container import Container
 
 from app.models.container_models import ContainerModel
-from ..utils.common_func import format_log, auth_controller, get_dir_info, get_file_contents, log_record, get_time_stamp, send_data_over_websocket, shell_output_sender, shell_input_reciever
-from ..utils.get_application_list import get_container_lists
+from app.utils.common_func import format_log, auth_controller, get_dir_info, get_file_contents, log_record, get_time_stamp, send_data_over_websocket, shell_output_sender, shell_input_reciever
+from app.utils.get_application_list import get_container_lists
 
 # 获取docker服务器及容器列表，根据选项和关键字过滤
 @method_decorator(auth_controller, name='dispatch')
-class Docker_Server_List(View):
+class ContainerListView(View):
 	def get(self, request):
+		current_user_id = request.session.get('user_id')
 		filter_keyword = request.GET.get('filter_keyword')
 		filter_select = request.GET.get('filter_select')
 		servers = ServerType.objects.get(server_type='docker').server_set.all().order_by('ip')
@@ -36,21 +39,21 @@ class Docker_Server_List(View):
 															status=container.status,
 															port=container.port,
 															name=container.name,
-											))
-			ContainerModel.objects.all().delete()
+															current_user_id=current_user_id))
+			ContainerModel.objects.filter(current_user_id=current_user_id).delete()
 			ContainerModel.objects.bulk_create(container_list)
 		except Exception as e:
 			logging.error(e)
 		if filter_keyword != None:
 			if filter_select == 'Status =':
-				container_list = ContainerModel.objects.filter(status=filter_keyword).order_by('id')
+				container_list = ContainerModel.objects.filter(current_user_id=current_user_id,status=filter_keyword).order_by('id')
 			if filter_select == 'Name':
-				container_list = ContainerModel.objects.filter(name__icontains=filter_keyword).order_by('id')
+				container_list = ContainerModel.objects.filter(current_user_id=current_user_id,name__icontains=filter_keyword).order_by('id')
 			if filter_select == 'Location':
-				container_list = ContainerModel.objects.filter(host_ip__icontains=filter_keyword).order_by('id')
+				container_list = ContainerModel.objects.filter(current_user_id=current_user_id,host_ip__icontains=filter_keyword).order_by('id')
 			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
 		else:
-			container_list = ContainerModel.objects.all().order_by('id')
+			container_list = ContainerModel.objects.filter(current_user_id=current_user_id).order_by('id')
 			page_prefix = '?page='
 		paginator = Paginator(container_list, 10)
 		page = request.GET.get('page')
@@ -63,6 +66,8 @@ class Docker_Server_List(View):
 			# If page is out of range (e.g. 9999), deliver last page of results.
 			container_list = paginator.page(paginator.num_pages)
 		container_count = len(container_list)
+		if filter_keyword == None:
+			filter_keyword = ''
 		return render(request, 'docker_server.html', {'container_list': container_list, 'container_count': container_count, 'filter_keyword': filter_keyword, 'filter_select': filter_select, 'page_prefix': page_prefix})
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')
@@ -72,7 +77,7 @@ class Docker_Server_List(View):
 
 # 容器操作启动，停止，重启
 @method_decorator(auth_controller, name='dispatch')
-class Container_Option(View):
+class ContainerOptionView(View):
 	def get(self, request):
 		print (request.get_full_path() )
 		server_ip = request.GET.get('server_ip')

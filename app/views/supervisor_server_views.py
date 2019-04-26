@@ -1,3 +1,5 @@
+# coding=utf8
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, StreamingHttpResponse
 from django.views import View

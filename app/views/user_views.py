@@ -1,3 +1,5 @@
+# coding=utf8
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 # from django.contrib.auth import models, authenticate
@@ -25,6 +27,7 @@ class Login(View):
 			if check_password(password, user.password):
 				request.session['islogin'] = True
 				request.session['username'] = username
+				request.session['user_id'] = user.user_id
 				request.session['is_superuser'] = user.is_superuser
 				return redirect("/index/")
 			else:

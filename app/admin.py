@@ -1,3 +1,5 @@
+# coding=utf8
+
 from django.contrib import admin
 from .models.jenkins_server_models import Jenkins_Server
 from .models.user_info_models import User_Info
