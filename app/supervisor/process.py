@@ -3,7 +3,7 @@ __author__ = 'ma'
 
 import paramiko
 
-from ..utils.common_func import exec_command_over_ssh, get_channel_over_ssh
+from app.utils.common_func import exec_command_over_ssh, get_channel_over_ssh
 
 
 # Process容器对象，supervisor管理的进程

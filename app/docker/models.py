@@ -19,6 +19,5 @@ class ContainerInfo(models.Model):
 	name = models.CharField(max_length=128)
 	current_user_id = models.IntegerField()
 	class Meta:
-		managed = False
 		ordering = ['container_info_id']
 		db_table = "app_container_info"

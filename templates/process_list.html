@@ -91,6 +91,22 @@
     </tr>
 </table>
 
+<div>
+  <span style="text-align:center; display:block;">
+    <a>
+        {% if process_list.has_previous %}
+            <a style="text-decoration:underline; color:inherit;" href="{{ page_prefix }}{{ process_list.previous_page_number }}">Previous</a>
+        {% endif %}
+    </a>
+    <a style="color:inherit;">&nbsp; < {{ process_list.number }} / {{ process_list.paginator.num_pages }} > &nbsp;</a>
+    <a>
+        {% if process_list.has_next %}
+            <a style="text-decoration:underline; color:inherit;" href="{{ page_prefix }}{{ process_list.next_page_number }}">Next</a>
+        {% endif %}
+    </a>
+  </span>
+</div>
+
 <script> 
 //复选框的全选、取消全选功能
 function checkAll() {

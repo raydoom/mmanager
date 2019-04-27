@@ -14,6 +14,5 @@ class UserInfo(models.Model):
 	def __str__(self):
 		return self.username
 	class Meta:
-		managed = False
 		ordering = ['user_id']
 		db_table = "app_user_info"

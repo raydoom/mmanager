@@ -6,9 +6,11 @@ from django.views import View
 from django.utils.decorators import method_decorator
 import logging, json, time, threading
 from dwebsocket import require_websocket, accept_websocket
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from app.server.models import Server, ServerType
 from app.supervisor.process import Process
+from app.supervisor.models import ProcessInfo
 from app.utils.common_func import get_time_stamp, format_log, auth_controller, log_record, send_data_over_websocket
 from app.utils.get_application_list import get_process_lists
 
@@ -17,30 +19,52 @@ from app.utils.get_application_list import get_process_lists
 @method_decorator(auth_controller, name='dispatch')
 class ProcessListView(View):
 	def get(self, request):
+		current_user_id = request.session.get('user_id')
 		filter_keyword = request.GET.get('filter_keyword')
 		filter_select = request.GET.get('filter_select')
 		servers = ServerType.objects.get(server_type='supervisor').server_set.all().order_by('ip')
 		process_list = []
 		try:
 			processes = get_process_lists(servers)
-			if filter_keyword != None:
-				for process in processes:
-					if filter_select == 'Status =' and filter_keyword.lower() == process.statename.lower():
-							process_list.append(process)
-					if filter_select == 'Name' and filter_keyword in process.name:
-							process_list.append(process)		
-					if filter_select == 'Location' and filter_keyword in process.host_ip:
-							process_list.append(process)
-			else:
-				process_list = processes
+			for process in processes:
+				process_list.append(ProcessInfo(host_ip=process.host_ip,
+												host_port=process.host_port,
+												host_username=process.host_username,
+												host_password=process.host_password,
+												statename=process.statename,
+												name=process.name,
+												description=process.description,
+												current_user_id=current_user_id))
+			ProcessInfo.objects.filter(current_user_id=current_user_id).delete()
+			ProcessInfo.objects.bulk_create(process_list)
 		except Exception as e:
 			logging.error(e)		
+		if filter_keyword != None:
+			if filter_select == 'Status =':
+				process_list = ProcessInfo.objects.filter(current_user_id=current_user_id,status=filter_keyword)
+			if filter_select == 'Name':
+				process_list = ProcessInfo.objects.filter(current_user_id=current_user_id,name__icontains=filter_keyword)
+			if filter_select == 'Location':
+				process_list = ProcessInfo.objects.filter(current_user_id=current_user_id,host_ip__icontains=filter_keyword)
+			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
+		else:
+			process_list = ProcessInfo.objects.filter(current_user_id=current_user_id)
+			page_prefix = '?page='
+		paginator = Paginator(process_list, 10)
+		page = request.GET.get('page')
+		try:
+			process_list = paginator.page(page)
+		except PageNotAnInteger:
+			# If page is not an integer, deliver first page.
+			process_list = paginator.page(1)
+		except EmptyPage:
+			# If page is out of range (e.g. 9999), deliver last page of results.
+			process_list = paginator.page(paginator.num_pages)
 		process_count = len(process_list)
 		if filter_keyword == None:
-			filter_keyword = ''
-		if filter_select == None:
 			filter_select = ''
-		return render(request, 'process_list.html', {'process_list': process_list, 'process_count': process_count, 'filter_keyword': filter_keyword, 'filter_select': filter_select})
+			filter_keyword = ''
+		return render(request, 'process_list.html', {'process_list': process_list, 'process_count': process_count, 'filter_keyword': filter_keyword, 'filter_select': filter_select, 'page_prefix': page_prefix})
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')
