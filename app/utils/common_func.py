@@ -3,7 +3,7 @@ __author__ = 'ma'
 
 import time, os, logging, paramiko, multiprocessing, threading, re
 
-from ..models.action_log_models import Action_Log
+from app.action_log.models import ActionLog
 from django.shortcuts import render, redirect
 
 
@@ -110,7 +110,7 @@ def get_file_contents(dist, lines_per_page, page, filter_keyword):
 
 # 记录日志函数
 def log_record(log_user, log_detail):
-	return (Action_Log.objects.create(log_user=log_user, log_detail=log_detail))
+	return (ActionLog.objects.create(log_user=log_user, log_detail=log_detail))
 
 # ssh远程执行命令
 def exec_command_over_ssh(ip='', port='22', username='', password='', cmd=''):

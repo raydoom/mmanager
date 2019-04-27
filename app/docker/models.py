@@ -3,7 +3,8 @@
 from django.db import models
 
 # 容器信息模型，存储每次实时获取到的container数据，用于实现分页
-class ContainerModel(models.Model):
+class ContainerInfo(models.Model):
+	container_info_id = models.BigAutoField(primary_key=True)
 	host_ip = models.CharField()
 	host_port = models.IntegerField()
 	host_username = models.CharField(max_length=128)
@@ -17,3 +18,7 @@ class ContainerModel(models.Model):
 	port = models.CharField(max_length=128)
 	name = models.CharField(max_length=128)
 	current_user_id = models.IntegerField()
+	class Meta:
+		managed = False
+		ordering = ['container_info_id']
+		db_table = "app_container_info"

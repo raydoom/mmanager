@@ -7,15 +7,15 @@ from django.utils.decorators import method_decorator
 import logging, json, time, threading
 from dwebsocket import require_websocket, accept_websocket
 
-from ..models.server import Server, ServerType
-from ..models.process import Process
-from ..utils.common_func import get_time_stamp, format_log, auth_controller, log_record, send_data_over_websocket
-from ..utils.get_application_list import get_process_lists
+from app.server.models import Server, ServerType
+from app.supervisor.process import Process
+from app.utils.common_func import get_time_stamp, format_log, auth_controller, log_record, send_data_over_websocket
+from app.utils.get_application_list import get_process_lists
 
 
 # 获取supervisor服务器及程序列表，根据选项和关键字过滤
 @method_decorator(auth_controller, name='dispatch')
-class Supervisor_Server_List(View):
+class ProcessListView(View):
 	def get(self, request):
 		filter_keyword = request.GET.get('filter_keyword')
 		filter_select = request.GET.get('filter_select')
@@ -40,17 +40,17 @@ class Supervisor_Server_List(View):
 			filter_keyword = ''
 		if filter_select == None:
 			filter_select = ''
-		return render(request, 'supervisor_server.html', {'process_list': process_list, 'process_count': process_count, 'filter_keyword': filter_keyword, 'filter_select': filter_select})
+		return render(request, 'process_list.html', {'process_list': process_list, 'process_count': process_count, 'filter_keyword': filter_keyword, 'filter_select': filter_select})
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')
 		filter_select = request.POST.get('filter_select')
-		prg_url = '/supervisorserver/?filter_select=' + filter_select +'&filter_keyword=' + filter_keyword
+		prg_url = '/supervisor/process_list?filter_select=' + filter_select +'&filter_keyword=' + filter_keyword
 		return redirect(prg_url)
 
 # supervisor程序操作启动，停止，重启
 @method_decorator(auth_controller, name='dispatch')
-class Process_Option(View):
+class ProcessOptionView(View):
 	def get(self, request):
 		server_ip = request.GET.get('server_ip')
 		server_port = int(request.GET.get('server_port'))
@@ -71,7 +71,7 @@ class Process_Option(View):
 # 获取supervisor程序的日志
 @auth_controller
 @accept_websocket
-def tail_process_log(request):
+def process_log(request):
 	if not request.is_websocket():
 		server_ip = request.GET.get('server_ip')
 		server_port = int(request.GET.get('server_port'))

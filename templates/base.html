@@ -39,7 +39,7 @@
 <body>
 
 <!-- navbar start-->
-<div class="row"style="margin-left: 0px; margin-right: 0px">
+<div class="row"style="margin-left: 0px; margin-right: 0px;">
     <div class="col-md-12">
         <nav class="navbar navbar-default"><!-- /navbar -->
               <div class="container-fluid">
@@ -67,7 +67,7 @@
                         <ul class="dropdown-menu">
                           <li><a a class="fa fa-cog" href="/account/">&nbsp; Settings</a></li>
                           <li role="separator" class="divider"></li>
-                          <li><a class="fa fa-sign-out" href="/logout/">&nbsp; Sign out</a></li>
+                          <li><a class="fa fa-sign-out" href="/account/logout">&nbsp; Logout</a></li>
                         </ul>
                       </li>
                   </ul>
@@ -81,7 +81,7 @@
 <div class="container-fluid">
 <div class="row" style="margin-right:1px; margin-left: 1px">
   <div class="list-group col-md-2">
-    {% include 'sidebar.html' %}
+    {% include 'side_bar.html' %}
   </div>
   <div id="body" class="col-md-10">
     {% block body %}
@@ -91,10 +91,10 @@
 </div>
 
 <!-- footer start-->
-<div id =“footer”> 
+<div class="footer"> 
 <hr>
 <footer> 
-<p style="text-align: center; font-size: 13px">
+<p style="text-align: center; font-size: 13px;">
 Copyright © 2018 mmanager
 </p> 
 </footer> 

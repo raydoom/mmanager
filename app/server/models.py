@@ -4,16 +4,17 @@ __author__ = 'ma'
 from django.db import models
 import paramiko, logging, re
 
-from .container import Container
-from .process import Process
-from ..utils.common_func import exec_command_over_ssh
+from app.docker.container import Container
+from app.supervisor.process import Process
+from app.utils.common_func import exec_command_over_ssh
 
-
+# 主机类型
 class ServerType(models.Model):
 	server_type = models.CharField(max_length=50, verbose_name=u"server type", unique=True)
 	def __str__(self):
 		return self.server_type
 
+# 主机
 class Server(models.Model):
 	hostname = models.CharField(max_length=50, verbose_name=u"hostname", unique=True)
 	ip = models.GenericIPAddressField(u"server ip", max_length=15)

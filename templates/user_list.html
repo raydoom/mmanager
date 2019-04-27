@@ -4,18 +4,18 @@
 
 <ol class="breadcrumb">
   <li>Admin</li>
-  <li class="active">Users</li>
+  <li class="active">User List</li>
 </ol>
 
 <div class="page-header">
     <h2>
-        Users
+        User List
     </h2>
 </div>
 
 <table class="table table-hover">
 <caption>
-<form class="form-inline" style="float: right;" action="/users/" method="post">
+<form class="form-inline" style="float: right;" action="/account/user_list" method="post">
  {% csrf_token %}
   <div class="form-group">
     <p class="form-control-static">
@@ -29,7 +29,7 @@
     <input type="text" class="form-control" name="filter_keyword" value="{{filter_keyword}}" placeholder="">
   </div>
   <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> Filter</button>
-  <button class="btn btn-default"><a class="fa fa-plus" href="/createuser/"> Create User</a></button>
+  <button class="btn btn-default"><a class="fa fa-plus" href="/account/user_create"> Create User</a></button>
   <div class="btn-group">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     More Actions <span class="caret"></span>
@@ -70,8 +70,8 @@
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="/changepassword/?username={{user.username}}">Change Password</a></li>
-              <li><a style="color: red;" href="/deleteuser/?username={{user.username}}">Delete User</a></li>
+              <li><a href="/account/password_change?username={{user.username}}">Change Password</a></li>
+              <li><a style="color: red;" href="/account/user_delete?username={{user.username}}">Delete User</a></li>
             </ul>
           </div>
         </td>

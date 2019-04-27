@@ -22,13 +22,13 @@
 <div class="panel panel-default col-center-block">
   <div class="panel-heading"><span>mmanager</span></div>
   <div class="panel-body">
-    <form class="form-horizontal" role="form" action='/login/' method="post">
+    <form class="form-horizontal" role="form" action='/account/login' method="post">
         {% csrf_token %}
         <div class="container">
           <div class="row myCenter">
             <div class="col-xs-6 col-md-4">
               <form class="form-signin">
-                <h2 class="form-signin-heading">Sign in to mmanager</h2>
+                <h2 class="form-signin-heading">Login to mmanager</h2>
                 </br>
                 <p>Username</p>
                 <input type="text" name="username" class="form-control" placeholder="" required autofocus>
@@ -40,7 +40,7 @@
                   <label><input type="checkbox" value="remember-me">Remember me</label>
                 </div>
                 </br>
-                <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
                 </br>
                 {% if message %}
                     <div class="alert alert-warning">{{ message }}</div>

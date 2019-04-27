@@ -4,7 +4,7 @@ from django.db import models
 
 
 # 用户
-class User_Info(models.Model):
+class UserInfo(models.Model):
 	user_id = models.BigAutoField(primary_key=True)
 	username = models.CharField("用户名", max_length=128, blank=False, unique=True)
 	password = models.CharField("密码", max_length=128, blank=False)
@@ -13,3 +13,7 @@ class User_Info(models.Model):
 	description = models.CharField("描述", max_length=128, blank=True)
 	def __str__(self):
 		return self.username
+	class Meta:
+		managed = False
+		ordering = ['user_id']
+		db_table = "app_user_info"

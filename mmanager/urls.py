@@ -1,26 +1,17 @@
 # urls.py
 
 from django.conf.urls import url
+from django.urls import path, include
 from django.views.generic.base import RedirectView
 from django.contrib import admin
-from app.views import ( action_log_views, directory_viewer_views, 
-                        docker_server_views, jenkins_server_views, 
-                        supervisor_server_views, user_views,
-                        server_list_views
+from app.views import (  directory_viewer_views, 
+                         jenkins_server_views, 
+                       
                       )
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls,name=admin),
     url(r'^favicon.ico$', RedirectView.as_view(url='/static/img/favicon.ico')),
-
-    url(r'^dockerserver/', docker_server_views.ContainerListView.as_view(), name='container_list'),
-    url(r'^container_opt/', docker_server_views.ContainerOptionView.as_view(), name='container_option'),
-    url(r'^containerconsole/', docker_server_views.container_console, name='container_console'),
-    url(r'^tail_container_log/', docker_server_views.tail_container_log, name='tail_container_log'),
-
-    url(r'^supervisorserver/', supervisor_server_views.Supervisor_Server_List.as_view(), name='supervisor_server'),
-    url(r'^process_opt/', supervisor_server_views.Process_Option.as_view(), name='process_opt'),
-    url(r'^tail_process_log/', supervisor_server_views.tail_process_log, name='tail_process_log'),
 
     url(r'^jenkinsserver/', jenkins_server_views.Jenkins_Server_List.as_view(), name='jenkins_server'),
     url(r'^jenkins_job_opt/', jenkins_server_views.Jenkins_Job_Opt.as_view(), name='jenkins_job_opt'),
@@ -30,23 +21,11 @@ urlpatterns = [
     url(r'^textviewer/', directory_viewer_views.Text_Viewer.as_view(), name='text_viewer'),
     url(r'^filedownload/', directory_viewer_views.File_Download.as_view(), name='file_download'),
 
-    url(r'^actionlog/', action_log_views.Action_Log_List.as_view(), name='action_log_list'),
-
-    url(r'^login/', user_views.Login.as_view(), name='login'),
-    url(r'^register/', user_views.Register.as_view(), name='register'),
-	url(r'^logout/', user_views.Sign_Out.as_view(), name='sign_out'),
-    url(r'^changepassword/', user_views.Change_Password.as_view(), name='change_password'),
-    url(r'^account/', user_views.Account.as_view(), name='account'),
-    url(r'^serverlist/', server_list_views.Server_List.as_view(), name='server_list'),
-    url(r'^users/', user_views.Users.as_view(), name='users'),
-    url(r'^createuser/', user_views.Create_User.as_view(), name='create_user'),
-    url(r'^deleteuser/', user_views.Delete_User.as_view(), name='delete_user'),
-
-    url(r'^addserver/', server_list_views.Add_Server.as_view(), name='add_server'),
-    url(r'^editserver/', server_list_views.Edit_Server.as_view(), name='edit_server'),
-    url(r'^deleteserver/', server_list_views.Delete_Server.as_view(), name='delete_server'),
-    
-    url(r'', docker_server_views.ContainerListView.as_view(), name='default'),
+    path('account/', include('app.account.urls')),
+    path('server/', include('app.server.urls')),
+    path('docker/', include('app.docker.urls')),
+    path('supervisor/', include('app.supervisor.urls')),
+    path('action_log/', include('app.action_log.urls')),
     
 ]
 

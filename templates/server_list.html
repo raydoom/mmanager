@@ -15,7 +15,7 @@
 
 <table class="table table-hover">
 <caption>
-<form class="form-inline" style="float: right;" action="/serverlist/" method="post">
+<form class="form-inline" style="float: right;" action="/server/server_list" method="post">
  {% csrf_token %}
   <div class="form-group">
     <p class="form-control-static">
@@ -29,7 +29,7 @@
     <input type="text" class="form-control" name="filter_keyword" value="{{filter_keyword}}" placeholder="">
   </div>
   <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> Filter</button>
-  <button class="btn btn-default"><a class="fa fa-plus" href="/addserver/"> Add Server</a></button>
+  <button class="btn btn-default"><a class="fa fa-plus" href="/server/server_create"> Create Server</a></button>
   <div class="btn-group">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     More Actions <span class="caret"></span>
@@ -69,12 +69,12 @@
           
           <!-- Split button -->
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="/editserver/?ip={{server.ip}}&port={{server.port}}&servertype={{server.type}}">Edit</a>
+            <a type="button" class="btn btn-default btn-sm" href="/server/server_update?ip={{server.ip}}&port={{server.port}}&servertype={{server.type}}">Edit</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a style="color: red;" href="/deleteserver/?ip={{server.ip}}&port={{server.port}}&servertype={{server.type}}">Delete Server</a></li>
+              <li><a style="color: red;" href="/server/server_delete?ip={{server.ip}}&port={{server.port}}&servertype={{server.type}}">Delete Server</a></li>
             </ul>
           </div>
 
