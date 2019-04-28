@@ -41,7 +41,7 @@ function tail_process_name_log(server_ip, server_port, process_name) {
 
 /*触发henkins任务构建按钮点击事件*/
 function jenkins_job_opt(server_ip, server_port, job_name, opt) {
-    $.get("/jenkins_job_opt/?server_ip=" + server_ip + "&server_port=" + server_port + "&job_name=" + job_name + "&jenkins_opt=" + opt, 
+    $.get("/jenkins/job_option?server_ip=" + server_ip + "&server_port=" + server_port + "&job_name=" + job_name + "&jenkins_opt=" + opt, 
         function (data,status) {
         parse_result(data)
                     }

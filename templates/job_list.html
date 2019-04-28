@@ -4,18 +4,18 @@
 
 <ol class="breadcrumb">
   <li>Ops Manage</li>
-  <li class="active">Jenkins Server</li>
+  <li class="active">Jenkins Job</li>
 </ol>
 
 <div class="page-header">
     <h2>
-        Jenkins Server
+        Jenkins Job
     </h2>
 </div>
 
 <table class="table table-hover">
 <caption>
-<form class="form-inline" style="float: right;" action="/jenkinsserver/" method="post">
+<form class="form-inline" style="float: right;" action="/jenkins/job_list" method="post">
  {% csrf_token %}
   <div class="form-group">
     <p class="form-control-static">

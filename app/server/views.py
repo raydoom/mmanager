@@ -9,7 +9,7 @@ from django.utils.decorators import method_decorator
 import logging, os, configparser, json
 
 from app.server.models import Server, ServerType
-from app.models.jenkins_server_models import  Jenkins_Server
+from app.jenkins.models import  JenkinsServer
 from app.utils.common_func import auth_controller, log_record
 from app.utils.get_application_list import get_container_lists, get_process_lists
 
@@ -56,7 +56,7 @@ class ServerListView(View):
 				server.status = 'Disonnected'	
 				server.description = 'none'			
 			server_list.append(server)
-		for server in Jenkins_Server.objects.all().order_by('ip'):
+		for server in JenkinsServer.objects.all().order_by('ip'):
 			server.type = 'jenkins'
 			try:
 				result = server.get_all_jobs_list()
@@ -118,7 +118,7 @@ class ServerCreateView(View):
 			new_server.save()
 
 		if server_type == 'Jenkins':
-			Jenkins_Server.objects.create(hostname=hostname, ip=ip, port=int(port), apiversion=apiversion, username=username, password=password, description=description)
+			JenkinsServer.objects.create(hostname=hostname, ip=ip, port=int(port), apiversion=apiversion, username=username, password=password, description=description)
 		return redirect('/server/server_list')
 
 # 删除服务器
@@ -132,7 +132,7 @@ class ServerDeleteView(View):
 			ServerType.objects.get(server_type=server_type).server_set.all().filter(ip=ip, port=int(port)).delete()
 
 		if server_type == 'jenkins':
-			Jenkins_Server.objects.filter(ip=ip, port=int(port)).delete()
+			JenkinsServer.objects.filter(ip=ip, port=int(port)).delete()
 		return redirect('/server/server_list')
 
 # 编辑服务器

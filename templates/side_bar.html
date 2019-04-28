@@ -19,8 +19,8 @@
         <span class="fa fa-chevron-right pull-right"></span>
     </a>
     <ul class="nav panel-collapse collapse" id="collapse-ops-manage">
-      <li ><a id="nav-jenkinsserver" style="text-align: right;" href="/jenkinsserver/">Jenkins Server</a></li>
-      <li ><a id="nav-directoryviewer" style="text-align: right;" href="/directoryviewer/">Directory Viewer</a></li>
+      <li ><a id="nav-job_list" style="text-align: right;" href="/jenkins/job_list">Job List</a></li>
+      <li ><a id="nav-directory_list" style="text-align: right;" href="/filemanager/directory_list">File Manager</a></li>
     </ul>
   </li>
 
@@ -31,7 +31,6 @@
     </a>
     <ul class="nav panel-collapse collapse" id="collapse-setting">
       <li ><a id="nav-my_account" style="text-align: right;" href="/account/my_account">Account</a></li>
-      <li ><a id="nav-system" style="text-align: right;" href="/system/">User Setting</a></li>
     </ul>
   </li>
   {% if request.session.is_superuser == True %}

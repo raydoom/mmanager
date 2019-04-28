@@ -20,7 +20,7 @@ lines_per_page = int(config.config_info.get('dir_info').get('lines_per_page'))
 
 # 本地日志目录浏览
 @method_decorator(auth_controller, name='dispatch')
-class Directory_Viewer(View):
+class DirectoryListView(View):
 	def get(self, request):
 		dist = '/'
 		current_dir = '/'
@@ -35,13 +35,13 @@ class Directory_Viewer(View):
 		dist = dir_root + dist	
 		dir_infos = get_dir_info(dist)
 		dir_infos_count = len(dir_infos)
-		return render(request, 'directory_viewer.html', {'dir_infos': dir_infos, 'current_dir': current_dir,
+		return render(request, 'directory_list.html', {'dir_infos': dir_infos, 'current_dir': current_dir,
 														 'dir_infos_count': dir_infos_count})
 
 
 # 本地日志文件浏览
 @method_decorator(auth_controller, name='dispatch')
-class Text_Viewer(View):
+class TextViewerView(View):
 	def get(self, request):
 		current_directory = '/'
 		dist = dir_root
@@ -76,12 +76,12 @@ class Text_Viewer(View):
 		dist = request.POST.get('dist')
 		filter_keyword = request.POST.get('filter_keyword')
 		filter_select = request.POST.get('filter_select')
-		prg_url = '/textviewer/?dist=' + dist + '&filter_select=' + filter_select +'&filter_keyword=' + filter_keyword + '&page=1'
+		prg_url = '/filemanager/text_viewer?dist=' + dist + '&filter_select=' + filter_select +'&filter_keyword=' + filter_keyword + '&page=1'
 		return redirect(prg_url)
 
 # 文件下载视图函数
 @method_decorator(auth_controller, name='dispatch')
-class File_Download(View):
+class FileDownloadView(View):
 	def get(self, request):
 		filepath = request.GET.get('filepath')
 		filepath = dir_root + filepath

@@ -4,18 +4,18 @@
 
 <ol class="breadcrumb">
   <li>Ops Manage</li>
-  <li class="active">Directory Viewer</li>
+  <li class="active">File Manager</li>
 </ol>
 
 <div class="page-header">
     <h2>
-        Directory Viewer
+        File Manager
     </h2>
 </div>
 
 <table class="table table-hover">
     <caption>
-      <form class="form-inline" style="float: right;" action="/directoryviewer/" method="post">
+      <form class="form-inline" style="float: right;" action="/filemanager/directory_list" method="post">
        {% csrf_token %}
         <div class="form-group">
           <p class="form-control-static">
@@ -70,12 +70,12 @@
 
             <!-- Split button -->
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="/dirviewer/?dist={{current_dir}}{{dir_info.file_name}}">Open</a>
+            <a type="button" class="btn btn-default btn-sm" href="/filemanager/directory_list?dist={{current_dir}}{{dir_info.file_name}}">Open</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="/filedownload/?filepath={{current_dir}}{{dir_info.file_name}}">Download</a></li>
+              <li><a href="/filemanager/file_download?filepath={{current_dir}}{{dir_info.file_name}}">Download</a></li>
             </ul>
           </div>
         </td>
@@ -89,7 +89,7 @@
         <td><input type="checkbox" name="check_item"></td>
         <td>
         <span class="fa fa-file-text-o">
-            <a a style="color:inherit;" href="/textviewer/?dist={{current_dir}}{{dir_info.file_name}}"</a>
+            <a a style="color:inherit;" href="/filemanager/text_viewer?dist={{current_dir}}{{dir_info.file_name}}"</a>
         {{dir_info.file_name}}
         </span>
         </td>
@@ -99,12 +99,12 @@
 
         <!-- Split button -->
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="/textviewer/?dist={{current_dir}}{{dir_info.file_name}}">Open</a>
+            <a type="button" class="btn btn-default btn-sm" href="/filemanager/text_viewer?dist={{current_dir}}{{dir_info.file_name}}">Open</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="/filedownload/?filepath={{current_dir}}{{dir_info.file_name}}">Download</a></li>
+              <li><a href="/filemanager/file_download?filepath={{current_dir}}{{dir_info.file_name}}">Download</a></li>
             </ul>
           </div>
         </td>
