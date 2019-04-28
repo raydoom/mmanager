@@ -113,11 +113,11 @@ def log_record(log_user, log_detail):
 	return (ActionLog.objects.create(log_user=log_user, log_detail=log_detail))
 
 # ssh远程执行命令
-def exec_command_over_ssh(ip='', port='22', username='', password='', cmd=''):
+def exec_command_over_ssh(host='', port='22', username='', password='', cmd=''):
 	try:
 		ssh_client = paramiko.SSHClient()
 		ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-		ssh_client.connect(ip, port, username, password)
+		ssh_client.connect(host, port, username, password)
 		std_in, std_out, std_err = ssh_client.exec_command(cmd)
 		std_out = std_out.read()
 		ssh_client.close()
@@ -127,11 +127,11 @@ def exec_command_over_ssh(ip='', port='22', username='', password='', cmd=''):
 		return None
 
 # 获取paramiko的channel.exec_command对象
-def get_channel_over_ssh(ip='', port='22', username='', password='', cmd=''):
+def get_channel_over_ssh(host='', port='22', username='', password='', cmd=''):
 	try:
 		ssh_client = paramiko.SSHClient()
 		ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-		ssh_client.connect(ip, port, username, password)
+		ssh_client.connect(host, port, username, password)
 		# open channel pipeline
 		transport = ssh_client.get_transport()
 		channel = transport.open_session()

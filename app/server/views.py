@@ -9,7 +9,6 @@ from django.utils.decorators import method_decorator
 import logging, os, configparser, json
 
 from app.server.models import Server, ServerType
-from app.jenkins.models import  JenkinsServer
 from app.utils.common_func import auth_controller, log_record
 from app.utils.get_application_list import get_container_lists, get_process_lists
 

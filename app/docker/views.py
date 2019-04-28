@@ -22,24 +22,23 @@ class ContainerListView(View):
 		current_user_id = request.session.get('user_id')
 		filter_keyword = request.GET.get('filter_keyword')
 		filter_select = request.GET.get('filter_select')
-		servers = ServerType.objects.get(server_type='docker').server_set.all().order_by('ip')
+		docker_server_type_id = ServerType.objects.get(server_type='docker').server_type_id
+		servers = Server.objects.filter(server_type_id=docker_server_type_id).order_by('host')
 		container_list = []
 		try:
 			containers = get_container_lists(servers)
 			for container in containers:
-				container_list.append(ContainerInfo(host_ip=container.host_ip,
-															host_port=container.host_port,
-															host_username=container.host_username,
-															container_id=container.container_id,
-															host_password=container.host_password,
-															image=container.image,
-															command=container.command,
-															created=container.created,
-															statename=container.statename,
-															status=container.status,
-															port=container.port,
-															name=container.name,
-															current_user_id=current_user_id))
+				container_list.append(ContainerInfo(host=container.host,
+													host_port=container.host_port,
+													container_id=container.container_id,
+													image=container.image,
+													command=container.command,
+													created=container.created,
+													statename=container.statename,
+													status=container.status,
+													port=container.port,
+													name=container.name,
+													current_user_id=current_user_id))
 			ContainerInfo.objects.filter(current_user_id=current_user_id).delete()
 			ContainerInfo.objects.bulk_create(container_list)
 		except Exception as e:
@@ -49,8 +48,8 @@ class ContainerListView(View):
 				container_list = ContainerInfo.objects.filter(current_user_id=current_user_id,status=filter_keyword)
 			if filter_select == 'Name':
 				container_list = ContainerInfo.objects.filter(current_user_id=current_user_id,name__icontains=filter_keyword)
-			if filter_select == 'Location':
-				container_list = ContainerInfo.objects.filter(current_user_id=current_user_id,host_ip__icontains=filter_keyword)
+			if filter_select == 'Host':
+				container_list = ContainerInfo.objects.filter(current_user_id=current_user_id,host__icontains=filter_keyword)
 			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
 		else:
 			container_list = ContainerInfo.objects.filter(current_user_id=current_user_id)
@@ -80,7 +79,7 @@ class ContainerListView(View):
 @method_decorator(auth_controller, name='dispatch')
 class ContainerOptionView(View):
 	def get(self, request):
-		print (request.get_full_path() )
+		print (request.get_full_path())
 		server_ip = request.GET.get('server_ip')
 		server_port = int(request.GET.get('server_port'))
 		container_id = request.GET.get('container_id')

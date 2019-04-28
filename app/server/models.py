@@ -2,41 +2,53 @@
 __author__ = 'ma'
 
 from django.db import models
-import paramiko, logging, re
+import paramiko, logging, re, requests
 
 from app.docker.container import Container
 from app.supervisor.process import Process
+from app.jenkins.job import Job
 from app.utils.common_func import exec_command_over_ssh
 
 # 主机类型
 class ServerType(models.Model):
-	server_type = models.CharField(max_length=50, verbose_name=u"server type", unique=True)
+	server_type_id = models.BigAutoField(primary_key=True)
+	server_type = models.CharField(max_length=50, unique=True)
+	class Meta:
+		ordering = ['server_type_id']
+		db_table = "app_server_type"
 	def __str__(self):
 		return self.server_type
 
 # 主机
 class Server(models.Model):
-	hostname = models.CharField(max_length=50, verbose_name=u"hostname", unique=True)
-	ip = models.GenericIPAddressField(u"server ip", max_length=15)
-	port = models.IntegerField(u'ssh port')
-	username = models.CharField(max_length=50, verbose_name=u"ssh username", default='', blank=True)
-	password = models.CharField(max_length=50, verbose_name=u"ssh password", default='', blank=True)
-	description = models.CharField(max_length=128, verbose_name=u"description", default='', blank=True)
-	server_type = models.ManyToManyField(ServerType)
-
+	server_id = models.BigAutoField(primary_key=True)
+	host = models.CharField(max_length=50)
+	port = models.IntegerField()
+	username = models.CharField(max_length=50, default='', blank=True)
+	password = models.CharField(max_length=50, default='', blank=True)
+	username_api = models.CharField(max_length=50, default='', blank=True)
+	password_api = models.CharField(max_length=50, default='', blank=True)	
+	port_api = models.IntegerField()
+	protocal_api = models.CharField(max_length=50, default='', blank=True)
+	description = models.CharField(max_length=128, default='', blank=True)
+	server_type_id = models.IntegerField()
+	class Meta:
+		ordering = ['server_id']
+		db_table = "app_server"
 	def __str__(self):
 		return self.hostname
+
 	# 获取容器列表
 	def get_container_list(self):
 		container_list = []
 		cmd = 'docker ps -a | grep -v IMAGE'
-		stdout = exec_command_over_ssh(self.ip, self.port, self.username, self.password, cmd)
+		stdout = exec_command_over_ssh(self.host, self.port, self.username, self.password, cmd)
 		container_infos = stdout.decode().split('\n')
 		for i in range(0,len(container_infos)-1):
 			container_info = re.split('  +', container_infos[i])
 			for j in range(0, len(container_infos[i])):
 				 container = Container()
-				 container.host_ip = self.ip 
+				 container.host = self.host 
 				 container.host_port = self.port
 				 container.container_id = container_info[0]
 				 container.image = container_info[1]
@@ -58,16 +70,36 @@ class Server(models.Model):
 	def get_process_list(self):
 		process_list = []
 		cmd = 'supervisorctl status'
-		stdout = exec_command_over_ssh(self.ip, self.port, self.username, self.password, cmd)
+		stdout = exec_command_over_ssh(self.host, self.port, self.username, self.password, cmd)
 		process_infos = stdout.decode().split('\n')
 		for i in range(0,len(process_infos)-1):
 			process_info = re.split('  +', process_infos[i])
 			for j in range(0, len(process_infos[i])):
 				 process = Process()
-				 process.host_ip = self.ip 
+				 process.host = self.host 
 				 process.host_port = self.port
 				 process.name = process_info[0]
 				 process.statename = process_info[1]
 				 process.description = process_info[2]
 			process_list.append(process)
 		return (process_list)
+
+	# 获取job列表
+	def get_job_list(self):
+		job_list = []
+		jenkins_job_list_url = self.protocal_api + '://' + self.host + ':' + str(self.port_api) + '/api/json'
+		jenkins_response = requests.get(jenkins_job_list_url, auth=(self.username_api, self.password_api))
+		job_info = jenkins_response.json().get('jobs')
+		for i in range(0,len(job_info)):
+			job = Job()
+			job.host=self.host
+			job.host_port_api=self.port_api
+			job.host_protocal_api=self.protocal_api
+			job.name=job_info[i].get('name')
+			job.color=job_info[i].get('color')
+			job_list.append(job)
+		return (job_list)
+
+
+
+

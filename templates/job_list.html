@@ -22,7 +22,7 @@
         <select class="form-control" name="filter_select">
           <option {% if filter_select == "Status =" %} selected="selected" {% endif %}>Status =</option>
           <option {% if filter_select == "Name" or filter_select == "" %} selected="selected" {% endif %}>Name</option>
-          <option {% if filter_select == "Location" %} selected="selected" {% endif %}>Location</option>
+          <option {% if filter_select == "Host" %} selected="selected" {% endif %}>Location</option>
         </select>
     </p>
     <input type="text" class="form-control" name="filter_keyword" value="{{filter_keyword}}" placeholder="">
@@ -50,7 +50,7 @@
         <th><input type="checkbox" name="check_all" id="check_all" onclick="checkAll()"></th>
         <th width="10%">Status</th>
         <th width="30%">Name</thw>
-        <th width="20%">Location</th>
+        <th width="20%">Host</th>
         <th width="25%">Description</th>
         <th colspan="4" width="15%">Actions</th>
     </tr>
@@ -61,7 +61,7 @@
             {{job.color|lower}}
         </td>
         <td>{{job.name}}</td>
-        <td>{{job.host_ip}}</td>
+        <td>{{job.host}}</td>
         <td>{{app.description|lower}}</td>
         <td>
 
@@ -72,7 +72,7 @@
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="javascript:;" onclick="jenkins_job_opt('{{job.host_ip}}','{{job.host_port}}','{{job.name}}','build')">Build Job</a></li>
+              <li><a href="javascript:;" onclick="jenkins_job_opt('{{job.host}}','{{job.host_port_api}}','{{job.name}}','build')">Build Job</a></li>
               <li role="separator" class="divider"></li>
               <li><a href="#" target="_blank">Console Output</a></li>
             </ul>
@@ -87,6 +87,22 @@
         </td>
     </tr>
 </table>
+
+<div>
+  <span style="text-align:center; display:block;">
+    <a>
+        {% if job_list.has_previous %}
+            <a style="text-decoration:underline; color:inherit;" href="{{ page_prefix }}{{ job_list.previous_page_number }}">Previous</a>
+        {% endif %}
+    </a>
+    <a style="color:inherit;">&nbsp; < {{ job_list.number }} / {{ job_list.paginator.num_pages }} > &nbsp;</a>
+    <a>
+        {% if job_list.has_next %}
+            <a style="text-decoration:underline; color:inherit;" href="{{ page_prefix }}{{ job_list.next_page_number }}">Next</a>
+        {% endif %}
+    </a>
+  </span>
+</div>
 
 <script> 
 //复选框的全选、取消全选功能

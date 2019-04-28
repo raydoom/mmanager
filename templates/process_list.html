@@ -22,7 +22,7 @@
         <select class="form-control" name="filter_select">
           <option {% if filter_select == "Status =" %} selected="selected" {% endif %}>Status =</option>
           <option {% if filter_select == "Name" or filter_select == "" %} selected="selected" {% endif %}>Name</option>
-          <option {% if filter_select == "Location" %} selected="selected" {% endif %}>Location</option>
+          <option {% if filter_select == "Host" %} selected="selected" {% endif %}>Location</option>
         </select>
     </p>
     <input type="text" class="form-control" name="filter_keyword" value="{{filter_keyword}}" placeholder="">
@@ -52,7 +52,7 @@
         <th><input type="checkbox" name="check_all" id="check_all" onclick="checkAll()"></th>
         <th width="10%">Status</th>
         <th width="30%">Name</thw>
-        <th width="20%">Location</th>
+        <th width="20%">Host</th>
         <th width="25%">Description</th>
         <th colspan="4" width="15%">Actions</th>
     </tr>
@@ -63,7 +63,7 @@
             {{process.statename|lower}}
         </td>
         <td>{{process.name}}</td>
-        <td>{{process.host_ip}}</td>
+        <td>{{process.host}}</td>
         <td>{{process.description|lower}}</td>
         <td>
  
@@ -74,10 +74,10 @@
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="javascript:;" onclick="process_opt('{{process.host_ip}}','{{process.host_port}}','{{process.name}}','start')">Start Process</a></li>
-              <li><a href="javascript:;" onclick="process_opt('{{process.host_ip}}','{{process.host_port}}','{{process.name}}','stop')">Stop Process</a></li>
+              <li><a href="javascript:;" onclick="process_opt('{{process.host}}','{{process.host_port}}','{{process.name}}','start')">Start Process</a></li>
+              <li><a href="javascript:;" onclick="process_opt('{{process.host}}','{{process.host_port}}','{{process.name}}','stop')">Stop Process</a></li>
               <li role="separator" class="divider"></li>
-              <li><a href="process_log?server_ip={{process.host_ip}}&server_port={{process.host_port}}&process_name={{process.name}}" target="_blank">Tail Log</a></li>
+              <li><a href="process_log?server_ip={{process.host}}&server_port={{process.host_port}}&process_name={{process.name}}" target="_blank">Tail Log</a></li>
             </ul>
           </div>
         </td>

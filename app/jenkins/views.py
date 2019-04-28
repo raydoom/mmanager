@@ -4,42 +4,66 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views import View
 from django.utils.decorators import method_decorator
-import logging, os, configparser, json
+import logging, os, configparser, json, requests
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from app.jenkins.models import JenkinsServer
+from app.server.models import Server, ServerType
+from app.jenkins.models import JobInfo
+from app.jenkins.job import Job
 from app.utils.common_func import format_log, auth_controller, get_dir_info, get_file_contents, log_record
+from app.utils.get_application_list import get_job_lists
 
 
 # jenkins任务列表视图
 @method_decorator(auth_controller, name='dispatch')
 class JobListView(View):
 	def get(self, request):
+		current_user_id = request.session.get('user_id')
 		filter_keyword = request.GET.get('filter_keyword')
 		filter_select = request.GET.get('filter_select')
-		servers = JenkinsServer.objects.all().order_by('ip')
+		jenkins_server_type_id = ServerType.objects.get(server_type='jenkins').server_type_id
+		servers = Server.objects.filter(server_type_id=jenkins_server_type_id).order_by('host')
 		job_list = []
-		for server in servers:
-			try:
-				jobs = server.get_all_jobs_list()
-				if filter_keyword != None:
-					for job in jobs:
-						if filter_select == 'Status =' and filter_keyword.lower() == job['color'].lower():
-								job_list.append(job)
-						if filter_select == 'Name' and filter_keyword in job['name']:
-								job_list.append(job)		
-						if filter_select == 'Location' and filter_keyword in job['host_ip']:
-								job_list.append(job)						
-				else:
-					for job in jobs:
-						job_list.append(job)
-			except Exception as e:
-				logging.error(e)
+		try:
+			jobs = get_job_lists(servers)
+			for job in jobs:
+				job_list.append(JobInfo(host=job.host,
+										host_port_api=job.host_port_api,
+										host_protocal_api=job.host_protocal_api,
+										name=job.name,
+										color=job.color,
+										current_user_id=current_user_id))
+			JobInfo.objects.filter(current_user_id=current_user_id).delete()
+			JobInfo.objects.bulk_create(job_list)
+		except Exception as e:
+			logging.error(e)
+		if filter_keyword != None:
+			if filter_select == 'Status =':
+				job_list = JobInfo.objects.filter(current_user_id=current_user_id,status=filter_keyword)
+			if filter_select == 'Name':
+				job_list = JobInfo.objects.filter(current_user_id=current_user_id,name__icontains=filter_keyword)
+			if filter_select == 'Host':
+				job_list = JobInfo.objects.filter(current_user_id=current_user_id,host__icontains=filter_keyword)
+			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
+		else:
+			job_list = JobInfo.objects.filter(current_user_id=current_user_id)
+			page_prefix = '?page='
+		paginator = Paginator(job_list, 10)
+		page = request.GET.get('page')
+		try:
+			job_list = paginator.page(page)
+		except PageNotAnInteger:
+			# If page is not an integer, deliver first page.
+			job_list = paginator.page(1)
+		except EmptyPage:
+			# If page is out of range (e.g. 9999), deliver last page of results.
+			job_list = paginator.page(paginator.num_pages)
 		job_count = len(job_list)
 		if filter_keyword == None:
 			filter_keyword = ''
 		if filter_select == None:
 			filter_select = ''
-		return render(request, 'job_list.html', {'job_list': job_list, 'job_count': job_count, 'filter_keyword': filter_keyword, 'filter_select': filter_select})
+		return render(request, 'job_list.html', {'job_list': job_list, 'job_count': job_count, 'filter_keyword': filter_keyword, 'filter_select': filter_select, 'page_prefix': page_prefix})
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')
@@ -52,12 +76,15 @@ class JobListView(View):
 @method_decorator(auth_controller, name='dispatch')
 class JobOptionView(View):
 	def get(self, request):
-		server_ip = request.GET.get('server_ip')
-		server_port = int(request.GET.get('server_port'))
-		job_name = request.GET.get('job_name')
-		jenkins_opt = request.GET.get('jenkins_opt')
-		server = JenkinsServer.objects.filter(ip=server_ip).first()
-		result = server.send_build_job(job_name)
+		job = Job()
+		job.host = request.GET.get('server_ip')
+		job.host_port_api = '8080'
+		job.name = request.GET.get('job_name')
+		job_host_info = Server.objects.get(ip=request.GET.get('server_ip'))
+		job.host_username_api = job_host_info.username_api
+		job.host_username_api = job_host_info.password_api
+		job.protocal_api = job_host_info.protocal_api
+		job.job_build_now()
 		log_detail = jenkins_opt + ' <' + job_name + '> on host ' + server_ip
 		log_record(request.session.get('username'), log_detail=log_detail)
 		return HttpResponse(result)

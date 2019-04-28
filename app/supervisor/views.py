@@ -22,15 +22,14 @@ class ProcessListView(View):
 		current_user_id = request.session.get('user_id')
 		filter_keyword = request.GET.get('filter_keyword')
 		filter_select = request.GET.get('filter_select')
-		servers = ServerType.objects.get(server_type='supervisor').server_set.all().order_by('ip')
+		supervisor_server_type_id = ServerType.objects.get(server_type='supervisor').server_type_id
+		servers = Server.objects.filter(server_type_id=supervisor_server_type_id).order_by('host')
 		process_list = []
 		try:
 			processes = get_process_lists(servers)
 			for process in processes:
-				process_list.append(ProcessInfo(host_ip=process.host_ip,
+				process_list.append(ProcessInfo(host=process.host,
 												host_port=process.host_port,
-												host_username=process.host_username,
-												host_password=process.host_password,
 												statename=process.statename,
 												name=process.name,
 												description=process.description,
@@ -44,8 +43,8 @@ class ProcessListView(View):
 				process_list = ProcessInfo.objects.filter(current_user_id=current_user_id,status=filter_keyword)
 			if filter_select == 'Name':
 				process_list = ProcessInfo.objects.filter(current_user_id=current_user_id,name__icontains=filter_keyword)
-			if filter_select == 'Location':
-				process_list = ProcessInfo.objects.filter(current_user_id=current_user_id,host_ip__icontains=filter_keyword)
+			if filter_select == 'Host':
+				process_list = ProcessInfo.objects.filter(current_user_id=current_user_id,host__icontains=filter_keyword)
 			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
 		else:
 			process_list = ProcessInfo.objects.filter(current_user_id=current_user_id)

@@ -22,7 +22,7 @@
         <select class="form-control" name="filter_select">
           <option {% if filter_select == "Status =" %} selected="selected" {% endif %}>Status =</option>
           <option {% if filter_select == "Name" or filter_select == "" %} selected="selected" {% endif %}>Name</option>
-          <option {% if filter_select == "Location" %} selected="selected" {% endif %}>Location</option>
+          <option {% if filter_select == "Host" %} selected="selected" {% endif %}>Location</option>
         </select>
     </p>
     <input type="text" class="form-control" name="filter_keyword" value="{{filter_keyword}}" placeholder="">
@@ -51,7 +51,7 @@
         <th><input type="checkbox" name="check_all" id="check_all" onclick="checkAll()"></th>
         <th width="10%">Status</th>
         <th width="30%">Name</thw>
-        <th width="20%">Location</th>
+        <th width="20%">Host</th>
         <th width="25%">Description</th>
         <th colspan="4" width="15%">Actions</th>
     </tr>
@@ -62,22 +62,22 @@
             {{container.statename|lower}}
         </td>
         <td>{{container.name}}</td>
-        <td>{{container.host_ip}}</td>
+        <td>{{container.host}}</td>
         <td>{{container.status|lower}}, created {{container.created|lower}}</td>
         <td>
           
           <!-- Split button -->
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="javascript:;" onclick="container_opt('{{container.host_ip}}','{{container.host_port}}','{{container.container_id}}','{{container.name}}','restart')">Restart</a>
+            <a type="button" class="btn btn-default btn-sm" href="javascript:;" onclick="container_opt('{{container.host}}','{{container.host_port}}','{{container.container_id}}','{{container.name}}','restart')">Restart</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="javascript:;" onclick="container_opt('{{container.host_ip}}','{{container.host_port}}','{{container.container_id}}','{{container.name}}','start')">Start Container</a></li>
-              <li><a href="javascript:;" onclick="container_opt('{{container.host_ip}}','{{container.host_port}}','{{container.container_id}}','{{container.name}}','stop')">Stop Container</a></li>
+              <li><a href="javascript:;" onclick="container_opt('{{container.host}}','{{container.host_port}}','{{container.container_id}}','{{container.name}}','start')">Start Container</a></li>
+              <li><a href="javascript:;" onclick="container_opt('{{container.host}}','{{container.host_port}}','{{container.container_id}}','{{container.name}}','stop')">Stop Container</a></li>
               <li role="separator" class="divider"></li>
-              <li><a href="/docker/container_console?server_ip={{container.host_ip}}&server_port={{container.host_port}}&container_id={{container.container_id}}&container_name={{container.name}}" target="_blank">Container Console</a></li>
-              <li><a href="container_log?server_ip={{container.host_ip}}&server_port={{container.host_port}}&container_id={{container.container_id}}&container_name={{container.name}}" target="_blank">Tail Log</a></li>
+              <li><a href="/docker/container_console?server_ip={{container.host}}&server_port={{container.host_port}}&container_id={{container.container_id}}&container_name={{container.name}}" target="_blank">Container Console</a></li>
+              <li><a href="container_log?server_ip={{container.host}}&server_port={{container.host_port}}&container_id={{container.container_id}}&container_name={{container.name}}" target="_blank">Tail Log</a></li>
             </ul>
           </div>
 
