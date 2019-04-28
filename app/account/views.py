@@ -7,10 +7,10 @@ from django.views import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.hashers import make_password, check_password
 import logging, os, configparser, json
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from app.account.models import UserInfo
 from app.utils.common_func import auth_controller, log_record
+from app.utils.paginator import paginator_for_list_view
 
 
 # 用户登陆
@@ -98,22 +98,14 @@ class UserListView(View):
 		else:
 			user_lists = UserInfo.objects.all().order_by("username")
 			page_prefix = '?page='
-		paginator = Paginator(user_lists, 10)
-		page = request.GET.get('page')
-		try:
-			user_list = paginator.page(page)
-		except PageNotAnInteger:
-			# If page is not an integer, deliver first page.
-			user_list = paginator.page(1)
-		except EmptyPage:
-			# If page is out of range (e.g. 9999), deliver last page of results.
-			user_list = paginator.page(paginator.num_pages)
-		user_list_count = len(user_lists)
+		page_num = request.GET.get('page')
+		user_list = paginator_for_list_view(user_lists, page_num)
+		curent_page_size = len(user_list)
 		if filter_keyword == None:
 			filter_keyword = ''
 		if filter_select == None:
 			filter_select = ''
-		return render(request, 'user_list.html', {'user_list': user_list, 'user_list_count': user_list_count, 'page_prefix': page_prefix, 'filter_keyword': filter_keyword, 'filter_select': filter_select})
+		return render(request, 'user_list.html', {'user_list': user_list, 'curent_page_size': curent_page_size, 'page_prefix': page_prefix, 'filter_keyword': filter_keyword, 'filter_select': filter_select})
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')

@@ -4,11 +4,11 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views import View
 from django.utils.decorators import method_decorator
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import logging, os, configparser, json
 
 from app.utils.common_func import auth_controller, get_dir_info, get_file_contents, log_record
 from app.action_log.models import ActionLog
+from app.utils.paginator import paginator_for_list_view
 
 # 操作日志查看页面试图函数
 @method_decorator(auth_controller, name='dispatch')
@@ -26,18 +26,10 @@ class ActionLogListView(View):
 		else:
 			action_logs = ActionLog.objects.all().order_by('-log_time')
 			page_prefix = '?page='
-		paginator = Paginator(action_logs, 10)
-		page = request.GET.get('page')
-		try:
-			action_log = paginator.page(page)
-		except PageNotAnInteger:
-			# If page is not an integer, deliver first page.
-			action_log = paginator.page(1)
-		except EmptyPage:
-			# If page is out of range (e.g. 9999), deliver last page of results.
-			action_log = paginator.page(paginator.num_pages)
-		action_log_count = len(action_logs)
-		return render(request, 'action_log.html', {'action_log': action_log, 'action_log_count': action_log_count, 'page_prefix': page_prefix})
+		page_num = request.GET.get('page')
+		action_log = paginator_for_list_view(action_logs ,page_num)
+		curent_page_size = len(action_log)
+		return render(request, 'action_log.html', {'action_log': action_log, 'curent_page_size': curent_page_size, 'page_prefix': page_prefix})
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')

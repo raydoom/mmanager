@@ -3,7 +3,7 @@
 {% block body %}
 
 <ol class="breadcrumb">
-  <li>Ops Manage</li>
+  <li>Admin</li>
   <li class="active">Action Log</li>
 </ol>
 
@@ -40,7 +40,7 @@
 </caption>
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying 10 / {{ action_log_count }} items</span>
+            <span class="table_count">Displaying {{ curent_page_size }} / {{ action_log.paginator.count }} items</span>
         </td>
     </tr>
     <tr class="active">
@@ -57,7 +57,7 @@
     {% endfor %}
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying 10 / {{ action_log_count }} items</span>
+            <span class="table_count">Displaying {{ curent_page_size }} / {{ action_log.paginator.count }} items</span>
         </td>
     </tr>
 </table>

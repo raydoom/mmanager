@@ -6,13 +6,13 @@ from django.views import View
 from django.utils.decorators import method_decorator
 import logging, json, time, threading
 from dwebsocket import require_websocket, accept_websocket
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from app.server.models import Server, ServerType
 from app.supervisor.process import Process
 from app.supervisor.models import ProcessInfo
 from app.utils.common_func import get_time_stamp, format_log, auth_controller, log_record, send_data_over_websocket
 from app.utils.get_application_list import get_process_lists
+from app.utils.paginator import paginator_for_list_view
 
 
 # 获取supervisor服务器及程序列表，根据选项和关键字过滤
@@ -40,30 +40,22 @@ class ProcessListView(View):
 			logging.error(e)		
 		if filter_keyword != None:
 			if filter_select == 'Status =':
-				process_list = ProcessInfo.objects.filter(current_user_id=current_user_id,status=filter_keyword)
+				process_lists = ProcessInfo.objects.filter(current_user_id=current_user_id,status=filter_keyword)
 			if filter_select == 'Name':
-				process_list = ProcessInfo.objects.filter(current_user_id=current_user_id,name__icontains=filter_keyword)
+				process_lists = ProcessInfo.objects.filter(current_user_id=current_user_id,name__icontains=filter_keyword)
 			if filter_select == 'Host':
-				process_list = ProcessInfo.objects.filter(current_user_id=current_user_id,host__icontains=filter_keyword)
+				process_lists = ProcessInfo.objects.filter(current_user_id=current_user_id,host__icontains=filter_keyword)
 			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
 		else:
-			process_list = ProcessInfo.objects.filter(current_user_id=current_user_id)
+			process_lists = ProcessInfo.objects.filter(current_user_id=current_user_id)
 			page_prefix = '?page='
-		paginator = Paginator(process_list, 10)
-		page = request.GET.get('page')
-		try:
-			process_list = paginator.page(page)
-		except PageNotAnInteger:
-			# If page is not an integer, deliver first page.
-			process_list = paginator.page(1)
-		except EmptyPage:
-			# If page is out of range (e.g. 9999), deliver last page of results.
-			process_list = paginator.page(paginator.num_pages)
-		process_count = len(process_list)
+		page_num = request.GET.get('page')
+		process_list = paginator_for_list_view(process_lists, page_num)
+		curent_page_size = len(process_list)
 		if filter_keyword == None:
 			filter_select = ''
 			filter_keyword = ''
-		return render(request, 'process_list.html', {'process_list': process_list, 'process_count': process_count, 'filter_keyword': filter_keyword, 'filter_select': filter_select, 'page_prefix': page_prefix})
+		return render(request, 'process_list.html', {'process_list': process_list, 'curent_page_size': curent_page_size, 'filter_keyword': filter_keyword, 'filter_select': filter_select, 'page_prefix': page_prefix})
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')

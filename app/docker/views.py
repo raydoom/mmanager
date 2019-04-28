@@ -5,15 +5,14 @@ from django.http import HttpResponse, StreamingHttpResponse
 from django.views import View
 from django.utils.decorators import method_decorator
 from dwebsocket import require_websocket, accept_websocket
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import logging, os, json, time, threading
 
 from app.server.models import Server, ServerType
 from app.docker.container import Container
-
 from app.docker.models import ContainerInfo
 from app.utils.common_func import format_log, auth_controller, get_dir_info, get_file_contents, log_record, get_time_stamp, send_data_over_websocket, shell_output_sender, shell_input_reciever
 from app.utils.get_application_list import get_container_lists
+from app.utils.paginator import paginator_for_list_view
 
 # 获取docker服务器及容器列表，根据选项和关键字过滤
 @method_decorator(auth_controller, name='dispatch')
@@ -45,30 +44,22 @@ class ContainerListView(View):
 			logging.error(e)
 		if filter_keyword != None:
 			if filter_select == 'Status =':
-				container_list = ContainerInfo.objects.filter(current_user_id=current_user_id,status=filter_keyword)
+				container_lists = ContainerInfo.objects.filter(current_user_id=current_user_id,status=filter_keyword)
 			if filter_select == 'Name':
-				container_list = ContainerInfo.objects.filter(current_user_id=current_user_id,name__icontains=filter_keyword)
+				container_lists = ContainerInfo.objects.filter(current_user_id=current_user_id,name__icontains=filter_keyword)
 			if filter_select == 'Host':
-				container_list = ContainerInfo.objects.filter(current_user_id=current_user_id,host__icontains=filter_keyword)
+				container_lists = ContainerInfo.objects.filter(current_user_id=current_user_id,host__icontains=filter_keyword)
 			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
 		else:
-			container_list = ContainerInfo.objects.filter(current_user_id=current_user_id)
+			container_lists = ContainerInfo.objects.filter(current_user_id=current_user_id)
 			page_prefix = '?page='
-		paginator = Paginator(container_list, 10)
-		page = request.GET.get('page')
-		try:
-			container_list = paginator.page(page)
-		except PageNotAnInteger:
-			# If page is not an integer, deliver first page.
-			container_list = paginator.page(1)
-		except EmptyPage:
-			# If page is out of range (e.g. 9999), deliver last page of results.
-			container_list = paginator.page(paginator.num_pages)
-		container_count = len(container_list)
+		page_num = request.GET.get('page')
+		container_list = paginator_for_list_view(container_lists, page_num)
+		curent_page_size = len(container_list)
 		if filter_keyword == None:
 			filter_select = ''
 			filter_keyword = ''
-		return render(request, 'container_list.html', {'container_list': container_list, 'container_count': container_count, 'filter_keyword': filter_keyword, 'filter_select': filter_select, 'page_prefix': page_prefix})
+		return render(request, 'container_list.html', {'container_list': container_list, 'curent_page_size':curent_page_size, 'filter_keyword': filter_keyword, 'filter_select': filter_select, 'page_prefix': page_prefix})
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')
 		filter_select = request.POST.get('filter_select')

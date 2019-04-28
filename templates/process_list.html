@@ -45,7 +45,7 @@
 
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ process_count }} items</span>
+            <span class="table_count">Displaying {{ curent_page_size }} / {{ process_list.paginator.count }} items</span>
         </td>
     </tr>
     <tr class="active">
@@ -86,7 +86,7 @@
     {% endfor %}
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ process_count }} items</span>
+            <span class="table_count">Displaying {{ curent_page_size }} / {{ process_list.paginator.count }} items</span>
         </td>
     </tr>
 </table>
