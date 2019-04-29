@@ -27,7 +27,7 @@ class LoginView(View):
 				request.session['islogin'] = True
 				request.session['username'] = username
 				request.session['user_id'] = user.user_id
-				request.session['is_superuser'] = user.is_superuser
+				request.session['role'] = user.role
 				return redirect("/docker/container_list")
 			else:
 				message = 'username or password error!'
@@ -73,6 +73,24 @@ class PasswordChangeView(View):
 			message = 'Old password is wrong'
 			return render(request, 'password_change.html', {"message": message, "username": username})
 
+# 重置密码，管理员功能
+@method_decorator(auth_controller, name='dispatch')
+class PasswordResetView(View):
+	def get(self, request):
+		username = request.GET.get('username')
+		return render(request, 'password_reset.html', {'username': username})
+
+	def post(self, request):
+		username = request.POST.get('username')
+		new_password = request.POST.get('new_password')
+		confirm_new_password = request.POST.get('confirm_new_password')
+		if new_password != confirm_new_password:
+			message = 'confirm_new_password is not match'
+			return render(request, 'password_reset.html', {"message": message, "username": username})
+		else:
+			UserInfo.objects.filter(username=username).update(password=make_password(new_password, None, 'pbkdf2_sha256'))
+			message = 'Password Successfully Changed'
+			return render(request, 'password_reset.html', {"message": message, "username": username})
 
 # 用户退出
 class LogoutView(View):
@@ -122,17 +140,16 @@ class UserCreateView(View):
 	def post(self, request):
 		username = request.POST.get('username')
 		email = request.POST.get('email')
-		is_superuser = request.POST.get('is_superuser')
+		role = request.POST.get('role')
 		password = request.POST.get('password')
 		confirm_password = request.POST.get('confirm_password')
 		description = request.POST.get('description')
-
 		if password != confirm_password:
 			message = 'confirm_password is not match'
 			return render(request, 'user_create.html', {"message": message})
 		try:
 			password=make_password(password, None, 'pbkdf2_sha256')
-			UserInfo.objects.create(username=username, email=email, is_superuser=is_superuser, password=password, description=description)
+			UserInfo.objects.create(username=username, email=email, role=role, password=password, description=description)
 			message = 'User [ ' + username + ' ] Successfully Created'
 		except Exception as e:
 			logging.error(e)

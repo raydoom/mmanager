@@ -23,12 +23,12 @@ class ServerType(models.Model):
 class Server(models.Model):
 	server_id = models.BigAutoField(primary_key=True)
 	host = models.CharField(max_length=50)
-	port = models.IntegerField()
+	port = models.IntegerField(default=0)
 	username = models.CharField(max_length=50, default='', blank=True)
 	password = models.CharField(max_length=50, default='', blank=True)
 	username_api = models.CharField(max_length=50, default='', blank=True)
 	password_api = models.CharField(max_length=50, default='', blank=True)	
-	port_api = models.IntegerField()
+	port_api = models.IntegerField(default=0)
 	protocal_api = models.CharField(max_length=50, default='', blank=True)
 	description = models.CharField(max_length=128, default='', blank=True)
 	server_type_id = models.IntegerField()
@@ -36,7 +36,7 @@ class Server(models.Model):
 		ordering = ['server_id']
 		db_table = "app_server"
 	def __str__(self):
-		return self.hostname
+		return self.host
 
 	# 获取容器列表
 	def get_container_list(self):
@@ -100,6 +100,20 @@ class Server(models.Model):
 			job_list.append(job)
 		return (job_list)
 
-
-
-
+# 主机信息缓存，用于查询主机列表时生成分页
+class ServerCache(models.Model):
+	server_cache_id = models.BigAutoField(primary_key=True)
+	server_id = models.IntegerField()
+	host = models.CharField(max_length=50)
+	port = models.IntegerField()
+	port_api = models.IntegerField()
+	protocal_api = models.CharField(max_length=50, default='', blank=True)
+	description = models.CharField(max_length=128, default='', blank=True)
+	status = models.CharField(max_length=50, default='', blank=True)
+	server_type = models.CharField(max_length=50)
+	current_user_id = models.IntegerField()
+	class Meta:
+		ordering = ['server_cache_id']
+		db_table = "app_server_cache"
+	def __str__(self):
+		return self.host

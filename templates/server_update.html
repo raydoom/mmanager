@@ -18,29 +18,37 @@
       {% csrf_token %}
         <div class="row">
           <div class="col-sm-6 col-md-5">
-              <p><strong>Host Name </strong><span class="fa fa-asterisk"></span></p>
-              <input type="text" name="hostname" class="form-control" value={{server.hostname}} laceholder="" required autofocus>
+              <p><strong>Host </strong><span class="fa fa-asterisk"></span></p>
+              <input type="text" name="host" class="form-control" value={{server.host}} readonly="readonly" required>
               </br>
               <p><strong>Server Type </strong><span class="fa fa-asterisk"></span></p>
               <select class="form-control" name="server_type" readonly="readonly">
                 <option>{{server_type}}</option>
               </select>
               </br>
-              <p><strong>Ip Addr </strong> </strong><span class="fa fa-asterisk"></span></p>
-              <input type="text" name="ip" class="form-control" value={{server.ip}} readonly="readonly" placeholder="" required autofocus>
-              </br>
               <p><strong>Port </strong> </strong><span class="fa fa-asterisk"></span></p>
-              <input type="text" name="port" class="form-control" value={{server.port}}  placeholder="" required autofocus>
+              <input type="text" name="port" class="form-control" value={{server.port}}>
               </br>
               <p><strong>User Name </strong></p>
-              <input type="text" name="username" class="form-control" value={{server.username}} placeholder="" autofocus>
+              <input type="text" name="username" class="form-control" value={{server.username}}>
               </br>
               <p><strong>Password </strong></span></p>
-              <input type="password" name="password" class="form-control" placeholder="">
+              <input type="password" name="password" class="form-control">
               </br>
+              <p><strong>API User Name </strong></p>
+              <input type="text" name="username_api" class="form-control" value={{server.username_api}}>
+              </br>
+              <p><strong>API Password </strong></span></p>
+              <input type="password" name="password_api" class="form-control">
+              </br>
+              <p><strong>API Port </strong></p>
+              <input type="text" name="port_api" class="form-control" value={{server.port_api}}>
+              </br>
+              <p><strong>API Protocal </strong></p>
+              <input type="text" name="protocal_api" class="form-control" value={{server.protocal_api}}>
               </br>
               <p><strong>Description </strong></p>
-              <input type="text" name="description" class="form-control" value="{{server.description}}" placeholder="">
+              <input type="text" name="description" class="form-control" value="{{server.description}}">
               </br>
               {% if message %}
                   <div class="alert alert-warning">{{ message }}</div>

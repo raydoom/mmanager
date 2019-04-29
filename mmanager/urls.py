@@ -18,7 +18,7 @@ urlpatterns = [
     path('filemanager/', include('app.filemanager.urls')),
     path('action_log/', include('app.action_log.urls')),
 
-    url(r'^', RedirectView.as_view(url='/docker/container_list')),
+    url(r'^', RedirectView.as_view(url='/account/login')),
     
 ]
 

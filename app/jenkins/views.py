@@ -21,8 +21,8 @@ class JobListView(View):
 		current_user_id = request.session.get('user_id')
 		filter_keyword = request.GET.get('filter_keyword')
 		filter_select = request.GET.get('filter_select')
-		jenkins_server_type_id = ServerType.objects.get(server_type='jenkins').server_type_id
-		servers = Server.objects.filter(server_type_id=jenkins_server_type_id).order_by('host')
+		server_type_id = ServerType.objects.get(server_type='jenkins').server_type_id
+		servers = Server.objects.filter(server_type_id=server_type_id).order_by('host')
 		job_list = []
 		try:
 			jobs = get_job_lists(servers)
@@ -68,17 +68,22 @@ class JobListView(View):
 @method_decorator(auth_controller, name='dispatch')
 class JobOptionView(View):
 	def get(self, request):
+		host = request.GET.get('host')
+		host_port_api = request.GET.get('host_port_api')
+		job_name = request.GET.get('job_name')
+		job_opt = request.GET.get('job_opt')
+		server_type_id = ServerType.objects.get(server_type='jenkins').server_type_id
+		server = Server.objects.get(server_type_id=server_type_id, host=host, port_api=host_port_api)
 		job = Job()
-		job.host = request.GET.get('server_ip')
-		job.host_port_api = '8080'
-		job.name = request.GET.get('job_name')
-		job_host_info = Server.objects.get(ip=request.GET.get('server_ip'))
-		job.host_username_api = job_host_info.username_api
-		job.host_username_api = job_host_info.password_api
-		job.protocal_api = job_host_info.protocal_api
-		job.job_build_now()
-		log_detail = jenkins_opt + ' <' + job_name + '> on host ' + server_ip
+		job.host = host
+		job.host_port_api = host_port_api
+		job.name = job_name
+		job.host_username_api = server.username_api
+		job.host_password_api = server.password_api
+		job.host_protocal_api = server.protocal_api
+		result = job.job_build_now(job_opt)
+		log_detail = job_opt + ' <' + job_name + '> on host ' + host
 		log_record(request.session.get('username'), log_detail=log_detail)
-		return HttpResponse(result)
+		return HttpResponse('200')
 
  	

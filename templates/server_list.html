@@ -20,8 +20,8 @@
   <div class="form-group">
     <p class="form-control-static">
         <select class="form-control" name="filter_select">
-          <option {% if filter_select == "Host Name" or filter_select == "" %} selected="selected" {% endif %}>Host Name</option>
-          <option {% if filter_select == "IP" %} selected="selected" {% endif %}>IP</option>
+          <option {% if filter_select == "Status =" or filter_select == "" %} selected="selected" {% endif %}>Status =</option>
+          <option {% if filter_select == "Host" %} selected="selected" {% endif %}>Host</option>
           <option {% if filter_select == "Port =" %} selected="selected" {% endif %}>Port =</option>
           <option {% if filter_select == "Type =" %} selected="selected" {% endif %}>Type =</option>
         </select>
@@ -43,38 +43,36 @@
 </caption>
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ server_count }} items</span>
+            <span class="table_count">Displaying {{ curent_page_size }} / {{ server_list.paginator.count }} items</span>
         </td>
     </tr>
     <tr class="active">
         <th><input type="checkbox" name="check_all" id="check_all" onclick="checkAll()"></th>
         <th width="15%">Status</th>
-        <th width="10%">Host Name</th>
-        <th width="15%">IP</thw>
+        <th width="15%">Host</th>
         <th width="10%">Port</th>
         <th width="15%">Type</th>
-        <th width="20%">Description</th>
+        <th width="30%">Description</th>
         <th colspan="4" width="15%">Actions</th>
     </tr>
     {% for server in server_list %}
     <tr>
         <td><input type="checkbox" name="check_item"></td>
         <td>{{server.status}}</td>
-        <td>{{server.hostname}}</td>
-        <td>{{server.ip}}</td>
+        <td>{{server.host}}</td>
         <td>{{server.port}}</td>
-        <td>{{server.type}}</td>
+        <td>{{server.server_type}}</td>
         <td>{{server.description}}</td>
         <td>
           
           <!-- Split button -->
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="/server/server_update?ip={{server.ip}}&port={{server.port}}&servertype={{server.type}}">Edit</a>
+            <a type="button" class="btn btn-default btn-sm" href="/server/server_update?host={{server.host}}&server_type={{server.server_type}}">Edit</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a style="color: red;" href="/server/server_delete?ip={{server.ip}}&port={{server.port}}&servertype={{server.type}}">Delete Server</a></li>
+              <li><a style="color: red;" href="/server/server_delete?host={{server.host}}&server_type={{server.server_type}}">Delete Server</a></li>
             </ul>
           </div>
 
@@ -84,11 +82,27 @@
     {% endfor %}
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ server_count }} items</span>
+            <span class="table_count">Displaying {{ curent_page_size }} / {{ server_list.paginator.count }} items</span>
         </td>
     </tr>
 
 </table>
+
+<div>
+  <span style="text-align:center; display:block;">
+    <a>
+        {% if server_list.has_previous %}
+            <a style="text-decoration:underline; color:inherit;" href="{{ page_prefix }}{{ server_list.previous_page_number }}">Previous</a>
+        {% endif %}
+    </a>
+    <a style="color:inherit;">&nbsp; < {{ server_list.number }} / {{ server_list.paginator.num_pages }} > &nbsp;</a>
+    <a>
+        {% if server_list.has_next %}
+            <a style="text-decoration:underline; color:inherit;" href="{{ page_prefix }}{{ server_list.next_page_number }}">Next</a>
+        {% endif %}
+    </a>
+  </span>
+</div>
 
 <script> 
 //复选框的全选、取消全选功能

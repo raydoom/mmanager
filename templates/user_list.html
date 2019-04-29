@@ -50,7 +50,7 @@
         <th><input type="checkbox" name="check_all" id="check_all" onclick="checkAll()"></th>
         <th width="15%">User Name</th>
         <th width="20%">Email</thw>
-        <th width="15%">Superuser</thw>
+        <th width="15%">Role</thw>
         <th width="35%">Description</th>
         <th width="15%">Action</th>
     </tr>
@@ -59,7 +59,7 @@
         <td><input type="checkbox" name="check_item"></td>
         <td>{{user.username}}</td>
         <td>{{user.email}}</td>
-        <td>{{user.is_superuser}}</td>
+        <td>{{user.role}}</td>
         <td>{{user.description}}</td>
         <td>
  
@@ -70,7 +70,7 @@
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="/account/password_change?username={{user.username}}">Change Password</a></li>
+              <li><a href="/account/password_reset?username={{user.username}}">Reset Password</a></li>
               <li><a style="color: red;" href="/account/user_delete?username={{user.username}}">Delete User</a></li>
             </ul>
           </div>

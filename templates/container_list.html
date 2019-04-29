@@ -76,8 +76,8 @@
               <li><a href="javascript:;" onclick="container_opt('{{container.host}}','{{container.host_port}}','{{container.container_id}}','{{container.name}}','start')">Start Container</a></li>
               <li><a href="javascript:;" onclick="container_opt('{{container.host}}','{{container.host_port}}','{{container.container_id}}','{{container.name}}','stop')">Stop Container</a></li>
               <li role="separator" class="divider"></li>
-              <li><a href="/docker/container_console?server_ip={{container.host}}&server_port={{container.host_port}}&container_id={{container.container_id}}&container_name={{container.name}}" target="_blank">Container Console</a></li>
-              <li><a href="container_log?server_ip={{container.host}}&server_port={{container.host_port}}&container_id={{container.container_id}}&container_name={{container.name}}" target="_blank">Tail Log</a></li>
+              <li><a href="/docker/container_console?host={{container.host}}&host_port={{container.host_port}}&container_id={{container.container_id}}&container_name={{container.name}}" target="_blank">Container Console</a></li>
+              <li><a href="container_log?host={{container.host}}&host_port={{container.host_port}}&container_id={{container.container_id}}&container_name={{container.name}}" target="_blank">Tail Log</a></li>
             </ul>
           </div>
 

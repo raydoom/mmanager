@@ -22,8 +22,8 @@ class ProcessListView(View):
 		current_user_id = request.session.get('user_id')
 		filter_keyword = request.GET.get('filter_keyword')
 		filter_select = request.GET.get('filter_select')
-		supervisor_server_type_id = ServerType.objects.get(server_type='supervisor').server_type_id
-		servers = Server.objects.filter(server_type_id=supervisor_server_type_id).order_by('host')
+		server_type_id = ServerType.objects.get(server_type='supervisor').server_type_id
+		servers = Server.objects.filter(server_type_id=server_type_id).order_by('host')
 		process_list = []
 		try:
 			processes = get_process_lists(servers)
@@ -67,19 +67,20 @@ class ProcessListView(View):
 @method_decorator(auth_controller, name='dispatch')
 class ProcessOptionView(View):
 	def get(self, request):
-		server_ip = request.GET.get('server_ip')
-		server_port = int(request.GET.get('server_port'))
+		host = request.GET.get('host')
+		host_port = int(request.GET.get('host_port'))
 		process_name = request.GET.get('process_name')
 		process_opt = request.GET.get('process_opt')
-		server = ServerType.objects.get(server_type='supervisor').server_set.all().get(ip=server_ip, port=int(server_port))
+		server_type_id = ServerType.objects.get(server_type='supervisor').server_type_id
+		server = Server.objects.get(server_type_id=server_type_id, host=host, port=host_port)
 		process = Process()
-		process.host_ip = server.ip
-		process._host_port = server.port
+		process.host = server.host
+		process.host_port = server.port
 		process.host_username = server.username
 		process.host_password = server.password
 		process.name = process_name		
 		result = process.process_opt(process_opt)
-		log_detail = process_opt + ' <' + process_name + '> on host ' + server_ip
+		log_detail = process_opt + ' <' + process_name + '> on host ' + host
 		log_record(request.session.get('username'), log_detail=log_detail)
 		return HttpResponse(result)
 
@@ -88,17 +89,18 @@ class ProcessOptionView(View):
 @accept_websocket
 def process_log(request):
 	if not request.is_websocket():
-		server_ip = request.GET.get('server_ip')
-		server_port = int(request.GET.get('server_port'))
+		host = request.GET.get('host')
+		host_port = int(request.GET.get('host_port'))
 		process_name = request.GET.get('process_name')
-		return render(request, 'tail_log.html', {'name': process_name, 'server_ip': server_ip})
+		return render(request, 'tail_log.html', {'name': process_name, 'host': host})
 	else:
-		server_ip = request.GET.get('server_ip')
-		server_port = int(request.GET.get('server_port'))
+		host = request.GET.get('host')
+		host_port = int(request.GET.get('host_port'))
 		process_name = request.GET.get('process_name')
-		server = ServerType.objects.get(server_type='supervisor').server_set.all().get(ip=server_ip, port=int(server_port))
+		server_type_id = ServerType.objects.get(server_type='supervisor').server_type_id
+		server = Server.objects.get(server_type_id=server_type_id, host=host, port=host_port)
 		process = Process()
-		process.host_ip = server.ip
+		process.host = server.host
 		process.host_port = server.port
 		process.host_username = server.username
 		process.host_password = server.password

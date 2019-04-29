@@ -18,8 +18,8 @@
       {% csrf_token %}
         <div class="row">
           <div class="col-sm-6 col-md-5">
-              <p><strong>Host Name </strong><span class="fa fa-asterisk"></span></p>
-              <input type="text" name="hostname" class="form-control" placeholder="" required autofocus>
+              <p><strong>Host </strong><span class="fa fa-asterisk"></span></p>
+              <input type="text" name="host" class="form-control" placeholder="" required autofocus>
               </br>
               <p><strong>Server Type </strong><span class="fa fa-asterisk"></span></p>
               <select class="form-control" name="server_type">
@@ -28,21 +28,29 @@
                 <option>Jenkins</option>
               </select>
               </br>
-              <p><strong>Ip Addr </strong> </strong><span class="fa fa-asterisk"></span></p>
-              <input type="text" name="ip" class="form-control" placeholder="" required autofocus>
-              </br>
               <p><strong>Port </strong> </strong><span class="fa fa-asterisk"></span></p>
-              <input type="text" name="port" class="form-control" value ="22" placeholder="" required autofocus>
+              <input type="text" name="port" class="form-control" value ="22">
               </br>
               <p><strong>User Name </strong></p>
-              <input type="text" name="username" class="form-control" placeholder="" autofocus>
+              <input type="text" name="username" class="form-control">
               </br>
               <p><strong>Password </strong></span></p>
-              <input type="password" name="password" class="form-control" placeholder="">
+              <input type="password" name="password" class="form-control">
               </br>
+              <p><strong>API User Name </strong></p>
+              <input type="text" name="username_api" class="form-control">
+              </br>
+              <p><strong>API Password </strong></span></p>
+              <input type="password" name="password_api" class="form-control">
+              </br>
+              <p><strong>API Port </strong></p>
+              <input type="text" name="port_api" class="form-control" value="0">
+              </br>
+              <p><strong>API Protocal </strong></p>
+              <input type="text" name="protocal_api" class="form-control">
               </br>
               <p><strong>Description </strong></p>
-              <input type="text" name="description" class="form-control" placeholder="">
+              <input type="text" name="description" class="form-control">
               </br>
               {% if message %}
                   <div class="alert alert-warning">{{ message }}</div>

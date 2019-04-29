@@ -33,7 +33,7 @@
       <li ><a id="nav-my_account" style="text-align: right;" href="/account/my_account">Account</a></li>
     </ul>
   </li>
-  {% if request.session.is_superuser == True %}
+  {% if request.session.role == "admin" %}
   <li>
     <a data-toggle="collapse" href="#collapse-admin" aria-expanded="false" aria-controls="collapse-admin" style="color: inherit;" >
             Admin

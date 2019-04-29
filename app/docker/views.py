@@ -21,8 +21,8 @@ class ContainerListView(View):
 		current_user_id = request.session.get('user_id')
 		filter_keyword = request.GET.get('filter_keyword')
 		filter_select = request.GET.get('filter_select')
-		docker_server_type_id = ServerType.objects.get(server_type='docker').server_type_id
-		servers = Server.objects.filter(server_type_id=docker_server_type_id).order_by('host')
+		server_type_id = ServerType.objects.get(server_type='docker').server_type_id
+		servers = Server.objects.filter(server_type_id=server_type_id).order_by('host')
 		container_list = []
 		try:
 			containers = get_container_lists(servers)
@@ -70,21 +70,21 @@ class ContainerListView(View):
 @method_decorator(auth_controller, name='dispatch')
 class ContainerOptionView(View):
 	def get(self, request):
-		print (request.get_full_path())
-		server_ip = request.GET.get('server_ip')
-		server_port = int(request.GET.get('server_port'))
+		host = request.GET.get('host')
+		host_port = int(request.GET.get('host_port'))
 		container_id = request.GET.get('container_id')
 		container_name = request.GET.get('container_name')
 		container_opt = request.GET.get('container_opt')
-		server = ServerType.objects.get(server_type='docker').server_set.all().get(ip=server_ip, port=int(server_port))
+		server_type_id = ServerType.objects.get(server_type='docker').server_type_id
+		server = Server.objects.get(server_type_id=server_type_id, host=host, port=host_port)
 		container = Container()
-		container.host_ip = server.ip
-		container._host_port = server.port
+		container.host = server.host
+		container.host_port = server.port
 		container.host_username = server.username
 		container.host_password = server.password
 		container.container_id = container_id
 		result = container.container_opt(container_opt)
-		log_detail = container_opt + ' <' + container_name + '> on host ' + server_ip
+		log_detail = container_opt + ' <' + container_name + '> on host ' + host
 		log_record(request.session.get('username'), log_detail=log_detail)
 		return HttpResponse(result)
 
@@ -93,19 +93,20 @@ class ContainerOptionView(View):
 @accept_websocket
 def container_log(request):
 	if not request.is_websocket():
-		server_ip = request.GET.get('server_ip')
-		server_port = int(request.GET.get('server_port'))
+		host = request.GET.get('host')
+		host_port = int(request.GET.get('host_port'))
 		container_id = request.GET.get('container_id')
 		container_name = request.GET.get('container_name')
-		return render(request, 'tail_log.html', {'name': container_name, 'server_ip': server_ip})
+		return render(request, 'tail_log.html', {'name': container_name, 'host': host})
 	else: 
-		server_ip = request.GET.get('server_ip')
-		server_port = int(request.GET.get('server_port'))
+		host = request.GET.get('host')
+		host_port = int(request.GET.get('host_port'))
 		container_id = request.GET.get('container_id')
 		container_name = request.GET.get('container_name')
-		server = ServerType.objects.get(server_type='docker').server_set.all().get(ip=server_ip, port=int(server_port))
+		server_type_id = ServerType.objects.get(server_type='docker').server_type_id
+		server = Server.objects.get(server_type_id=server_type_id, host=host, port=host_port)
 		container = Container()
-		container.host_ip = server.ip
+		container.host = server.host
 		container.host_port = server.port
 		container.host_username = server.username
 		container.host_password = server.password
@@ -121,19 +122,20 @@ def container_log(request):
 @accept_websocket
 def container_console(request):
 	if not request.is_websocket():
-		server_ip = request.GET.get('server_ip')
-		server_port = int(request.GET.get('server_port'))
+		host = request.GET.get('host')
+		host_port = int(request.GET.get('host_port'))
 		container_id = request.GET.get('container_id')
 		container_name = request.GET.get('container_name')
-		return render(request, 'container_console.html', {'name': container_name, 'server_ip': server_ip})
+		return render(request, 'container_console.html', {'name': container_name, 'host': host})
 	else:
-		server_ip = request.GET.get('server_ip')
-		server_port = int(request.GET.get('server_port'))
+		host = request.GET.get('host')
+		host_port = int(request.GET.get('host_port'))
 		container_id = request.GET.get('container_id')
 		container_name = request.GET.get('container_name')
-		server = ServerType.objects.get(server_type='docker').server_set.all().get(ip=server_ip, port=int(server_port))
+		server_type_id = ServerType.objects.get(server_type='docker').server_type_id
+		server = Server.objects.get(server_type_id=server_type_id, host=host, port=host_port)
 		container = Container()
-		container.host_ip = server.ip
+		container.host = server.host
 		container.host_port = server.port
 		container.host_username = server.username
 		container.host_password = server.password

@@ -8,90 +8,119 @@ from django.utils.decorators import method_decorator
 
 import logging, os, configparser, json
 
-from app.server.models import Server, ServerType
+from app.server.models import Server, ServerType, ServerCache
 from app.utils.common_func import auth_controller, log_record
-from app.utils.get_application_list import get_container_lists, get_process_lists
+from app.utils.get_application_list import get_container_lists, get_process_lists, get_job_lists
+from app.utils.paginator import paginator_for_list_view
 
 # 所有服务器列表
 @method_decorator(auth_controller, name='dispatch')
 class ServerListView(View):
 	def get(self, request):
+		current_user_id = request.session.get('user_id')
 		filter_keyword = request.GET.get('filter_keyword')
 		filter_select = request.GET.get('filter_select')
 		server_list = []
+		server_lists = []
 		server_list_filter = []
-		for server in  ServerType.objects.get(server_type='docker').server_set.all().order_by('ip'):
+		docker_server_type_id = ServerType.objects.get(server_type='docker').server_type_id
+		servers = Server.objects.filter(server_type_id=docker_server_type_id).order_by('host')
+		for server in servers:
 			# get_container_list只能接受列表参数，无法接受单个对象作为参数，生成只含一个server对象的列表server_list_odd
 			server_list_odd = []
 			server_list_odd.append(server)
-			server.type = server.server_type.first()
+			server.type = 'docker'
 			try:
 				result = get_container_lists(server_list_odd)
 				server.status = 'Connected'
 				result_running = 0
 				for i in result:
 					if i.statename == 'running':
-						result_running +=1
+						result_running += 1
 				server.description = str(len(result)) + ' containers, ' + str(result_running) + ' running'
 			except Exception as e:
 				logging.error(e)
 				server.status = 'Disonnected'
 				server.description = 'none'
-			server_list.append(server)
-		for server in  ServerType.objects.get(server_type='supervisor').server_set.all().order_by('ip'):
+			server_lists.append(server)
+		supervisor_server_type_id = ServerType.objects.get(server_type='supervisor').server_type_id
+		servers = Server.objects.filter(server_type_id=supervisor_server_type_id).order_by('host')
+		for server in servers:
 			server_list_odd = []
 			server_list_odd.append(server)
-			server.type = server.server_type.first()
+			server.type = 'supervisor'
 			try:
 				result = get_process_lists(server_list_odd)
 				server.status = 'Connected'
 				result_running = 0
 				for i in result:
 					if i.statename == 'RUNNING':
-						result_running +=1
+						result_running += 1
 				server.description = str(len(result)) + ' processes, ' + str(result_running) + ' running'
 			except Exception as e:
 				logging.error(e)
 				server.status = 'Disonnected'	
 				server.description = 'none'			
-			server_list.append(server)
-		for server in JenkinsServer.objects.all().order_by('ip'):
+			server_lists.append(server)
+		jenkins_server_type_id = ServerType.objects.get(server_type='jenkins').server_type_id
+		servers = Server.objects.filter(server_type_id=jenkins_server_type_id).order_by('host')
+		for server in servers:
+			server_list_odd = []
+			server_list_odd.append(server)
 			server.type = 'jenkins'
 			try:
-				result = server.get_all_jobs_list()
+				result = get_job_lists(server_list_odd)
 				server.status = 'Connected'
 				result_blue = 0
 				for i in result:
-					if i['color'] == 'blue':
-						result_blue +=1
+					if i.color == 'blue':
+						result_blue += 1
 				server.description = str(len(result)) + ' jobs, ' + str(result_blue) + ' blue'
 			except Exception as e:
 				logging.error(e)
 				server.status = 'Disonnected'	
 				server.description = 'none'
-			server_list.append(server)
+			server_lists.append(server)
+		try:
+			for server in server_lists:
+				server_list.append(ServerCache(host=server.host,
+												port=server.port,
+												server_id=server.server_id,
+												server_type=server.type,
+												description=server.description,
+												port_api=server.port_api,
+												protocal_api=server.protocal_api,
+												status=server.status,
+												current_user_id=current_user_id))
+			ServerCache.objects.filter(current_user_id=current_user_id).delete()
+			ServerCache.objects.bulk_create(server_list)
+		except Exception as e:
+			logging.error(e)
 		if filter_keyword != None:
-			for server in server_list:
-				if filter_select == 'Host Name' and filter_keyword in server.hostname:
-					server_list_filter.append(server)
-				if filter_select == 'IP' and filter_keyword in server.ip:
-					server_list_filter.append(server)
-				if filter_select == 'Port =' and int(filter_keyword) == server.port:
-					server_list_filter.append(server)
-				if filter_select == 'Type =' and filter_keyword == str(server.type):
-					server_list_filter.append(server)
-			server_list = server_list_filter
-		server_count = len(server_list)
+			if filter_select == 'Status =':
+				server_lists = ServerCache.objects.filter(current_user_id=current_user_id,status=filter_keyword)
+			if filter_select == 'Port =':
+				server_lists = ServerCache.objects.filter(current_user_id=current_user_id,port=int(filter_keyword))
+			if filter_select == 'Host':
+				server_lists = ServerCache.objects.filter(current_user_id=current_user_id,host__icontains=filter_keyword)
+			if filter_select == 'Type =':
+				server_lists = ServerCache.objects.filter(current_user_id=current_user_id,server_type=filter_keyword)			
+			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
+		else:
+			server_lists = ServerCache.objects.filter(current_user_id=current_user_id)
+			page_prefix = '?page='
+		page_num = request.GET.get('page')
+		server_list = paginator_for_list_view(server_lists, page_num)
+		curent_page_size = len(server_list)
 		if filter_keyword == None:
-			filter_keyword = ''
-		if filter_select == None:
 			filter_select = ''
-		return render(request, 'server_list.html', {'server_list': server_list, 'server_count': server_count, 'filter_keyword': filter_keyword, 'filter_select': filter_select})
+			filter_keyword = ''
+		return render(request, 'server_list.html', {'server_list': server_list, 'curent_page_size':curent_page_size, 'filter_keyword': filter_keyword, 'filter_select': filter_select, 'page_prefix': page_prefix})
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')
 		filter_select = request.POST.get('filter_select')
-		prg_url = 'server/server_list?filter_select=' + filter_select +'&filter_keyword=' + filter_keyword
+		prg_url = '/server/server_list?filter_select=' + filter_select +'&filter_keyword=' + filter_keyword
 		return redirect(prg_url)
 
 # 添加服务器
@@ -101,73 +130,72 @@ class ServerCreateView(View):
 		return render(request, 'server_create.html')
 
 	def post(self, request):
-		hostname = request.POST.get('hostname')
-		server_type = request.POST.get('server_type')
-		ip = request.POST.get('ip')
+		host = request.POST.get('host')
 		port = request.POST.get('port')
-		apiversion = request.POST.get('apiversion')
 		username = request.POST.get('username')
 		password = request.POST.get('password')
+		username_api = request.POST.get('username_api')
+		password_api = request.POST.get('password_api')
+		port_api = request.POST.get('port_api')
+		protocal_api = request.POST.get('protocal_api')
 		description = request.POST.get('description')
-		if server_type == 'Docker' or server_type == 'Supervisor':
-			server_type_get = ServerType.objects.get(server_type=server_type.lower())
-			new_server = Server(hostname=hostname, ip=ip, port=int(port), username=username, password=password, description=description)
-			new_server.save()
-			new_server.server_type.add(server_type_get)
-			new_server.save()
-
-		if server_type == 'Jenkins':
-			JenkinsServer.objects.create(hostname=hostname, ip=ip, port=int(port), apiversion=apiversion, username=username, password=password, description=description)
+		server_type = request.POST.get('server_type')
+		server_type_id = int(ServerType.objects.get(server_type=server_type.lower()).server_type_id)
+		Server.objects.create(host=host, port=int(port), username=username, password=password, 
+								username_api=username_api, password_api=password_api,
+								port_api=int(port_api), protocal_api=protocal_api,
+								server_type_id=server_type_id,
+								description=description)
 		return redirect('/server/server_list')
 
 # 删除服务器
 @method_decorator(auth_controller, name='dispatch')
 class ServerDeleteView(View):
 	def get(self, request):
-		server_type = request.GET.get('servertype')
-		ip = request.GET.get('ip')
-		port = request.GET.get('port')
-		if server_type == 'docker' or server_type == 'supervisor':
-			ServerType.objects.get(server_type=server_type).server_set.all().filter(ip=ip, port=int(port)).delete()
-
-		if server_type == 'jenkins':
-			JenkinsServer.objects.filter(ip=ip, port=int(port)).delete()
+		host = request.GET.get('host')
+		server_type = request.GET.get('server_type')
+		server_type_id = int(ServerType.objects.get(server_type=server_type.lower()).server_type_id)
+		Server.objects.filter(host=host,server_type_id=server_type_id).delete()
 		return redirect('/server/server_list')
+		
 
 # 编辑服务器
 @method_decorator(auth_controller, name='dispatch')
 class ServerUpdateView(View):
 	def get(self, request):
-		server_type = request.GET.get('servertype')
-		ip = request.GET.get('ip')
-		port = request.GET.get('port')
-		if server_type == 'docker' or server_type == 'supervisor':		
-			server = ServerType.objects.get(server_type=server_type).server_set.get(ip=ip,port=int(port))
-			server_type = server.server_type.all().first().server_type.capitalize()
-			return render(request, 'server_update.html', {'server': server, 'server_type': server_type})
-		if server_type == 'jenkins':
-			return HttpResponse('...')
+		host = request.GET.get('host')
+		server_type = request.GET.get('server_type')
+		server_type_id = ServerType.objects.get(server_type=server_type).server_type_id
+		server = Server.objects.get(server_type_id=server_type_id, host=host)
+		return render(request, 'server_update.html', {'server': server, 'server_type': server_type})
 
 	def post(self, request):
-		hostname = request.POST.get('hostname')
-		server_type = request.POST.get('server_type')
-		ip = request.POST.get('ip')
+		host = request.POST.get('host')
 		port = request.POST.get('port')
-		apiversion = request.POST.get('apiversion','')
 		username = request.POST.get('username')
 		password = request.POST.get('password')
+		username_api = request.POST.get('username_api')
+		password_api = request.POST.get('password_api')
+		port_api = request.POST.get('port_api')
+		protocal_api = request.POST.get('protocal_api')
 		description = request.POST.get('description')
-		if server_type == 'Docker' or server_type == 'Supervisor':
-			server_type_get = ServerType.objects.get(server_type=server_type.lower())
-			obj = ServerType.objects.get(server_type=server_type_get).server_set.all().filter(ip=ip, port=int(port)).first()
-			obj.hostname=hostname
-			obj.ip=ip
-			obj.port=int(port)
-			obj.username=username
+		server_type = request.POST.get('server_type')
+		print (password_api)
+		try:
+			server_type_id = ServerType.objects.get(server_type=server_type).server_type_id
+			obj = Server.objects.get(server_type_id=server_type_id, host=host)
+			obj.host = host
+			obj.port = int(port)
+			obj.username = username
+			obj.username_api = username_api
+			obj.port_api = int(port_api)
+			obj.protocal_api = protocal_api
 			obj.description = description
 			if password != '':
 				obj.password = password
+			if password_api != '':
+				obj.password_api = password_api
 			obj.save()
-		if server_type == 'Jenkins':
-			pass
+		except Exception as e:
+			logging.error(e)
 		return redirect('/server/server_list')

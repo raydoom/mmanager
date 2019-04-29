@@ -1,10 +1,15 @@
 # coding=utf8
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from app.utils.config_info_formater import ConfigInfo
+
+# 获取默认page_size大小
+config = ConfigInfo()
+page_size_default = int(config.config_info.get('page_info').get('page_size_default'))
 
 # 列表分页函数
 def paginator_for_list_view(object_list, page_num):
-	paginator = Paginator(object_list, 10)
+	paginator = Paginator(object_list, page_size_default)
 	try:
 		result_list = paginator.page(page_num)
 	except PageNotAnInteger:
