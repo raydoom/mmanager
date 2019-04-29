@@ -101,8 +101,8 @@ class Server(models.Model):
 		return (job_list)
 
 # 主机信息缓存，用于查询主机列表时生成分页
-class ServerCache(models.Model):
-	server_cache_id = models.BigAutoField(primary_key=True)
+class ServerInfoCache(models.Model):
+	server_info_cache_id = models.BigAutoField(primary_key=True)
 	server_id = models.IntegerField()
 	host = models.CharField(max_length=50)
 	port = models.IntegerField()
@@ -113,7 +113,7 @@ class ServerCache(models.Model):
 	server_type = models.CharField(max_length=50)
 	current_user_id = models.IntegerField()
 	class Meta:
-		ordering = ['server_cache_id']
-		db_table = "app_server_cache"
+		ordering = ['server_info_cache_id']
+		db_table = "app_server_info_cache"
 	def __str__(self):
 		return self.host

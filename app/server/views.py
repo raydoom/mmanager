@@ -8,7 +8,7 @@ from django.utils.decorators import method_decorator
 
 import logging, os, configparser, json
 
-from app.server.models import Server, ServerType, ServerCache
+from app.server.models import Server, ServerType, ServerInfoCache
 from app.utils.common_func import auth_controller, log_record
 from app.utils.get_application_list import get_container_lists, get_process_lists, get_job_lists
 from app.utils.paginator import paginator_for_list_view
@@ -83,7 +83,7 @@ class ServerListView(View):
 			server_lists.append(server)
 		try:
 			for server in server_lists:
-				server_list.append(ServerCache(host=server.host,
+				server_list.append(ServerInfoCache(host=server.host,
 												port=server.port,
 												server_id=server.server_id,
 												server_type=server.type,
@@ -92,22 +92,22 @@ class ServerListView(View):
 												protocal_api=server.protocal_api,
 												status=server.status,
 												current_user_id=current_user_id))
-			ServerCache.objects.filter(current_user_id=current_user_id).delete()
-			ServerCache.objects.bulk_create(server_list)
+			ServerInfoCache.objects.filter(current_user_id=current_user_id).delete()
+			ServerInfoCache.objects.bulk_create(server_list)
 		except Exception as e:
 			logging.error(e)
 		if filter_keyword != None:
 			if filter_select == 'Status =':
-				server_lists = ServerCache.objects.filter(current_user_id=current_user_id,status=filter_keyword)
+				server_lists = ServerInfoCache.objects.filter(current_user_id=current_user_id,status=filter_keyword)
 			if filter_select == 'Port =':
-				server_lists = ServerCache.objects.filter(current_user_id=current_user_id,port=int(filter_keyword))
+				server_lists = ServerInfoCache.objects.filter(current_user_id=current_user_id,port=int(filter_keyword))
 			if filter_select == 'Host':
-				server_lists = ServerCache.objects.filter(current_user_id=current_user_id,host__icontains=filter_keyword)
+				server_lists = ServerInfoCache.objects.filter(current_user_id=current_user_id,host__icontains=filter_keyword)
 			if filter_select == 'Type =':
-				server_lists = ServerCache.objects.filter(current_user_id=current_user_id,server_type=filter_keyword)			
+				server_lists = ServerInfoCache.objects.filter(current_user_id=current_user_id,server_type=filter_keyword)			
 			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
 		else:
-			server_lists = ServerCache.objects.filter(current_user_id=current_user_id)
+			server_lists = ServerInfoCache.objects.filter(current_user_id=current_user_id)
 			page_prefix = '?page='
 		page_num = request.GET.get('page')
 		server_list = paginator_for_list_view(server_lists, page_num)
