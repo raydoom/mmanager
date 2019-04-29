@@ -9,7 +9,7 @@ from dwebsocket import require_websocket, accept_websocket
 
 from app.server.models import Server, ServerType
 from app.supervisor.process import Process
-from app.supervisor.models import ProcessInfo
+from app.supervisor.models import ProcessInfoCache
 from app.utils.common_func import get_time_stamp, format_log, auth_controller, log_record, send_data_over_websocket
 from app.utils.get_application_list import get_process_lists
 from app.utils.paginator import paginator_for_list_view
@@ -28,26 +28,26 @@ class ProcessListView(View):
 		try:
 			processes = get_process_lists(servers)
 			for process in processes:
-				process_list.append(ProcessInfo(host=process.host,
+				process_list.append(ProcessInfoCache(host=process.host,
 												host_port=process.host_port,
 												statename=process.statename,
 												name=process.name,
 												description=process.description,
 												current_user_id=current_user_id))
-			ProcessInfo.objects.filter(current_user_id=current_user_id).delete()
-			ProcessInfo.objects.bulk_create(process_list)
+			ProcessInfoCache.objects.filter(current_user_id=current_user_id).delete()
+			ProcessInfoCache.objects.bulk_create(process_list)
 		except Exception as e:
 			logging.error(e)		
 		if filter_keyword != None:
 			if filter_select == 'Status =':
-				process_lists = ProcessInfo.objects.filter(current_user_id=current_user_id,status=filter_keyword)
+				process_lists = ProcessInfoCache.objects.filter(current_user_id=current_user_id,status=filter_keyword)
 			if filter_select == 'Name':
-				process_lists = ProcessInfo.objects.filter(current_user_id=current_user_id,name__icontains=filter_keyword)
+				process_lists = ProcessInfoCache.objects.filter(current_user_id=current_user_id,name__icontains=filter_keyword)
 			if filter_select == 'Host':
-				process_lists = ProcessInfo.objects.filter(current_user_id=current_user_id,host__icontains=filter_keyword)
+				process_lists = ProcessInfoCache.objects.filter(current_user_id=current_user_id,host__icontains=filter_keyword)
 			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
 		else:
-			process_lists = ProcessInfo.objects.filter(current_user_id=current_user_id)
+			process_lists = ProcessInfoCache.objects.filter(current_user_id=current_user_id)
 			page_prefix = '?page='
 		page_num = request.GET.get('page')
 		process_list = paginator_for_list_view(process_lists, page_num)

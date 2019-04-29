@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 import logging, os, configparser, json, requests
 
 from app.server.models import Server, ServerType
-from app.jenkins.models import JobInfo
+from app.jenkins.models import JobInfoCache
 from app.jenkins.job import Job
 from app.utils.common_func import format_log, auth_controller, get_dir_info, get_file_contents, log_record
 from app.utils.get_application_list import get_job_lists
@@ -27,26 +27,26 @@ class JobListView(View):
 		try:
 			jobs = get_job_lists(servers)
 			for job in jobs:
-				job_list.append(JobInfo(host=job.host,
+				job_list.append(JobInfoCache(host=job.host,
 										host_port_api=job.host_port_api,
 										host_protocal_api=job.host_protocal_api,
 										name=job.name,
 										color=job.color,
 										current_user_id=current_user_id))
-			JobInfo.objects.filter(current_user_id=current_user_id).delete()
-			JobInfo.objects.bulk_create(job_list)
+			JobInfoCache.objects.filter(current_user_id=current_user_id).delete()
+			JobInfoCache.objects.bulk_create(job_list)
 		except Exception as e:
 			logging.error(e)
 		if filter_keyword != None:
 			if filter_select == 'Status =':
-				job_lists = JobInfo.objects.filter(current_user_id=current_user_id,status=filter_keyword)
+				job_lists = JobInfoCache.objects.filter(current_user_id=current_user_id,status=filter_keyword)
 			if filter_select == 'Name':
-				job_lists = JobInfo.objects.filter(current_user_id=current_user_id,name__icontains=filter_keyword)
+				job_lists = JobInfoCache.objects.filter(current_user_id=current_user_id,name__icontains=filter_keyword)
 			if filter_select == 'Host':
-				job_lists = JobInfo.objects.filter(current_user_id=current_user_id,host__icontains=filter_keyword)
+				job_lists = JobInfoCache.objects.filter(current_user_id=current_user_id,host__icontains=filter_keyword)
 			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
 		else:
-			job_lists = JobInfo.objects.filter(current_user_id=current_user_id)
+			job_lists = JobInfoCache.objects.filter(current_user_id=current_user_id)
 			page_prefix = '?page='
 		page_num = request.GET.get('page')
 		job_list = paginator_for_list_view(job_lists, page_num)
