@@ -1,21 +1,21 @@
 # coding=utf8
 
+import logging, os, configparser, json, requests
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views import View
 from django.utils.decorators import method_decorator
-import logging, os, configparser, json, requests
 
 from app.server.models import Server, ServerType
 from app.jenkins.models import JobInfoCache
 from app.jenkins.job import Job
-from app.utils.common_func import format_log, auth_controller, get_dir_info, get_file_contents, log_record
+from app.utils.common_func import auth_login_required, get_dir_info, get_file_contents, log_record
 from app.utils.get_application_list import get_job_lists
 from app.utils.paginator import paginator_for_list_view
 
 
 # jenkins任务列表视图
-@method_decorator(auth_controller, name='dispatch')
+@method_decorator(auth_login_required, name='dispatch')
 class JobListView(View):
 	def get(self, request):
 		current_user_id = request.session.get('user_id')
@@ -65,7 +65,7 @@ class JobListView(View):
 
 
 # jenkins操作
-@method_decorator(auth_controller, name='dispatch')
+@method_decorator(auth_login_required, name='dispatch')
 class JobOptionView(View):
 	def get(self, request):
 		host = request.GET.get('host')

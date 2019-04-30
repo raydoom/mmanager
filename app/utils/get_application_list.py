@@ -1,5 +1,5 @@
 # coding=utf8
-__author__ = 'ma'
+__author__ = 'maxd'
 
 import logging, threading
 

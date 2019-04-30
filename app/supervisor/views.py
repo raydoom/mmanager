@@ -1,22 +1,22 @@
 # coding=utf8
 
+import logging, json, time, threading
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, StreamingHttpResponse
 from django.views import View
 from django.utils.decorators import method_decorator
-import logging, json, time, threading
 from dwebsocket import require_websocket, accept_websocket
 
 from app.server.models import Server, ServerType
 from app.supervisor.process import Process
 from app.supervisor.models import ProcessInfoCache
-from app.utils.common_func import get_time_stamp, format_log, auth_controller, log_record, send_data_over_websocket
+from app.utils.common_func import get_time_stamp, auth_login_required, log_record, send_data_over_websocket
 from app.utils.get_application_list import get_process_lists
 from app.utils.paginator import paginator_for_list_view
 
 
 # 获取supervisor服务器及程序列表，根据选项和关键字过滤
-@method_decorator(auth_controller, name='dispatch')
+@method_decorator(auth_login_required, name='dispatch')
 class ProcessListView(View):
 	def get(self, request):
 		current_user_id = request.session.get('user_id')
@@ -64,7 +64,7 @@ class ProcessListView(View):
 		return redirect(prg_url)
 
 # supervisor程序操作启动，停止，重启
-@method_decorator(auth_controller, name='dispatch')
+@method_decorator(auth_login_required, name='dispatch')
 class ProcessOptionView(View):
 	def get(self, request):
 		host = request.GET.get('host')
@@ -85,7 +85,7 @@ class ProcessOptionView(View):
 		return HttpResponse(result)
 
 # 获取supervisor程序的日志
-@auth_controller
+@auth_login_required
 @accept_websocket
 def process_log(request):
 	if not request.is_websocket():

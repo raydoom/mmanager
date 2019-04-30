@@ -1,21 +1,21 @@
 # coding=utf8
 
+import logging, os, json, time, threading
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, StreamingHttpResponse
 from django.views import View
 from django.utils.decorators import method_decorator
 from dwebsocket import require_websocket, accept_websocket
-import logging, os, json, time, threading
 
 from app.server.models import Server, ServerType
 from app.docker.container import Container
 from app.docker.models import ContainerInfoCache
-from app.utils.common_func import format_log, auth_controller, get_dir_info, get_file_contents, log_record, get_time_stamp, send_data_over_websocket, shell_output_sender, shell_input_reciever
+from app.utils.common_func import auth_login_required, get_dir_info, get_file_contents, log_record, get_time_stamp, send_data_over_websocket, shell_output_sender, shell_input_reciever
 from app.utils.get_application_list import get_container_lists
 from app.utils.paginator import paginator_for_list_view
 
 # 获取docker服务器及容器列表，根据选项和关键字过滤
-@method_decorator(auth_controller, name='dispatch')
+@method_decorator(auth_login_required, name='dispatch')
 class ContainerListView(View):
 	def get(self, request):
 		current_user_id = request.session.get('user_id')
@@ -67,7 +67,7 @@ class ContainerListView(View):
 		return redirect(prg_url)
 
 # 容器操作启动，停止，重启
-@method_decorator(auth_controller, name='dispatch')
+@method_decorator(auth_login_required, name='dispatch')
 class ContainerOptionView(View):
 	def get(self, request):
 		host = request.GET.get('host')
@@ -89,7 +89,7 @@ class ContainerOptionView(View):
 		return HttpResponse(result)
 
 # 实时查看容器日志
-@auth_controller
+@auth_login_required
 @accept_websocket
 def container_log(request):
 	if not request.is_websocket():
@@ -118,7 +118,7 @@ def container_log(request):
 		t.join()
 
 # 容器命令行实现
-@auth_controller
+@auth_login_required
 @accept_websocket
 def container_console(request):
 	if not request.is_websocket():

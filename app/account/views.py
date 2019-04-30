@@ -1,15 +1,14 @@
 # coding=utf8
 
+import logging, os, configparser, json
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-# from django.contrib.auth import models, authenticate
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.hashers import make_password, check_password
-import logging, os, configparser, json
 
-from app.account.models import UserInfo
-from app.utils.common_func import auth_controller, log_record
+from app.account.models import User
+from app.utils.common_func import auth_login_required, log_record
 from app.utils.paginator import paginator_for_list_view
 
 
@@ -21,7 +20,7 @@ class LoginView(View):
 		username = request.POST.get('username')
 		password = request.POST.get('password')
 		# if authenticate(username=username, password=password):
-		user = UserInfo.objects.filter(username=username).first()
+		user = User.objects.filter(username=username).first()
 		if user:
 			if check_password(password, user.password):
 				request.session['islogin'] = True
@@ -38,16 +37,16 @@ class LoginView(View):
 			return render(request, 'login.html', {"message": message})
 
 # 当前用户信息
-@method_decorator(auth_controller, name='dispatch')
+@method_decorator(auth_login_required, name='dispatch')
 class MyAccountView(View):
 	def get(self, request):
 		username = request.session.get('username')
-		userinfo = UserInfo.objects.get(username=username)
-		return render(request, 'my_account.html', {'userinfo': userinfo})
+		user_info = User.objects.get(username=username)
+		return render(request, 'my_account.html', {'user_info': user_info})
 
 
 # 修改密码
-@method_decorator(auth_controller, name='dispatch')
+@method_decorator(auth_login_required, name='dispatch')
 class PasswordChangeView(View):
 	def get(self, request):
 		username = request.GET.get('username')
@@ -62,19 +61,19 @@ class PasswordChangeView(View):
 			message = 'confirm_new_password is not match'
 			return render(request, 'password_change.html', {"message": message, "username": username})
 
-		user = UserInfo.objects.filter(username=username).first()
+		user = User.objects.filter(username=username).first()
 		if check_password(old_password, user.password):
-			UserInfo.objects.filter(username=username).update(password=make_password(new_password, None, 'pbkdf2_sha256'))
+			User.objects.filter(username=username).update(password=make_password(new_password, None, 'pbkdf2_sha256'))
 		# if authenticate(username=username, password=old_password):
 		# 	models.User.objects.filter(username=username).update(password=make_password(new_password, None, 'pbkdf2_sha256'))
-			message = 'Password Successfully Changed'
+			message = 'Password Changed Successfully'
 			return render(request, 'password_change.html', {"message": message, "username": username})
 		else:
 			message = 'Old password is wrong'
 			return render(request, 'password_change.html', {"message": message, "username": username})
 
 # 重置密码，管理员功能
-@method_decorator(auth_controller, name='dispatch')
+@method_decorator(auth_login_required, name='dispatch')
 class PasswordResetView(View):
 	def get(self, request):
 		username = request.GET.get('username')
@@ -88,8 +87,8 @@ class PasswordResetView(View):
 			message = 'confirm_new_password is not match'
 			return render(request, 'password_reset.html', {"message": message, "username": username})
 		else:
-			UserInfo.objects.filter(username=username).update(password=make_password(new_password, None, 'pbkdf2_sha256'))
-			message = 'Password Successfully Changed'
+			User.objects.filter(username=username).update(password=make_password(new_password, None, 'pbkdf2_sha256'))
+			message = 'Password Reseted Successfully'
 			return render(request, 'password_reset.html', {"message": message, "username": username})
 
 # 用户退出
@@ -105,16 +104,16 @@ class UserListView(View):
 		filter_select = request.GET.get('filter_select')
 		if filter_keyword != None:
 			if filter_select == 'User Name =':
-				user_lists = UserInfo.objects.filter(username=filter_keyword).order_by("username")
+				user_lists = User.objects.filter(username=filter_keyword).order_by("username")
 			if filter_select == 'Email':
-				user_lists = UserInfo.objects.filter(email__icontains=filter_keyword).order_by("username")
+				user_lists = User.objects.filter(email__icontains=filter_keyword).order_by("username")
 			if filter_select == 'Superuser':
-				user_lists = UserInfo.objects.filter(is_superuser=filter_keyword).order_by("username")
+				user_lists = User.objects.filter(is_superuser=filter_keyword).order_by("username")
 			if filter_select == 'Description':
-				user_lists = UserInfo.objects.filter(description__icontains=filter_keyword).order_by("username")
+				user_lists = User.objects.filter(description__icontains=filter_keyword).order_by("username")
 			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
 		else:
-			user_lists = UserInfo.objects.all().order_by("username")
+			user_lists = User.objects.all().order_by("username")
 			page_prefix = '?page='
 		page_num = request.GET.get('page')
 		user_list = paginator_for_list_view(user_lists, page_num)
@@ -132,7 +131,7 @@ class UserListView(View):
 		return redirect(prg_url)
 
 # 创建用户
-@method_decorator(auth_controller, name='dispatch')
+@method_decorator(auth_login_required, name='dispatch')
 class UserCreateView(View):
 	def get(self, request):
 		return render(request, 'user_create.html')
@@ -149,7 +148,7 @@ class UserCreateView(View):
 			return render(request, 'user_create.html', {"message": message})
 		try:
 			password=make_password(password, None, 'pbkdf2_sha256')
-			UserInfo.objects.create(username=username, email=email, role=role, password=password, description=description)
+			User.objects.create(username=username, email=email, role=role, password=password, description=description)
 			message = 'User [ ' + username + ' ] Successfully Created'
 		except Exception as e:
 			logging.error(e)
@@ -157,9 +156,9 @@ class UserCreateView(View):
 		return render(request, 'user_create.html', {"message": message})
 
 # 删除用户
-@method_decorator(auth_controller, name='dispatch')
+@method_decorator(auth_login_required, name='dispatch')
 class UserDeleteView(View):
 	def get(self, request):
 		username = request.GET.get('username')
-		UserInfo.objects.filter(username=username).delete()
+		User.objects.filter(username=username).delete()
 		return redirect('/account/user_list')

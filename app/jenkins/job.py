@@ -1,8 +1,6 @@
 # coding=utf8
-__author__ = 'ma'
 
 import requests
-
 
 # Jenkins的Job对象
 class Job:

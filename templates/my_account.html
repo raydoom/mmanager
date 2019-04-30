@@ -57,10 +57,10 @@
     </tr>
     <tr>
         <td><input type="checkbox" name="check_item"></td>
-        <td>{{ userinfo.username }}</td>
-        <td>{{ userinfo.email }}</td>
-        <td>{{ userinfo.last_login }}</td>
-        <td>{{ userinfo.description }}</td>
+        <td>{{ user_info.username }}</td>
+        <td>{{ user_info.email }}</td>
+        <td>{{ user_info.last_login }}</td>
+        <td>{{ user_info.description }}</td>
         <td>
  
           <!-- Split button -->
@@ -70,7 +70,7 @@
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="/account/password_change?username={{userinfo.username}}">Change Password</a></li>
+              <li><a href="/account/password_change?username={{user_info.username}}">Change Password</a></li>
             </ul>
           </div>
         </td>

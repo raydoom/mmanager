@@ -1,14 +1,13 @@
 # coding=utf8
 
+import logging, os, configparser, json
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, FileResponse, StreamingHttpResponse
 from django.views import View
 from django.utils.decorators import method_decorator
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-import logging, os, configparser, json
 from dwebsocket import require_websocket, accept_websocket
 
-from app.utils.common_func import auth_controller, get_dir_info, get_file_contents, log_record
+from app.utils.common_func import auth_login_required, get_dir_info, get_file_contents, log_record
 from django.conf import settings
 from app.utils.config_info_formater import ConfigInfo
 
@@ -19,7 +18,7 @@ dir_root = config.config_info.get('dir_info').get('dir_root')
 lines_per_page = int(config.config_info.get('dir_info').get('lines_per_page'))
 
 # 本地日志目录浏览
-@method_decorator(auth_controller, name='dispatch')
+@method_decorator(auth_login_required, name='dispatch')
 class DirectoryListView(View):
 	def get(self, request):
 		dist = '/'
@@ -40,7 +39,7 @@ class DirectoryListView(View):
 
 
 # 本地日志文件浏览
-@method_decorator(auth_controller, name='dispatch')
+@method_decorator(auth_login_required, name='dispatch')
 class TextViewerView(View):
 	def get(self, request):
 		current_directory = '/'
@@ -80,7 +79,7 @@ class TextViewerView(View):
 		return redirect(prg_url)
 
 # 文件下载视图函数
-@method_decorator(auth_controller, name='dispatch')
+@method_decorator(auth_login_required, name='dispatch')
 class FileDownloadView(View):
 	def get(self, request):
 		filepath = request.GET.get('filepath')

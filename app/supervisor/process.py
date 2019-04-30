@@ -1,8 +1,6 @@
 # coding=utf8
-__author__ = 'ma'
 
 import paramiko
-
 from app.utils.common_func import exec_command_over_ssh, get_channel_over_ssh
 
 

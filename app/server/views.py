@@ -1,20 +1,18 @@
 # coding=utf8
 
+import logging, os, configparser, json
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, StreamingHttpResponse
 from django.views import View
 from django.utils.decorators import method_decorator
-# from django.contrib.auth.decorators import login_required
-
-import logging, os, configparser, json
 
 from app.server.models import Server, ServerType, ServerInfoCache
-from app.utils.common_func import auth_controller, log_record
+from app.utils.common_func import auth_login_required, log_record
 from app.utils.get_application_list import get_container_lists, get_process_lists, get_job_lists
 from app.utils.paginator import paginator_for_list_view
 
 # 所有服务器列表
-@method_decorator(auth_controller, name='dispatch')
+@method_decorator(auth_login_required, name='dispatch')
 class ServerListView(View):
 	def get(self, request):
 		current_user_id = request.session.get('user_id')
@@ -124,7 +122,7 @@ class ServerListView(View):
 		return redirect(prg_url)
 
 # 添加服务器
-@method_decorator(auth_controller, name='dispatch')
+@method_decorator(auth_login_required, name='dispatch')
 class ServerCreateView(View):
 	def get(self, request):
 		return render(request, 'server_create.html')
@@ -149,7 +147,7 @@ class ServerCreateView(View):
 		return redirect('/server/server_list')
 
 # 删除服务器
-@method_decorator(auth_controller, name='dispatch')
+@method_decorator(auth_login_required, name='dispatch')
 class ServerDeleteView(View):
 	def get(self, request):
 		host = request.GET.get('host')
@@ -160,7 +158,7 @@ class ServerDeleteView(View):
 		
 
 # 编辑服务器
-@method_decorator(auth_controller, name='dispatch')
+@method_decorator(auth_login_required, name='dispatch')
 class ServerUpdateView(View):
 	def get(self, request):
 		host = request.GET.get('host')

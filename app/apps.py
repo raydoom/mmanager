@@ -3,5 +3,5 @@
 from django.apps import AppConfig
 
 
-class MaopsAppConfig(AppConfig):
+class AppConfig(AppConfig):
     name = 'app'

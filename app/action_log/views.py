@@ -1,17 +1,17 @@
 # coding=utf8
 
+import logging, os, configparser, json
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views import View
 from django.utils.decorators import method_decorator
-import logging, os, configparser, json
 
-from app.utils.common_func import auth_controller, get_dir_info, get_file_contents, log_record
+from app.utils.common_func import auth_login_required, get_dir_info, get_file_contents, log_record
 from app.action_log.models import ActionLog
 from app.utils.paginator import paginator_for_list_view
 
 # 操作日志查看页面试图函数
-@method_decorator(auth_controller, name='dispatch')
+@method_decorator(auth_login_required, name='dispatch')
 class ActionLogListView(View):
 	def get(self, request):
 		req_url = request.get_full_path()

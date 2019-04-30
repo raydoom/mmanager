@@ -7,7 +7,7 @@
 #
 # Host: 192.168.0.64 (MySQL 5.7.19)
 # Database: mmanager
-# Generation Time: 2019-04-29 12:48:39 +0000
+# Generation Time: 2019-04-30 06:43:43 +0000
 # ************************************************************
 
 
@@ -26,11 +26,11 @@
 DROP TABLE IF EXISTS `app_action_log`;
 
 CREATE TABLE `app_action_log` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `action_log_id` int(11) NOT NULL AUTO_INCREMENT,
   `log_time` datetime(6) NOT NULL,
   `log_user` varchar(50) NOT NULL,
   `log_detail` varchar(256) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`action_log_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -151,12 +151,12 @@ CREATE TABLE `app_server_type` (
 
 
 
-# Dump of table app_user_info
+# Dump of table app_user
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `app_user_info`;
+DROP TABLE IF EXISTS `app_user`;
 
-CREATE TABLE `app_user_info` (
+CREATE TABLE `app_user` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(128) NOT NULL,
   `password` varchar(128) NOT NULL,

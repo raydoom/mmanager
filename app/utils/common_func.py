@@ -1,5 +1,5 @@
 # coding=utf8
-__author__ = 'ma'
+__author__ = 'maxd'
 
 import time, os, logging, paramiko, multiprocessing, threading, re
 
@@ -17,19 +17,15 @@ def get_time_stamp():
     return time_stamp
 
 # 将时间戳转换为格式化的时间
-def TimeStampToTime(timestamp):
-	timeStruct = time.localtime(timestamp)
-	return time.strftime('%Y-%m-%d %H:%M:%S',timeStruct)
-
-# 定义格式化日志的函数
-def format_log(log):
-	return '<div><a style="font-size:14px;">%s</a></div>' % (log,)
+def timestamp_to_time(timestamp):
+	time_struct = time.localtime(timestamp)
+	return time.strftime('%Y-%m-%d %H:%M:%S',time_struct)
 
 # 定义登陆状态控制器装饰器函数，如果未登录，则跳转到登录页面
-def auth_controller(func):
+def auth_login_required(func):
 	def wrapper(request,*args,**kwargs):
 		if not request.session.get("islogin"):
-			return redirect("/login/")
+			return redirect("/account/login/")
 		return  func(request,*args, **kwargs)
 	return wrapper
 
@@ -61,7 +57,7 @@ def get_dir_info(path):
 			dir_info['isdir'] = 0
 		dir_info['file_name'] = dir_name
 		dir_info['file_size'] = fsize
-		dir_info['mtime'] = TimeStampToTime(mtime)
+		dir_info['mtime'] = timestamp_to_time(mtime)
 		dir_infos.append(dir_info)
 	return (dir_infos)
 

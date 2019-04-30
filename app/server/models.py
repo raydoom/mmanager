@@ -1,5 +1,4 @@
 # coding=utf8
-__author__ = 'ma'
 
 from django.db import models
 import paramiko, logging, re, requests
