@@ -2,6 +2,7 @@
 
 import paramiko
 from app.utils.common_func import exec_command_over_ssh, get_channel_over_ssh
+from app.utils.data_encrypter import DataEncrypter
 
 # Container容器对象
 class Container:
@@ -35,6 +36,8 @@ class Container:
 		sshclient = paramiko.SSHClient()
 		sshclient.load_system_host_keys()
 		sshclient.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+		data_encrypter = DataEncrypter()
+		self.host_password =  data_encrypter.decrypt(data=self.host_password)
 		sshclient.connect(self.host, self.host_port, self.host_username, self.host_password)
 		channel = sshclient.invoke_shell(term='xterm')
 		channel.settimeout(0)

@@ -5,7 +5,7 @@ import time, os, logging, paramiko, multiprocessing, threading, re
 
 from app.action_log.models import ActionLog
 from django.shortcuts import render, redirect
-
+from app.utils.data_encrypter import DataEncrypter
 
 # 获取格式化的当前时间
 def get_time_stamp():
@@ -113,6 +113,8 @@ def exec_command_over_ssh(host='', port='22', username='', password='', cmd=''):
 	try:
 		ssh_client = paramiko.SSHClient()
 		ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+		data_encrypter = DataEncrypter()
+		password =  data_encrypter.decrypt(data=password)
 		ssh_client.connect(host, port, username, password)
 		std_in, std_out, std_err = ssh_client.exec_command(cmd)
 		std_out = std_out.read()
@@ -127,6 +129,8 @@ def get_channel_over_ssh(host='', port='22', username='', password='', cmd=''):
 	try:
 		ssh_client = paramiko.SSHClient()
 		ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+		data_encrypter = DataEncrypter()
+		password =  data_encrypter.decrypt(data=password)
 		ssh_client.connect(host, port, username, password)
 		# open channel pipeline
 		transport = ssh_client.get_transport()
