@@ -17,10 +17,12 @@
 - dwebsocket 0.5.10（python模块）
 - pymysql 0.9.2（python模块）
 - requests 2.20.1（python模块）
+- cryptography 2.6.1（python模块）
+- configparser 3.7.4（python模块）
 - bootstrap 3.3.6
 - jquery 1.9.1
 - fontawesome 4.7.0
 
 #### TODO
 
-- 为容器创建webshell，使用户能从web端连接到容器的shell，执行命令
+- 为容器创建webshell，使用户能从web端连接到容器的shell，执行命令（已完成）
