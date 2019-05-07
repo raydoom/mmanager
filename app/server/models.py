@@ -105,7 +105,6 @@ class Server(models.Model):
 			data_encrypter = DataEncrypter()
 			self.password_api =  data_encrypter.decrypt(data=self.password_api)
 			jenkins_response = requests.get(jenkins_job_list_url, auth=(self.username_api, self.password_api))
-			print (self.password_api)
 			job_info = jenkins_response.json().get('jobs')
 			for i in range(0,len(job_info)):
 				job = Job()
