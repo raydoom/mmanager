@@ -21,8 +21,12 @@ class ServerListView(View):
 		server_list = []
 		server_lists = []
 		server_list_filter = []
-		docker_server_type_id = ServerType.objects.get(server_type='docker').server_type_id
-		servers = Server.objects.filter(server_type_id=docker_server_type_id).order_by('host')
+		try:
+			docker_server_type_id = ServerType.objects.get(server_type='docker').server_type_id
+			servers = Server.objects.filter(server_type_id=docker_server_type_id).order_by('host')
+		except Exception as e:
+			logging.error(e)
+			servers = []
 		for server in servers:
 			# get_container_list只能接受列表参数，无法接受单个对象作为参数，生成只含一个server对象的列表server_list_odd
 			server_list_odd = []
@@ -41,8 +45,12 @@ class ServerListView(View):
 				server.status = 'Disonnected'
 				server.description = 'none'
 			server_lists.append(server)
-		supervisor_server_type_id = ServerType.objects.get(server_type='supervisor').server_type_id
-		servers = Server.objects.filter(server_type_id=supervisor_server_type_id).order_by('host')
+		try:
+			supervisor_server_type_id = ServerType.objects.get(server_type='supervisor').server_type_id
+			servers = Server.objects.filter(server_type_id=supervisor_server_type_id).order_by('host')
+		except Exception as e:
+			logging.error(e)
+			servers = []
 		for server in servers:
 			server_list_odd = []
 			server_list_odd.append(server)
@@ -60,8 +68,12 @@ class ServerListView(View):
 				server.status = 'Disonnected'	
 				server.description = 'none'			
 			server_lists.append(server)
-		jenkins_server_type_id = ServerType.objects.get(server_type='jenkins').server_type_id
-		servers = Server.objects.filter(server_type_id=jenkins_server_type_id).order_by('host')
+		try:
+			jenkins_server_type_id = ServerType.objects.get(server_type='jenkins').server_type_id
+			servers = Server.objects.filter(server_type_id=jenkins_server_type_id).order_by('host')
+		except Exception as e:
+			logging.error(e)
+			servers = []
 		for server in servers:
 			server_list_odd = []
 			server_list_odd.append(server)

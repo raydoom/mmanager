@@ -5,7 +5,7 @@ from django.db import models
 # 容器信息模型，存储每次实时获取到的container数据，用于实现分页
 class ContainerInfoCache(models.Model):
 	container_info_cache_id = models.BigAutoField(primary_key=True)
-	host = models.CharField()
+	host = models.CharField(max_length=128)
 	host_port = models.IntegerField()
 	container_id = models.CharField(max_length=128)
 	image = models.CharField(max_length=128)

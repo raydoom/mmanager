@@ -22,8 +22,12 @@ class ProcessListView(View):
 		current_user_id = request.session.get('user_id')
 		filter_keyword = request.GET.get('filter_keyword')
 		filter_select = request.GET.get('filter_select')
-		server_type_id = ServerType.objects.get(server_type='supervisor').server_type_id
-		servers = Server.objects.filter(server_type_id=server_type_id).order_by('host')
+		try:
+			server_type_id = ServerType.objects.get(server_type='supervisor').server_type_id
+			servers = Server.objects.filter(server_type_id=server_type_id).order_by('host')
+		except Exception as e:
+			logging.error(e)
+			servers = []
 		process_list = []
 		try:
 			processes = get_process_lists(servers)

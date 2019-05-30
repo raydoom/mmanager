@@ -21,8 +21,12 @@ class ContainerListView(View):
 		current_user_id = request.session.get('user_id')
 		filter_keyword = request.GET.get('filter_keyword')
 		filter_select = request.GET.get('filter_select')
-		server_type_id = ServerType.objects.get(server_type='docker').server_type_id
-		servers = Server.objects.filter(server_type_id=server_type_id).order_by('host')
+		try:
+			server_type_id = ServerType.objects.filter(server_type='docker').first().server_type_id
+			servers = Server.objects.filter(server_type_id=server_type_id).order_by('host')
+		except Exception as e:
+			logging.error(e)
+			servers = []
 		container_list = []
 		try:
 			containers = get_container_lists(servers)
