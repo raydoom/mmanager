@@ -1,6 +1,6 @@
 # coding=utf8
 
-import logging, os, json, time, threading
+import logging
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, StreamingHttpResponse
 from django.views import View
@@ -10,7 +10,8 @@ from dwebsocket import require_websocket, accept_websocket
 from app.server.models import Server, ServerType
 from app.docker.container import Container
 from app.docker.models import ContainerInfoCache
-from app.utils.common_func import auth_login_required, get_dir_info, get_file_contents, log_record, get_time_stamp, send_data_over_websocket, shell_output_sender, shell_input_reciever
+from app.utils.common_func import (auth_login_required, log_record, 
+	send_data_over_websocket, shell_output_sender, shell_input_reciever)
 from app.utils.get_application_list import get_container_lists
 from app.utils.paginator import paginator_for_list_view
 
@@ -31,28 +32,35 @@ class ContainerListView(View):
 		try:
 			containers = get_container_lists(servers)
 			for container in containers:
-				container_list.append(ContainerInfoCache(host=container.host,
-													host_port=container.host_port,
-													container_id=container.container_id,
-													image=container.image,
-													command=container.command,
-													created=container.created,
-													statename=container.statename,
-													status=container.status,
-													port=container.port,
-													name=container.name,
-													current_user_id=current_user_id))
+				container_list.append(ContainerInfoCache(
+					host=container.host,
+					host_port=container.host_port,
+					container_id=container.container_id,
+					image=container.image,
+					command=container.command,
+					created=container.created,
+					statename=container.statename,
+					status=container.status,
+					port=container.port,
+					name=container.name,
+					current_user_id=current_user_id))
 			ContainerInfoCache.objects.filter(current_user_id=current_user_id).delete()
 			ContainerInfoCache.objects.bulk_create(container_list)
 		except Exception as e:
 			logging.error(e)
 		if filter_keyword != None:
 			if filter_select == 'Status =':
-				container_lists = ContainerInfoCache.objects.filter(current_user_id=current_user_id,status=filter_keyword)
+				container_lists = ContainerInfoCache.objects.filter(
+					current_user_id=current_user_id,
+					status=filter_keyword)
 			if filter_select == 'Name':
-				container_lists = ContainerInfoCache.objects.filter(current_user_id=current_user_id,name__icontains=filter_keyword)
+				container_lists = ContainerInfoCache.objects.filter(
+					current_user_id=current_user_id,
+					name__icontains=filter_keyword)
 			if filter_select == 'Host':
-				container_lists = ContainerInfoCache.objects.filter(current_user_id=current_user_id,host__icontains=filter_keyword)
+				container_lists = ContainerInfoCache.objects.filter(
+					current_user_id=current_user_id,
+					host__icontains=filter_keyword)
 			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
 		else:
 			container_lists = ContainerInfoCache.objects.filter(current_user_id=current_user_id)
@@ -63,7 +71,9 @@ class ContainerListView(View):
 		if filter_keyword == None:
 			filter_select = ''
 			filter_keyword = ''
-		return render(request, 'container_list.html', {'container_list': container_list, 'curent_page_size':curent_page_size, 'filter_keyword': filter_keyword, 'filter_select': filter_select, 'page_prefix': page_prefix})
+		return render(request, 'container_list.html', {'container_list': container_list, 
+			'curent_page_size':curent_page_size, 'filter_keyword': filter_keyword, 
+			'filter_select': filter_select, 'page_prefix': page_prefix})
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')
 		filter_select = request.POST.get('filter_select')

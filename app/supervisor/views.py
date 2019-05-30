@@ -1,19 +1,23 @@
 # coding=utf8
 
-import logging, json, time, threading
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, StreamingHttpResponse
+import logging
+from django.shortcuts import render
+from django.shortcuts import redirect
+from django.http import HttpResponse
+from django.http import StreamingHttpResponse
 from django.views import View
 from django.utils.decorators import method_decorator
-from dwebsocket import require_websocket, accept_websocket
+from dwebsocket import require_websocket
+from dwebsocket import accept_websocket
 
 from app.server.models import Server, ServerType
 from app.supervisor.process import Process
 from app.supervisor.models import ProcessInfoCache
-from app.utils.common_func import get_time_stamp, auth_login_required, log_record, send_data_over_websocket
+from app.utils.common_func import auth_login_required
+from app.utils.common_func import log_record
+from app.utils.common_func import send_data_over_websocket
 from app.utils.get_application_list import get_process_lists
 from app.utils.paginator import paginator_for_list_view
-
 
 # 获取supervisor服务器及程序列表，根据选项和关键字过滤
 @method_decorator(auth_login_required, name='dispatch')
@@ -33,22 +37,25 @@ class ProcessListView(View):
 			processes = get_process_lists(servers)
 			for process in processes:
 				process_list.append(ProcessInfoCache(host=process.host,
-												host_port=process.host_port,
-												statename=process.statename,
-												name=process.name,
-												description=process.description,
-												current_user_id=current_user_id))
+					host_port=process.host_port,
+					statename=process.statename,
+					name=process.name,
+					description=process.description,
+					current_user_id=current_user_id))
 			ProcessInfoCache.objects.filter(current_user_id=current_user_id).delete()
 			ProcessInfoCache.objects.bulk_create(process_list)
 		except Exception as e:
 			logging.error(e)		
 		if filter_keyword != None:
 			if filter_select == 'Status =':
-				process_lists = ProcessInfoCache.objects.filter(current_user_id=current_user_id,status=filter_keyword)
+				process_lists = ProcessInfoCache.objects.filter(
+					current_user_id=current_user_id, status=filter_keyword)
 			if filter_select == 'Name':
-				process_lists = ProcessInfoCache.objects.filter(current_user_id=current_user_id,name__icontains=filter_keyword)
+				process_lists = ProcessInfoCache.objects.filter(
+					current_user_id=current_user_id, name__icontains=filter_keyword)
 			if filter_select == 'Host':
-				process_lists = ProcessInfoCache.objects.filter(current_user_id=current_user_id,host__icontains=filter_keyword)
+				process_lists = ProcessInfoCache.objects.filter(
+					current_user_id=current_user_id, host__icontains=filter_keyword)
 			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
 		else:
 			process_lists = ProcessInfoCache.objects.filter(current_user_id=current_user_id)
@@ -59,7 +66,9 @@ class ProcessListView(View):
 		if filter_keyword == None:
 			filter_select = ''
 			filter_keyword = ''
-		return render(request, 'process_list.html', {'process_list': process_list, 'curent_page_size': curent_page_size, 'filter_keyword': filter_keyword, 'filter_select': filter_select, 'page_prefix': page_prefix})
+		return render(request, 'process_list.html', {'process_list': process_list, 
+			'curent_page_size': curent_page_size, 'filter_keyword': filter_keyword, 
+			'filter_select': filter_select, 'page_prefix': page_prefix})
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')

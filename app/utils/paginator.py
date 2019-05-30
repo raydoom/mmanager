@@ -1,7 +1,9 @@
 # coding=utf8
 __author__ = 'maxd'
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator
+from django.core.paginator import EmptyPage
+from django.core.paginator import PageNotAnInteger
 from app.utils.config_info_formater import ConfigInfo
 
 # 获取默认page_size大小

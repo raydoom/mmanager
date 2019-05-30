@@ -1,12 +1,14 @@
 # coding=utf8
 
-import logging, os, configparser, json
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.shortcuts import render
+from django.shortcuts import redirect
 from django.views import View
 from django.utils.decorators import method_decorator
 
-from app.utils.common_func import auth_login_required, get_dir_info, get_file_contents, log_record
+from app.utils.common_func import auth_login_required
+from app.utils.common_func import get_dir_info
+from app.utils.common_func import get_file_contents
+from app.utils.common_func import log_record
 from app.action_log.models import ActionLog
 from app.utils.paginator import paginator_for_list_view
 
@@ -29,7 +31,8 @@ class ActionLogListView(View):
 		page_num = request.GET.get('page')
 		action_log = paginator_for_list_view(action_logs ,page_num)
 		curent_page_size = len(action_log)
-		return render(request, 'action_log.html', {'action_log': action_log, 'curent_page_size': curent_page_size, 'page_prefix': page_prefix})
+		return render(request, 'action_log.html', {'action_log': action_log,
+			'curent_page_size': curent_page_size, 'page_prefix': page_prefix})
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')

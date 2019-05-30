@@ -1,14 +1,18 @@
 # coding=utf8
 
-import logging, os, configparser, json
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, StreamingHttpResponse
+import logging
+from django.shortcuts import render
+from django.shortcuts import redirect
 from django.views import View
 from django.utils.decorators import method_decorator
 
-from app.server.models import Server, ServerType, ServerInfoCache
-from app.utils.common_func import auth_login_required, log_record
-from app.utils.get_application_list import get_container_lists, get_process_lists, get_job_lists
+from app.server.models import Server
+from app.server.models import ServerType
+from app.server.models import ServerInfoCache
+from app.utils.common_func import auth_login_required
+from app.utils.common_func import log_record
+from app.utils.get_application_list import get_process_lists
+from app.utils.get_application_list import get_job_lists
 from app.utils.paginator import paginator_for_list_view
 
 # 所有服务器列表
@@ -20,7 +24,6 @@ class ServerListView(View):
 		filter_select = request.GET.get('filter_select')
 		server_list = []
 		server_lists = []
-		server_list_filter = []
 		try:
 			docker_server_type_id = ServerType.objects.get(server_type='docker').server_type_id
 			servers = Server.objects.filter(server_type_id=docker_server_type_id).order_by('host')
@@ -28,7 +31,8 @@ class ServerListView(View):
 			logging.error(e)
 			servers = []
 		for server in servers:
-			# get_container_list只能接受列表参数，无法接受单个对象作为参数，生成只含一个server对象的列表server_list_odd
+			# get_container_list只能接受列表参数，无法接受单个对象作为参数，
+			# 生成只含一个server对象的列表server_list_odd
 			server_list_odd = []
 			server_list_odd.append(server)
 			server.type = 'docker'
@@ -93,28 +97,34 @@ class ServerListView(View):
 			server_lists.append(server)
 		try:
 			for server in server_lists:
-				server_list.append(ServerInfoCache(host=server.host,
-												port=server.port,
-												server_id=server.server_id,
-												server_type=server.type,
-												description=server.description,
-												port_api=server.port_api,
-												protocal_api=server.protocal_api,
-												status=server.status,
-												current_user_id=current_user_id))
+				server_info_cache = ServerInfoCache(
+					host=server.host,
+					port=server.port,
+					server_id=server.server_id,
+					server_type=server.type,
+					description=server.description,
+					port_api=server.port_api,
+					protocal_api=server.protocal_api,
+					status=server.status,
+					current_user_id=current_user_id)
+				server_list.append(server_info_cache)
 			ServerInfoCache.objects.filter(current_user_id=current_user_id).delete()
 			ServerInfoCache.objects.bulk_create(server_list)
 		except Exception as e:
 			logging.error(e)
 		if filter_keyword != None:
 			if filter_select == 'Status =':
-				server_lists = ServerInfoCache.objects.filter(current_user_id=current_user_id,status=filter_keyword)
+				server_lists = ServerInfoCache.objects.filter(
+					current_user_id=current_user_id,status=filter_keyword)
 			if filter_select == 'Port =':
-				server_lists = ServerInfoCache.objects.filter(current_user_id=current_user_id,port=int(filter_keyword))
+				server_lists = ServerInfoCache.objects.filter(
+					current_user_id=current_user_id,port=int(filter_keyword))
 			if filter_select == 'Host':
-				server_lists = ServerInfoCache.objects.filter(current_user_id=current_user_id,host__icontains=filter_keyword)
+				server_lists = ServerInfoCache.objects.filter(
+					current_user_id=current_user_id,host__icontains=filter_keyword)
 			if filter_select == 'Type =':
-				server_lists = ServerInfoCache.objects.filter(current_user_id=current_user_id,server_type=filter_keyword)			
+				server_lists = ServerInfoCache.objects.filter(
+					current_user_id=current_user_id,server_type=filter_keyword)			
 			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
 		else:
 			server_lists = ServerInfoCache.objects.filter(current_user_id=current_user_id)
@@ -125,7 +135,9 @@ class ServerListView(View):
 		if filter_keyword == None:
 			filter_select = ''
 			filter_keyword = ''
-		return render(request, 'server_list.html', {'server_list': server_list, 'curent_page_size':curent_page_size, 'filter_keyword': filter_keyword, 'filter_select': filter_select, 'page_prefix': page_prefix})
+		return render(request, 'server_list.html', {'server_list': server_list, 
+			'curent_page_size':curent_page_size, 'filter_keyword': filter_keyword, 
+			'filter_select': filter_select, 'page_prefix': page_prefix})
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')
@@ -152,10 +164,10 @@ class ServerCreateView(View):
 		server_type = request.POST.get('server_type')
 		server_type_id = int(ServerType.objects.get(server_type=server_type.lower()).server_type_id)
 		Server.objects.create(host=host, port=int(port), username=username, password=password, 
-								username_api=username_api, password_api=password_api,
-								port_api=int(port_api), protocal_api=protocal_api,
-								server_type_id=server_type_id,
-								description=description)
+			username_api=username_api, password_api=password_api,
+			port_api=int(port_api), protocal_api=protocal_api,
+			server_type_id=server_type_id,
+			description=description)
 		return redirect('/server/server_list')
 
 # 删除服务器
@@ -168,7 +180,6 @@ class ServerDeleteView(View):
 		Server.objects.filter(host=host,server_type_id=server_type_id).delete()
 		return redirect('/server/server_list')
 		
-
 # 编辑服务器
 @method_decorator(auth_login_required, name='dispatch')
 class ServerUpdateView(View):
@@ -177,7 +188,8 @@ class ServerUpdateView(View):
 		server_type = request.GET.get('server_type')
 		server_type_id = ServerType.objects.get(server_type=server_type).server_type_id
 		server = Server.objects.get(server_type_id=server_type_id, host=host)
-		return render(request, 'server_update.html', {'server': server, 'server_type': server_type})
+		context = {'server': server, 'server_type': server_type}
+		return render(request, 'server_update.html', context)
 
 	def post(self, request):
 		host = request.POST.get('host')
@@ -190,7 +202,6 @@ class ServerUpdateView(View):
 		protocal_api = request.POST.get('protocal_api')
 		description = request.POST.get('description')
 		server_type = request.POST.get('server_type')
-		print (password_api)
 		try:
 			server_type_id = ServerType.objects.get(server_type=server_type).server_type_id
 			obj = Server.objects.get(server_type_id=server_type_id, host=host)

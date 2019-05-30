@@ -1,16 +1,20 @@
 # coding=utf8
 
-import logging, os, configparser, json
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
+import os
+import logging
+import json
+import configparser
+from django.shortcuts import render
+from django.shortcuts import redirect
 from django.views import View
 from django.utils.decorators import method_decorator
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import check_password
 
 from app.account.models import User
-from app.utils.common_func import auth_login_required, log_record
+from app.utils.common_func import auth_login_required
+from app.utils.common_func import log_record
 from app.utils.paginator import paginator_for_list_view
-
 
 # 用户登陆
 class LoginView(View):
@@ -19,7 +23,6 @@ class LoginView(View):
 	def post(self, request):
 		username = request.POST.get('username')
 		password = request.POST.get('password')
-		# if authenticate(username=username, password=password):
 		user = User.objects.filter(username=username).first()
 		if user:
 			if check_password(password, user.password):
@@ -60,12 +63,10 @@ class PasswordChangeView(View):
 		if new_password != confirm_new_password:
 			message = 'confirm_new_password is not match'
 			return render(request, 'password_change.html', {"message": message, "username": username})
-
 		user = User.objects.filter(username=username).first()
 		if check_password(old_password, user.password):
-			User.objects.filter(username=username).update(password=make_password(new_password, None, 'pbkdf2_sha256'))
-		# if authenticate(username=username, password=old_password):
-		# 	models.User.objects.filter(username=username).update(password=make_password(new_password, None, 'pbkdf2_sha256'))
+			user_for_update = User.objects.filter(username=username)
+			user_for_update.update(password=make_password(new_password, None, 'pbkdf2_sha256'))
 			message = 'Password Changed Successfully'
 			return render(request, 'password_change.html', {"message": message, "username": username})
 		else:
@@ -87,7 +88,8 @@ class PasswordResetView(View):
 			message = 'confirm_new_password is not match'
 			return render(request, 'password_reset.html', {"message": message, "username": username})
 		else:
-			User.objects.filter(username=username).update(password=make_password(new_password, None, 'pbkdf2_sha256'))
+			user = User.objects.filter(username=username)
+			user.update(password=make_password(new_password, None, 'pbkdf2_sha256'))
 			message = 'Password Reseted Successfully'
 			return render(request, 'password_reset.html', {"message": message, "username": username})
 
@@ -122,7 +124,10 @@ class UserListView(View):
 			filter_keyword = ''
 		if filter_select == None:
 			filter_select = ''
-		return render(request, 'user_list.html', {'user_list': user_list, 'curent_page_size': curent_page_size, 'page_prefix': page_prefix, 'filter_keyword': filter_keyword, 'filter_select': filter_select})
+		dict_info = {'user_list': user_list, 'curent_page_size': curent_page_size, 
+					 'page_prefix': page_prefix, 'filter_keyword': filter_keyword, 
+					 'filter_select': filter_select}
+		return render(request, 'user_list.html', dict_info)
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')
