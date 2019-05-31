@@ -1,5 +1,4 @@
 # coding=utf8
-__author__ = 'maxd'
 
 import configparser
 from django.conf import settings

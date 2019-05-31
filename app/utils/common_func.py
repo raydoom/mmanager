@@ -1,10 +1,14 @@
 # coding=utf8
-__author__ = 'maxd'
 
-import time, os, logging, paramiko, multiprocessing, threading, re
+import os
+import time
+import logging
+import paramiko
+import paramiko
+from django.shortcuts import render
+from django.shortcuts import redirect
 
 from app.action_log.models import ActionLog
-from django.shortcuts import render, redirect
 from app.utils.data_encrypter import DataEncrypter
 
 # 获取格式化的当前时间

@@ -66,9 +66,13 @@ class ProcessListView(View):
 		if filter_keyword == None:
 			filter_select = ''
 			filter_keyword = ''
-		return render(request, 'process_list.html', {'process_list': process_list, 
-			'curent_page_size': curent_page_size, 'filter_keyword': filter_keyword, 
-			'filter_select': filter_select, 'page_prefix': page_prefix})
+		context = {
+			'process_list': process_list,
+			'curent_page_size': curent_page_size,
+			'filter_keyword': filter_keyword,
+			'filter_select': filter_select,
+			'page_prefix': page_prefix}
+		return render(request, 'process_list.html', context)
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')

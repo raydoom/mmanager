@@ -1,7 +1,8 @@
 # coding=utf8
 __author__ = 'maxd'
 
-import logging, threading
+import logging
+import threading
 
 from app.docker.container import Container
 from app.supervisor.process import Process

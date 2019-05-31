@@ -25,8 +25,8 @@ class ServerListView(View):
 		server_list = []
 		server_lists = []
 		try:
-			docker_server_type_id = ServerType.objects.get(server_type='docker').server_type_id
-			servers = Server.objects.filter(server_type_id=docker_server_type_id).order_by('host')
+			server_type_id = ServerType.objects.get(server_type='docker').server_type_id
+			servers = Server.objects.filter(server_type_id=server_type_id).order_by('host')
 		except Exception as e:
 			logging.error(e)
 			servers = []
@@ -50,8 +50,8 @@ class ServerListView(View):
 				server.description = 'none'
 			server_lists.append(server)
 		try:
-			supervisor_server_type_id = ServerType.objects.get(server_type='supervisor').server_type_id
-			servers = Server.objects.filter(server_type_id=supervisor_server_type_id).order_by('host')
+			server_type_id = ServerType.objects.get(server_type='supervisor').server_type_id
+			servers = Server.objects.filter(server_type_id=server_type_id).order_by('host')
 		except Exception as e:
 			logging.error(e)
 			servers = []
@@ -73,8 +73,8 @@ class ServerListView(View):
 				server.description = 'none'			
 			server_lists.append(server)
 		try:
-			jenkins_server_type_id = ServerType.objects.get(server_type='jenkins').server_type_id
-			servers = Server.objects.filter(server_type_id=jenkins_server_type_id).order_by('host')
+			server_type_id = ServerType.objects.get(server_type='jenkins').server_type_id
+			servers = Server.objects.filter(server_type_id=server_type_id).order_by('host')
 		except Exception as e:
 			logging.error(e)
 			servers = []
@@ -135,9 +135,13 @@ class ServerListView(View):
 		if filter_keyword == None:
 			filter_select = ''
 			filter_keyword = ''
-		return render(request, 'server_list.html', {'server_list': server_list, 
-			'curent_page_size':curent_page_size, 'filter_keyword': filter_keyword, 
-			'filter_select': filter_select, 'page_prefix': page_prefix})
+		context =  {
+			'server_list': server_list, 
+			'curent_page_size':curent_page_size, 
+			'filter_keyword': filter_keyword, 
+			'filter_select': filter_select, 
+			'page_prefix': page_prefix}
+		return render(request, 'server_list.html', context)
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')

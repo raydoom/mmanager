@@ -9,7 +9,8 @@ from django.utils.decorators import method_decorator
 from app.server.models import Server, ServerType
 from app.jenkins.models import JobInfoCache
 from app.jenkins.job import Job
-from app.utils.common_func import auth_login_required, log_record
+from app.utils.common_func import auth_login_required
+from app.utils.common_func import log_record
 from app.utils.get_application_list import get_job_lists
 from app.utils.paginator import paginator_for_list_view
 
@@ -62,9 +63,13 @@ class JobListView(View):
 			filter_keyword = ''
 		if filter_select == None:
 			filter_select = ''
-		return render(request, 'job_list.html', {'job_list': job_list, 
-			'curent_page_size': curent_page_size, 'filter_keyword': filter_keyword, 
-			'filter_select': filter_select, 'page_prefix': page_prefix})
+		context = {
+			'job_list': job_list, 
+			'curent_page_size': curent_page_size, 
+			'filter_keyword': filter_keyword, 
+			'filter_select': filter_select, 
+			'page_prefix': page_prefix}
+		return render(request, 'job_list.html', context)
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')

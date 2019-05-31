@@ -1,17 +1,23 @@
 # coding=utf8
 
 import logging
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, StreamingHttpResponse
+from django.shortcuts import render
+from django.shortcuts import redirect
+from django.http import HttpResponse
 from django.views import View
 from django.utils.decorators import method_decorator
-from dwebsocket import require_websocket, accept_websocket
+from dwebsocket import require_websocket
+from dwebsocket import accept_websocket
 
-from app.server.models import Server, ServerType
+from app.server.models import Server
+from app.server.models import ServerType
 from app.docker.container import Container
 from app.docker.models import ContainerInfoCache
-from app.utils.common_func import (auth_login_required, log_record, 
-	send_data_over_websocket, shell_output_sender, shell_input_reciever)
+from app.utils.common_func import auth_login_required
+from app.utils.common_func import log_record
+from app.utils.common_func import send_data_over_websocket
+from app.utils.common_func import shell_output_sender
+from app.utils.common_func import shell_input_reciever
 from app.utils.get_application_list import get_container_lists
 from app.utils.paginator import paginator_for_list_view
 

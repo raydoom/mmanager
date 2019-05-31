@@ -31,8 +31,11 @@ class ActionLogListView(View):
 		page_num = request.GET.get('page')
 		action_log = paginator_for_list_view(action_logs ,page_num)
 		curent_page_size = len(action_log)
-		return render(request, 'action_log.html', {'action_log': action_log,
-			'curent_page_size': curent_page_size, 'page_prefix': page_prefix})
+		context = {
+			'action_log': action_log,
+			'curent_page_size': curent_page_size, 
+			'page_prefix': page_prefix}
+		return render(request, 'action_log.html', context)
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')
