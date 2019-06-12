@@ -10,7 +10,8 @@ from django.utils.decorators import method_decorator
 from dwebsocket import require_websocket
 from dwebsocket import accept_websocket
 
-from app.server.models import Server, ServerType
+from app.server.models import Server
+from app.server.models import ServerType
 from app.supervisor.process import Process
 from app.supervisor.models import ProcessInfoCache
 from app.utils.common_func import auth_login_required
@@ -36,7 +37,8 @@ class ProcessListView(View):
 		try:
 			processes = get_process_lists(servers)
 			for process in processes:
-				process_list.append(ProcessInfoCache(host=process.host,
+				process_list.append(ProcessInfoCache(
+					host=process.host,
 					host_port=process.host_port,
 					statename=process.statename,
 					name=process.name,
@@ -109,7 +111,8 @@ def process_log(request):
 		host = request.GET.get('host')
 		host_port = int(request.GET.get('host_port'))
 		process_name = request.GET.get('process_name')
-		return render(request, 'tail_log.html', {'name': process_name, 'host': host})
+		context = {'name': process_name, 'host': host}
+		return render(request, 'tail_log.html', context)
 	else:
 		host = request.GET.get('host')
 		host_port = int(request.GET.get('host_port'))

@@ -77,13 +77,17 @@ class ContainerListView(View):
 		if filter_keyword == None:
 			filter_select = ''
 			filter_keyword = ''
-		return render(request, 'container_list.html', {'container_list': container_list, 
-			'curent_page_size':curent_page_size, 'filter_keyword': filter_keyword, 
-			'filter_select': filter_select, 'page_prefix': page_prefix})
+		context = {
+			'container_list': container_list, 
+			'curent_page_size':curent_page_size, 
+			'filter_keyword': filter_keyword, 
+			'filter_select': filter_select, 
+			'page_prefix': page_prefix}
+		return render(request, 'container_list.html', context)
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')
 		filter_select = request.POST.get('filter_select')
-		prg_url = '/docker/container_list?filter_select=' + filter_select +'&filter_keyword=' + filter_keyword
+		prg_url = '/docker/container_list?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword
 		return redirect(prg_url)
 
 # 容器操作启动，停止，重启
@@ -117,7 +121,8 @@ def container_log(request):
 		host_port = int(request.GET.get('host_port'))
 		container_id = request.GET.get('container_id')
 		container_name = request.GET.get('container_name')
-		return render(request, 'tail_log.html', {'name': container_name, 'host': host})
+		context = {'name': container_name, 'host': host}
+		return render(request, 'tail_log.html', context)
 	else: 
 		host = request.GET.get('host')
 		host_port = int(request.GET.get('host_port'))
@@ -146,7 +151,8 @@ def container_console(request):
 		host_port = int(request.GET.get('host_port'))
 		container_id = request.GET.get('container_id')
 		container_name = request.GET.get('container_name')
-		return render(request, 'container_console.html', {'name': container_name, 'host': host})
+		context= {'name': container_name, 'host': host}
+		return render(request, 'container_console.html', context)
 	else:
 		host = request.GET.get('host')
 		host_port = int(request.GET.get('host_port'))

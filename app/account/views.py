@@ -33,11 +33,13 @@ class LoginView(View):
 				return redirect("/docker/container_list")
 			else:
 				message = 'username or password error!'
-				return render(request, 'login.html', {"message": message})
+				context = {"message": message}
+				return render(request, 'login.html', context)
 
 		else:
 			message = 'username or password error!'
-			return render(request, 'login.html', {"message": message})
+			context = {"message": message}
+			return render(request, 'login.html', context)
 
 # 当前用户信息
 @method_decorator(auth_login_required, name='dispatch')
@@ -45,7 +47,8 @@ class MyAccountView(View):
 	def get(self, request):
 		username = request.session.get('username')
 		user_info = User.objects.get(username=username)
-		return render(request, 'my_account.html', {'user_info': user_info})
+		context = {'user_info': user_info}
+		return render(request, 'my_account.html', context)
 
 
 # 修改密码
@@ -53,7 +56,8 @@ class MyAccountView(View):
 class PasswordChangeView(View):
 	def get(self, request):
 		username = request.GET.get('username')
-		return render(request, 'password_change.html', {'username': username})
+		context = {'username': username}
+		return render(request, 'password_change.html', context)
 
 	def post(self, request):
 		username = request.POST.get('username')
@@ -62,23 +66,27 @@ class PasswordChangeView(View):
 		confirm_new_password = request.POST.get('confirm_new_password')
 		if new_password != confirm_new_password:
 			message = 'confirm_new_password is not match'
-			return render(request, 'password_change.html', {"message": message, "username": username})
+			context = {"message": message, "username": username}
+			return render(request, 'password_change.html', context)
 		user = User.objects.filter(username=username).first()
 		if check_password(old_password, user.password):
 			user_for_update = User.objects.filter(username=username)
 			user_for_update.update(password=make_password(new_password, None, 'pbkdf2_sha256'))
 			message = 'Password Changed Successfully'
-			return render(request, 'password_change.html', {"message": message, "username": username})
+			context = {"message": message, "username": username}
+			return render(request, 'password_change.html', context)
 		else:
 			message = 'Old password is wrong'
-			return render(request, 'password_change.html', {"message": message, "username": username})
+			context = {"message": message, "username": username}
+			return render(request, 'password_change.html', context)
 
 # 重置密码，管理员功能
 @method_decorator(auth_login_required, name='dispatch')
 class PasswordResetView(View):
 	def get(self, request):
 		username = request.GET.get('username')
-		return render(request, 'password_reset.html', {'username': username})
+		context = {'username': username}
+		return render(request, 'password_reset.html', context)
 
 	def post(self, request):
 		username = request.POST.get('username')
@@ -86,12 +94,14 @@ class PasswordResetView(View):
 		confirm_new_password = request.POST.get('confirm_new_password')
 		if new_password != confirm_new_password:
 			message = 'confirm_new_password is not match'
-			return render(request, 'password_reset.html', {"message": message, "username": username})
+			context = {"message": message, "username": username}
+			return render(request, 'password_reset.html', context)
 		else:
 			user = User.objects.filter(username=username)
 			user.update(password=make_password(new_password, None, 'pbkdf2_sha256'))
 			message = 'Password Reseted Successfully'
-			return render(request, 'password_reset.html', {"message": message, "username": username})
+			context = {"message": message, "username": username}
+			return render(request, 'password_reset.html', context)
 
 # 用户退出
 class LogoutView(View):
@@ -124,10 +134,13 @@ class UserListView(View):
 			filter_keyword = ''
 		if filter_select == None:
 			filter_select = ''
-		dict_info = {'user_list': user_list, 'curent_page_size': curent_page_size, 
-					 'page_prefix': page_prefix, 'filter_keyword': filter_keyword, 
-					 'filter_select': filter_select}
-		return render(request, 'user_list.html', dict_info)
+		context = {
+			'user_list': user_list, 
+			'curent_page_size': curent_page_size, 
+			'page_prefix': page_prefix, 
+			'filter_keyword': filter_keyword, 
+			'filter_select': filter_select}
+		return render(request, 'user_list.html', context)
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')
@@ -150,15 +163,22 @@ class UserCreateView(View):
 		description = request.POST.get('description')
 		if password != confirm_password:
 			message = 'confirm_password is not match'
-			return render(request, 'user_create.html', {"message": message})
+			context = {"message": message}
+			return render(request, 'user_create.html', context)
 		try:
 			password=make_password(password, None, 'pbkdf2_sha256')
-			User.objects.create(username=username, email=email, role=role, password=password, description=description)
+			User.objects.create(
+				username=username, 
+				email=email, 
+				role=role, 
+				password=password, 
+				description=description)
 			message = 'User [ ' + username + ' ] Successfully Created'
 		except Exception as e:
 			logging.error(e)
 			message = "Failed to create user [ " + username + " ]"
-		return render(request, 'user_create.html', {"message": message})
+			context = {"message": message}
+		return render(request, 'user_create.html', context)
 
 # 删除用户
 @method_decorator(auth_login_required, name='dispatch')

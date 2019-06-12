@@ -167,9 +167,15 @@ class ServerCreateView(View):
 		description = request.POST.get('description')
 		server_type = request.POST.get('server_type')
 		server_type_id = int(ServerType.objects.get(server_type=server_type.lower()).server_type_id)
-		Server.objects.create(host=host, port=int(port), username=username, password=password, 
-			username_api=username_api, password_api=password_api,
-			port_api=int(port_api), protocal_api=protocal_api,
+		Server.objects.create(
+			host=host, 
+			port=int(port), 
+			username=username, 
+			password=password, 
+			username_api=username_api, 
+			password_api=password_api,
+			port_api=int(port_api), 
+			protocal_api=protocal_api,
 			server_type_id=server_type_id,
 			description=description)
 		return redirect('/server/server_list')
