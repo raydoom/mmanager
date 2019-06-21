@@ -48,7 +48,7 @@ class DirectoryListView(View):
 			'dir_infos_count': dir_infos_count}
 		return render(request, 'directory_list.html', context)
 
-# 本地日志文件浏览
+# 本地文本文件浏览
 @method_decorator(auth_login_required, name='dispatch')
 class TextViewerView(View):
 	def get(self, request):
@@ -103,7 +103,7 @@ class FileDownloadView(View):
 	def get(self, request):
 		filepath = request.GET.get('filepath')
 		filepath = dir_root + filepath
-		file=open(filepath, 'rb')  
+		file=open(filepath, 'rb')
 		response =FileResponse(file)
 		response['Content-Type']='application/octet-stream'
 		filename = filepath.split('/')[-1]

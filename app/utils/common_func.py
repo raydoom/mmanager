@@ -75,10 +75,9 @@ def get_file_contents(dist, lines_per_page, page, filter_keyword):
 			if filter_keyword != '':
 				line_filtered = []
 				lines = file_to_read.readlines()
-				lines_reversed = lines[::-1] #对读取到的行进行反序排列
-				for i in range(0,len(lines_reversed)):
-					if filter_keyword in lines_reversed[i]:
-						line_filtered.append(lines_reversed[i])
+				for i in range(0,len(lines)):
+					if filter_keyword in lines[i]:
+						line_filtered.append(lines[i])
 				if len(line_filtered) == 0: # 如果结果为空，直接返回
 					return ([], 0)
 				if lines_per_page > len(line_filtered):
@@ -95,12 +94,11 @@ def get_file_contents(dist, lines_per_page, page, filter_keyword):
 					return ([], 0)
 				if lines_per_page > len(lines):
 					lines_per_page = len(lines)
-				lines_reversed = lines[::-1] #对读取到的行进行反序排列
 				line_end = page*lines_per_page
 				if page*lines_per_page >= len(lines):
 					line_end = len(lines) 
 				for i in range((page-1)*lines_per_page, line_end):
-					contents_list.append(lines_reversed[i])
+					contents_list.append(lines[i])
 				total_pages = (len(lines)//lines_per_page) + 1
 	except Exception as e:
 		logging.error(e)
