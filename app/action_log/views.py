@@ -34,7 +34,8 @@ class ActionLogListView(View):
 		context = {
 			'action_log': action_log,
 			'curent_page_size': curent_page_size, 
-			'page_prefix': page_prefix}
+			'page_prefix': page_prefix
+			}
 		return render(request, 'action_log.html', context)
 
 	def post(self, request):

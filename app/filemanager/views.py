@@ -45,7 +45,8 @@ class DirectoryListView(View):
 		context = {
 			'dir_infos': dir_infos, 
 			'current_dir': current_dir, 
-			'dir_infos_count': dir_infos_count}
+			'dir_infos_count': dir_infos_count
+			}
 		return render(request, 'directory_list.html', context)
 
 # 本地文本文件浏览
@@ -87,7 +88,8 @@ class TextViewerView(View):
 			'current_page_number': current_page_number,
 			'total_pages': total_pages,
 			'filter_select': filter_select,
-			'filter_keyword': filter_keyword}
+			'filter_keyword': filter_keyword
+			}
 		return render(request, 'text_viewer.html', context)
 	def post(self, request):
 		dist = request.POST.get('dist')

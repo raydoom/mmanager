@@ -44,7 +44,8 @@ class ProcessListView(View):
 					statename=process.statename,
 					name=process.name,
 					description=process.description,
-					current_user_id=current_user_id))
+					current_user_id=current_user_id)
+				)
 			ProcessInfoCache.objects.filter(current_user_id=current_user_id).delete()
 			ProcessInfoCache.objects.bulk_create(process_list)
 		except Exception as e:
@@ -52,13 +53,19 @@ class ProcessListView(View):
 		if filter_keyword != None:
 			if filter_select == 'Status =':
 				process_lists = ProcessInfoCache.objects.filter(
-					current_user_id=current_user_id, status=filter_keyword)
+					current_user_id=current_user_id,
+					status=filter_keyword
+					)
 			if filter_select == 'Name':
 				process_lists = ProcessInfoCache.objects.filter(
-					current_user_id=current_user_id, name__icontains=filter_keyword)
+					current_user_id=current_user_id,
+					name__icontains=filter_keyword
+					)
 			if filter_select == 'Host':
 				process_lists = ProcessInfoCache.objects.filter(
-					current_user_id=current_user_id, host__icontains=filter_keyword)
+					current_user_id=current_user_id,
+					host__icontains=filter_keyword
+					)
 			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
 		else:
 			process_lists = ProcessInfoCache.objects.filter(current_user_id=current_user_id)
@@ -74,7 +81,8 @@ class ProcessListView(View):
 			'curent_page_size': curent_page_size,
 			'filter_keyword': filter_keyword,
 			'filter_select': filter_select,
-			'page_prefix': page_prefix}
+			'page_prefix': page_prefix
+			}
 		return render(request, 'process_list.html', context)
 
 	def post(self, request):

@@ -50,7 +50,8 @@ class ContainerListView(View):
 					status=container.status,
 					port=container.port,
 					name=container.name,
-					current_user_id=current_user_id))
+					current_user_id=current_user_id)
+				)
 			ContainerInfoCache.objects.filter(current_user_id=current_user_id).delete()
 			ContainerInfoCache.objects.bulk_create(container_list)
 		except Exception as e:
@@ -59,15 +60,18 @@ class ContainerListView(View):
 			if filter_select == 'Status =':
 				container_lists = ContainerInfoCache.objects.filter(
 					current_user_id=current_user_id,
-					status=filter_keyword)
+					status=filter_keyword
+					)
 			if filter_select == 'Name':
 				container_lists = ContainerInfoCache.objects.filter(
 					current_user_id=current_user_id,
-					name__icontains=filter_keyword)
+					name__icontains=filter_keyword
+					)
 			if filter_select == 'Host':
 				container_lists = ContainerInfoCache.objects.filter(
 					current_user_id=current_user_id,
-					host__icontains=filter_keyword)
+					host__icontains=filter_keyword
+					)
 			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
 		else:
 			container_lists = ContainerInfoCache.objects.filter(current_user_id=current_user_id)
@@ -83,7 +87,8 @@ class ContainerListView(View):
 			'curent_page_size':curent_page_size, 
 			'filter_keyword': filter_keyword, 
 			'filter_select': filter_select, 
-			'page_prefix': page_prefix}
+			'page_prefix': page_prefix
+			}
 		return render(request, 'container_list.html', context)
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')

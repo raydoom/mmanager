@@ -139,7 +139,8 @@ class UserListView(View):
 			'curent_page_size': curent_page_size, 
 			'page_prefix': page_prefix, 
 			'filter_keyword': filter_keyword, 
-			'filter_select': filter_select}
+			'filter_select': filter_select
+			}
 		return render(request, 'user_list.html', context)
 
 	def post(self, request):
@@ -172,7 +173,8 @@ class UserCreateView(View):
 				email=email, 
 				role=role, 
 				password=password, 
-				description=description)
+				description=description
+				)
 			message = 'User [ ' + username + ' ] Successfully Created'
 		except Exception as e:
 			logging.error(e)

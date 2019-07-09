@@ -37,7 +37,8 @@ class JobListView(View):
 					host_protocal_api=job.host_protocal_api,
 					name=job.name,
 					color=job.color,
-					current_user_id=current_user_id))
+					current_user_id=current_user_id)
+				)
 			JobInfoCache.objects.filter(current_user_id=current_user_id).delete()
 			JobInfoCache.objects.bulk_create(job_list)
 		except Exception as e:
@@ -68,7 +69,8 @@ class JobListView(View):
 			'curent_page_size': curent_page_size, 
 			'filter_keyword': filter_keyword, 
 			'filter_select': filter_select, 
-			'page_prefix': page_prefix}
+			'page_prefix': page_prefix
+			}
 		return render(request, 'job_list.html', context)
 
 	def post(self, request):

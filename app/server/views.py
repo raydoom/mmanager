@@ -106,7 +106,8 @@ class ServerListView(View):
 					port_api=server.port_api,
 					protocal_api=server.protocal_api,
 					status=server.status,
-					current_user_id=current_user_id)
+					current_user_id=current_user_id
+					)
 				server_list.append(server_info_cache)
 			ServerInfoCache.objects.filter(current_user_id=current_user_id).delete()
 			ServerInfoCache.objects.bulk_create(server_list)
@@ -115,16 +116,22 @@ class ServerListView(View):
 		if filter_keyword != None:
 			if filter_select == 'Status =':
 				server_lists = ServerInfoCache.objects.filter(
-					current_user_id=current_user_id,status=filter_keyword)
+					current_user_id=current_user_id,
+					status=filter_keyword
+					)
 			if filter_select == 'Port =':
 				server_lists = ServerInfoCache.objects.filter(
 					current_user_id=current_user_id,port=int(filter_keyword))
 			if filter_select == 'Host':
 				server_lists = ServerInfoCache.objects.filter(
-					current_user_id=current_user_id,host__icontains=filter_keyword)
+					current_user_id=current_user_id,
+					host__icontains=filter_keyword
+					)
 			if filter_select == 'Type =':
 				server_lists = ServerInfoCache.objects.filter(
-					current_user_id=current_user_id,server_type=filter_keyword)			
+					current_user_id=current_user_id,
+					server_type=filter_keyword
+					)			
 			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
 		else:
 			server_lists = ServerInfoCache.objects.filter(current_user_id=current_user_id)
@@ -140,7 +147,8 @@ class ServerListView(View):
 			'curent_page_size':curent_page_size, 
 			'filter_keyword': filter_keyword, 
 			'filter_select': filter_select, 
-			'page_prefix': page_prefix}
+			'page_prefix': page_prefix
+			}
 		return render(request, 'server_list.html', context)
 
 	def post(self, request):
@@ -177,7 +185,8 @@ class ServerCreateView(View):
 			port_api=int(port_api), 
 			protocal_api=protocal_api,
 			server_type_id=server_type_id,
-			description=description)
+			description=description
+			)
 		return redirect('/server/server_list')
 
 # 删除服务器
