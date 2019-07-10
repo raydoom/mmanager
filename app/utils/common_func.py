@@ -78,7 +78,8 @@ def get_file_contents(dist, lines_per_page, page, filter_keyword):
 				for i in range(0,len(lines)):
 					if filter_keyword in lines[i]:
 						line_filtered.append(lines[i])
-				if len(line_filtered) == 0: # 如果结果为空，直接返回
+				# 如果结果为空，直接返回
+				if len(line_filtered) == 0:
 					return ([], 0)
 				if lines_per_page > len(line_filtered):
 					lines_per_page = len(line_filtered)
@@ -90,7 +91,8 @@ def get_file_contents(dist, lines_per_page, page, filter_keyword):
 				total_pages = (len(line_filtered)//lines_per_page) + 1				
 			else:
 				lines = file_to_read.readlines()
-				if len(lines) == 0: # 如果结果为空，直接返回
+				# 如果结果为空，直接返回
+				if len(lines) == 0:
 					return ([], 0)
 				if lines_per_page > len(lines):
 					lines_per_page = len(lines)
@@ -108,7 +110,7 @@ def get_file_contents(dist, lines_per_page, page, filter_keyword):
 
 # 记录日志函数
 def log_record(log_user, log_detail):
-	return (ActionLog.objects.create(log_user=log_user, log_detail=log_detail))
+	return ActionLog.objects.create(log_user=log_user, log_detail=log_detail)
 
 # ssh远程执行命令
 def exec_command_over_ssh(host='', port='22', username='', password='', cmd=''):
@@ -149,7 +151,8 @@ def get_channel_over_ssh(host='', port='22', username='', password='', cmd=''):
 def send_data_over_websocket(request, channel):
 	while True:
 		try:
-			if request.websocket.is_closed(): # 检测客户端心跳，如果客户端关闭，则停止读取和发送日志
+			# 检测客户端心跳，如果客户端关闭，则停止读取和发送日志
+			if request.websocket.is_closed():
 				print ('websocket is closed')
 				channel.close()
 				break
@@ -165,7 +168,8 @@ def send_data_over_websocket(request, channel):
 # 发送容器shell的输出结果到web页面
 def shell_output_sender(request, channel):
 	while True:
-		if request.websocket.is_closed(): # 检测客户端心跳，如果客户端关闭，则停止读取和发送日志
+		# 检测客户端心跳，如果客户端关闭，则停止读取和发送日志
+		if request.websocket.is_closed():
 			print ('websocket is closed')
 			channel.close()
 			break
@@ -177,7 +181,8 @@ def shell_output_sender(request, channel):
 # 接受页面输入并发送到容器shell
 def shell_input_reciever(request, channel):
 	while True:
-		if request.websocket.is_closed(): # 检测客户端心跳，如果客户端关闭，则停止读取和发送日志
+		# 检测客户端心跳，如果客户端关闭，则停止读取和发送日志
+		if request.websocket.is_closed():
 			print ('websocket is closed')
 			channel.close()
 			break

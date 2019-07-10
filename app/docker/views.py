@@ -39,7 +39,7 @@ class ContainerListView(View):
 		try:
 			containers = get_container_lists(servers)
 			for container in containers:
-				container_list.append(ContainerInfoCache(
+				container_info = ContainerInfoCache(
 					host=container.host,
 					host_port=container.host_port,
 					container_id=container.container_id,
@@ -50,8 +50,9 @@ class ContainerListView(View):
 					status=container.status,
 					port=container.port,
 					name=container.name,
-					current_user_id=current_user_id)
-				)
+					current_user_id=current_user_id
+					)
+				container_list.append(container_info)
 			ContainerInfoCache.objects.filter(current_user_id=current_user_id).delete()
 			ContainerInfoCache.objects.bulk_create(container_list)
 		except Exception as e:

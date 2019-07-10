@@ -65,12 +65,21 @@ class TextViewerView(View):
 		text_contents = []
 		filter_keyword = request.GET.get('filter_keyword', '')
 		filter_select = request.GET.get('filter_select', '')
-		text_contents, total_pages = get_file_contents(dist, lines_per_page, page, filter_keyword)
+		text_contents, total_pages = get_file_contents(
+			dist, lines_per_page, page, filter_keyword
+			)
 		log_user=request.session.get('username')
 		log_detail=log_user + ' viewer ' + dist
 		log_record(log_user=log_user, log_detail=log_detail)
-		page_prefix = ('?dist=' + request.GET.get('dist') + '&filter_select=' + 
-						filter_select + '&filter_keyword=' + filter_keyword + '&page=')
+		page_prefix = (
+			'?dist=' 
+			+ request.GET.get('dist')
+			+ '&filter_select='
+			+ filter_select
+			+ '&filter_keyword='
+			+ filter_keyword
+			+ '&page='
+			)
 		previous_page_number = page - 1
 		if previous_page_number < 1:
 			previous_page_number = 1
@@ -95,8 +104,15 @@ class TextViewerView(View):
 		dist = request.POST.get('dist')
 		filter_keyword = request.POST.get('filter_keyword')
 		filter_select = request.POST.get('filter_select')
-		prg_url = ('/filemanager/text_viewer?dist=' + dist + '&filter_select=' + 
-					filter_select +'&filter_keyword=' + filter_keyword + '&page=1')
+		prg_url = (
+			'/filemanager/text_viewer?dist='
+			+ dist
+			+ '&filter_select='
+			+ filter_select
+			+ '&filter_keyword='
+			+ filter_keyword
+			+ '&page=1'
+			)
 		return redirect(prg_url)
 
 # 文件下载视图函数

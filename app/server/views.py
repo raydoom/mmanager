@@ -121,7 +121,9 @@ class ServerListView(View):
 					)
 			if filter_select == 'Port =':
 				server_lists = ServerInfoCache.objects.filter(
-					current_user_id=current_user_id,port=int(filter_keyword))
+					current_user_id=current_user_id,
+					port=int(filter_keyword)
+					)
 			if filter_select == 'Host':
 				server_lists = ServerInfoCache.objects.filter(
 					current_user_id=current_user_id,
@@ -131,7 +133,7 @@ class ServerListView(View):
 				server_lists = ServerInfoCache.objects.filter(
 					current_user_id=current_user_id,
 					server_type=filter_keyword
-					)			
+					)
 			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
 		else:
 			server_lists = ServerInfoCache.objects.filter(current_user_id=current_user_id)
@@ -143,10 +145,10 @@ class ServerListView(View):
 			filter_select = ''
 			filter_keyword = ''
 		context =  {
-			'server_list': server_list, 
-			'curent_page_size':curent_page_size, 
-			'filter_keyword': filter_keyword, 
-			'filter_select': filter_select, 
+			'server_list': server_list,
+			'curent_page_size':curent_page_size,
+			'filter_keyword': filter_keyword,
+			'filter_select': filter_select,
 			'page_prefix': page_prefix
 			}
 		return render(request, 'server_list.html', context)
@@ -176,13 +178,13 @@ class ServerCreateView(View):
 		server_type = request.POST.get('server_type')
 		server_type_id = int(ServerType.objects.get(server_type=server_type.lower()).server_type_id)
 		Server.objects.create(
-			host=host, 
-			port=int(port), 
-			username=username, 
-			password=password, 
-			username_api=username_api, 
+			host=host,
+			port=int(port),
+			username=username,
+			password=password,
+			username_api=username_api,
 			password_api=password_api,
-			port_api=int(port_api), 
+			port_api=int(port_api),
 			protocal_api=protocal_api,
 			server_type_id=server_type_id,
 			description=description

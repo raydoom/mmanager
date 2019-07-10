@@ -41,5 +41,5 @@ class ActionLogListView(View):
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')
 		filter_select = request.POST.get('filter_select')
-		prg_url = '/action_log/action_log_list?filter_select=' + filter_select +'&filter_keyword=' + filter_keyword
+		prg_url = '/action_log/action_log_list?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword
 		return redirect(prg_url)

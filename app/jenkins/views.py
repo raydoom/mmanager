@@ -31,14 +31,15 @@ class JobListView(View):
 		try:
 			jobs = get_job_lists(servers)
 			for job in jobs:
-				job_list.append(JobInfoCache(
+				job_info = JobInfoCache(
 					host=job.host,
 					host_port_api=job.host_port_api,
 					host_protocal_api=job.host_protocal_api,
 					name=job.name,
 					color=job.color,
-					current_user_id=current_user_id)
-				)
+					current_user_id=current_user_id
+					)
+				job_list.append(job_info)
 			JobInfoCache.objects.filter(current_user_id=current_user_id).delete()
 			JobInfoCache.objects.bulk_create(job_list)
 		except Exception as e:
@@ -46,13 +47,19 @@ class JobListView(View):
 		if filter_keyword != None:
 			if filter_select == 'Status =':
 				job_lists = JobInfoCache.objects.filter(
-					current_user_id=current_user_id,status=filter_keyword)
+					current_user_id=current_user_id,
+					status=filter_keyword
+					)
 			if filter_select == 'Name':
 				job_lists = JobInfoCache.objects.filter(
-					current_user_id=current_user_id,name__icontains=filter_keyword)
+					current_user_id=current_user_id,
+					name__icontains=filter_keyword
+					)
 			if filter_select == 'Host':
 				job_lists = JobInfoCache.objects.filter(
-					current_user_id=current_user_id,host__icontains=filter_keyword)
+					current_user_id=current_user_id,
+					host__icontains=filter_keyword
+					)
 			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
 		else:
 			job_lists = JobInfoCache.objects.filter(current_user_id=current_user_id)
@@ -76,9 +83,8 @@ class JobListView(View):
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')
 		filter_select = request.POST.get('filter_select')
-		prg_url = '/jenkins/job_list?filter_select=' + filter_select +'&filter_keyword=' + filter_keyword
+		prg_url = '/jenkins/job_list?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword
 		return redirect(prg_url)
-
 
 # jenkins操作
 @method_decorator(auth_login_required, name='dispatch')

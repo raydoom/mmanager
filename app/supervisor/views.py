@@ -38,14 +38,15 @@ class ProcessListView(View):
 		try:
 			processes = get_process_lists(servers)
 			for process in processes:
-				process_list.append(ProcessInfoCache(
+				process_info = ProcessInfoCache(
 					host=process.host,
 					host_port=process.host_port,
 					statename=process.statename,
 					name=process.name,
 					description=process.description,
-					current_user_id=current_user_id)
-				)
+					current_user_id=current_user_id
+					)
+				process_list.append(process_info)
 			ProcessInfoCache.objects.filter(current_user_id=current_user_id).delete()
 			ProcessInfoCache.objects.bulk_create(process_list)
 		except Exception as e:
