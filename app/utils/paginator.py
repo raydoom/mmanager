@@ -1,5 +1,4 @@
 # coding=utf8
-__author__ = 'maxd'
 
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage

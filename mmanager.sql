@@ -352,3 +352,15 @@ CREATE TABLE `django_session` (
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+-- ----------------------------
+-- Records of app_server_type
+-- ----------------------------
+INSERT INTO `app_server_type` VALUES (1, 'docker');
+INSERT INTO `app_server_type` VALUES (3, 'jenkins');
+INSERT INTO `app_server_type` VALUES (2, 'supervisor');
+
+-- ----------------------------
+-- Records of app_user
+-- ----------------------------
+INSERT INTO `app_user` VALUES (1, 'admin', 'pbkdf2_sha256$120000$KFtImf0nFm7v$qKB3DqkO5R23M9ffM1G33kdC/ZWgMnCsZSq4Bgkxdh0=', 'admin@localhost.com', 'admin', 'admin');

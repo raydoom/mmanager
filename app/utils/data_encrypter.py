@@ -3,7 +3,6 @@
 # 需要安装扩展模块 pip3 install cryptography
 
 from cryptography.fernet import Fernet
-
 from app.utils.config_info_formater import ConfigInfo
 
 # key_data_encrypter

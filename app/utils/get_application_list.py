@@ -1,5 +1,4 @@
 # coding=utf8
-__author__ = 'maxd'
 
 import logging
 import threading
@@ -7,7 +6,6 @@ import threading
 from app.docker.container import Container
 from app.supervisor.process import Process
 from app.server.models import Server
-
 
 #重写Thread模块, 多线程支持获取返回值
 class MyThread(threading.Thread):
@@ -19,7 +17,8 @@ class MyThread(threading.Thread):
 		self.result = self.func(*self.args)
 	def get_result(self):
 		try:
-			return self.result  # 如果子线程不使用join方法，此处可能会报没有self.result的错误
+			# 如果子线程不使用join方法，此处可能会报没有self.result的错误
+			return self.result
 		except Exception:
 			return None
 
