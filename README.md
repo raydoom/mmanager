@@ -25,7 +25,15 @@
 
 #### 使用方式
 克隆代码到本地
+```
+git clone https://github.com/raydoom/mmanager.git
+```
 安装mysql数据库，新建mmanager数据库，导入mmanager.sql
+```
+CREATE DATABASE mmanager DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+use mmanager;
+source mmanager.sql;
+```
 修改config/config.ini中数据库相关的配置
 使用pip安装所需模块
 ```
