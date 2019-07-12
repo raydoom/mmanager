@@ -23,6 +23,36 @@
 - jquery 1.9.1
 - fontawesome 4.7.0
 
+#### 使用方式
+克隆代码到本地
+安装mysql数据库，新建mmanager数据库，导入mmanager.sql
+修改config/config.ini中数据库相关的配置
+使用pip安装所需模块
+```
+pip3 install -r requirements.txt
+```
+开发调试
+```
+python3 manage.py runserver 0.0.0.0:8000
+```
+
+使用supervisor进行部署，配置示例（修改directory为项目所在目录）
+```
+[program:mmanager]
+command=python3 manage.py runserver 0.0.0.0:8000                  
+autostart=true
+autorestart=unexpected
+startsecs=1                                                      
+directory=/opt/app_python/mmanager
+stdout_logfile=/var/log/mmanager.log
+redirect_stderr = true
+stdout_logfile_maxbytes = 10MB
+stdout_logfile_backups = 10
+```
+推荐使用supervisor或nohup进行部署，不推荐使用&放到后台运行，会导致websocket连接无法释放，进而导致系统资源浪费。
+
+部署完成后，访问8000端口，默认用户admin/111111
+
 #### TODO
 
 - 为容器创建webshell，使用户能从web端连接到容器的shell，执行命令（已完成）
