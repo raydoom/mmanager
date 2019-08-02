@@ -13,7 +13,7 @@
 </div>
 
 <div class="col-md-12">
-  <form class="form-inline" style="float: right;" action="/filemanager/text_viewer/" method="post">
+  <form class="form-inline" style="float: right;" action="?" method="post">
    {% csrf_token %}
     <div class="form-group">
       <p class="form-control-static">
@@ -22,28 +22,16 @@
           </select>
       </p>
       <input type="text" class="form-control" name="filter_keyword" value="{{filter_keyword}}" placeholder="">
-      <input type="hidden" class="form-control" name="dist" value="{{current_directory}}" placeholder="">
+      <input type="hidden" class="form-control" name="path" value="{{path}}" placeholder="">
+      <input type="hidden" class="form-control" name="host" value="{{host}}" placeholder="">
     </div>
     <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> Filter</button>
   </form>
 </div>
 
-<h5><code style="font-size: 13px;">Path: {{current_directory}}</code></h5>
+<h5><code style="font-size: 13px;">Path: {{path}}</code></h5>
 <pre style="background: white; height:500px;overflow: autos;">
-{% for text_content in text_contents%}{{text_content}}{% endfor %}
+{{text_content}}
 </pre>
-
-<div class="col-md-12">
-  </br>
-  <span style="text-align:center; display:block;">
-    <a>
-       <a style="text-decoration:underline; color:inherit;" href="{{ page_prefix }}{{ previous_page_number }}">Previous</a>
-    </a>
-    <a style="color:inherit;">&nbsp; < {{ current_page_number }} / {{ total_pages }} > &nbsp;</a>
-    <a>
-        <a style="text-decoration:underline; color:inherit;" href="{{ page_prefix }}{{ next_page_number }}">Next</a>
-    </a>
-  </span>
-</div>
 
 {% endblock %}

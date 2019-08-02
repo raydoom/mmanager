@@ -3,6 +3,7 @@
 import os
 import logging
 import json
+import re
 import configparser
 from django.shortcuts import render
 from django.shortcuts import redirect
@@ -13,105 +14,71 @@ from django.utils.decorators import method_decorator
 from dwebsocket import require_websocket
 from dwebsocket import accept_websocket
 
+from app.server.models import Server
+from app.server.models import ServerType
 from app.utils.common_func import auth_login_required
 from app.utils.common_func import get_dir_info
 from app.utils.common_func import get_file_contents
 from app.utils.common_func import log_record
+from app.utils.common_func import exec_command_over_ssh
+from app.utils.common_func import transfer_file_over_sftp
 from django.conf import settings
+from app.filemanager.directory import Directory
 from app.utils.config_info_formater import ConfigInfo
+from app.utils.paginator import paginator_for_list_view
 
 # 获取配置文件按信息
 config = ConfigInfo()
-dir_root = config.config_info.get('dir_info').get('dir_root')
-lines_per_page = int(config.config_info.get('dir_info').get('lines_per_page'))
+tmp_path = config.config_info.get('path_info').get('tmp_path')
+lines_for_view = (config.config_info.get('path_info').get('lines_for_view'))
 
-# 本地日志目录浏览
-@method_decorator(auth_login_required, name='dispatch')
-class DirectoryListView(View):
-	def get(self, request):
-		dist = '/'
-		current_dir = '/'
-		if request.GET.get('dist'):
-			dist = request.GET.get('dist') + '/'
-			if dist.split('/')[-2] == '..': 
-				dist_list = dist.split('/')
-				dist = ''
-				for i in range(0,len(dist_list)-3):
-					dist = dist + dist_list[i] +'/'
-		current_dir = dist			
-		dist = dir_root + dist	
-		dir_infos = get_dir_info(dist)
-		dir_infos_count = len(dir_infos)
-		context = {
-			'dir_infos': dir_infos, 
-			'current_dir': current_dir, 
-			'dir_infos_count': dir_infos_count
-			}
-		return render(request, 'directory_list.html', context)
-
-# 本地文本文件浏览
+# 文本文件浏览
 @method_decorator(auth_login_required, name='dispatch')
 class TextViewerView(View):
 	def get(self, request):
-		current_directory = '/'
-		dist = dir_root
-		if request.GET.get('dist'):
-			dist = request.GET.get('dist')
-			current_directory = request.GET.get('dist')
-			dist = dir_root + dist
-		page = 1
-		if request.GET.get('page'):
-			page = int(request.GET.get('page'))
-		text_contents = []
 		filter_keyword = request.GET.get('filter_keyword', '')
 		filter_select = request.GET.get('filter_select', '')
-		text_contents, total_pages = get_file_contents(
-			dist, lines_per_page, page, filter_keyword
+		host = request.GET.get('host', '')
+		server_type_id = ServerType.objects.get(server_type='file').server_type_id
+		server = Server.objects.get(server_type_id=server_type_id,host=host)
+		path_root = server.file_path_root
+		path = request.GET.get('path')		
+		cmd_tail = 'tail -' + lines_for_view + ' ' + path_root + path	
+		if filter_keyword != '':
+			cmd_tail = cmd_tail + ' | grep ' + filter_keyword
+		text_content = exec_command_over_ssh(
+			server.host,
+			server.port,
+			server.username,
+			server.password,
+			cmd=cmd_tail,
 			)
+		text_content = text_content.decode()
 		log_user=request.session.get('username')
-		log_detail=log_user + ' viewer ' + dist
+		log_detail=log_user + ' viewer ' + path
 		log_record(log_user=log_user, log_detail=log_detail)
-		page_prefix = (
-			'?dist=' 
-			+ request.GET.get('dist')
-			+ '&filter_select='
-			+ filter_select
-			+ '&filter_keyword='
-			+ filter_keyword
-			+ '&page='
-			)
-		previous_page_number = page - 1
-		if previous_page_number < 1:
-			previous_page_number = 1
-		next_page_number = page + 1
-		if next_page_number > total_pages:
-			next_page_number = total_pages
-		current_page_number = page
 		context = {
-			'text_contents': text_contents,
-			'current_directory': current_directory,
-			'page_prefix': page_prefix,
-			'next_page_number': next_page_number,
-			'page_prefix': page_prefix,
-			'previous_page_number': previous_page_number,
-			'current_page_number': current_page_number,
-			'total_pages': total_pages,
+			'host': host,
+			'path': path,
+			'text_content': text_content,
 			'filter_select': filter_select,
 			'filter_keyword': filter_keyword
 			}
 		return render(request, 'text_viewer.html', context)
 	def post(self, request):
-		dist = request.POST.get('dist')
-		filter_keyword = request.POST.get('filter_keyword')
-		filter_select = request.POST.get('filter_select')
+		path = request.POST.get('path')
+		host = request.POST.get('host', '')
+		filter_keyword = request.POST.get('filter_keyword', '')
+		filter_select = request.POST.get('filter_select', '')
 		prg_url = (
-			'/filemanager/text_viewer?dist='
-			+ dist
+			'/filemanager/text_viewer?host='
+			+ host
+			+ '&path='
+			+ path
 			+ '&filter_select='
 			+ filter_select
 			+ '&filter_keyword='
 			+ filter_keyword
-			+ '&page=1'
 			)
 		return redirect(prg_url)
 
@@ -119,14 +86,107 @@ class TextViewerView(View):
 @method_decorator(auth_login_required, name='dispatch')
 class FileDownloadView(View):
 	def get(self, request):
-		filepath = request.GET.get('filepath')
-		filepath = dir_root + filepath
-		file=open(filepath, 'rb')
+		host = request.GET.get('host', '')
+		server_type_id = ServerType.objects.get(server_type='file').server_type_id
+		server = Server.objects.get(server_type_id=server_type_id,host=host)
+		path_root = server.file_path_root
+		path = request.GET.get('path')
+		filename = path.split('/')[-1]
+		remote_file_path = path_root + path
+		local_file_path = tmp_path + '/' + filename
+		transfer_file_over_sftp(
+			server.host,
+			server.port,
+			server.username,
+			server.password,
+			remote_path=remote_file_path,
+			local_path=local_file_path,
+			)
+		file=open(local_file_path, 'rb')
 		response =FileResponse(file)
 		response['Content-Type']='application/octet-stream'
-		filename = filepath.split('/')[-1]
 		Content_Disposition = 'attachment;filename=' + filename
 		response['Content-Disposition']=Content_Disposition
-		log_detail='download ' + filepath
+		log_detail='download ' + path + ' on host ' + host
 		log_record(request.session.get('username'), log_detail=log_detail)
 		return response 
+
+# 文件服务器列表
+@method_decorator(auth_login_required, name='dispatch')
+class FileServerListView(View):
+	def get(self, request):
+		req_url = request.get_full_path()
+		filter_keyword = request.GET.get('filter_keyword')
+		filter_select = request.GET.get('filter_select')
+		server_type_id = ServerType.objects.get(server_type='file').server_type_id
+		if filter_keyword != None:
+			if filter_select == 'User =':
+				file_server = ActionLog.objects.filter(log_user=filter_keyword).order_by('-log_time')
+			if filter_select == 'Detail':
+				file_server = ActionLog.objects.filter(log_detail__icontains=filter_keyword).order_by('-log_time')
+			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
+		else:
+			file_server = Server.objects.filter(server_type_id=server_type_id).order_by('host')
+			print(file_server)
+			page_prefix = '?page='
+		page_num = request.GET.get('page')
+		action_log = paginator_for_list_view(file_server ,page_num)
+		print(file_server.values())
+		curent_page_size = len(file_server)
+		context = {
+			'file_server': file_server,
+			'curent_page_size': curent_page_size, 
+			'page_prefix': page_prefix
+			}
+		return render(request, 'file_server_list.html', context)
+
+	def post(self, request):
+		filter_keyword = request.POST.get('filter_keyword')
+		filter_select = request.POST.get('filter_select')
+		prg_url = '/action_log/action_log_list?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword
+		return redirect(prg_url)
+
+# 目录列表
+@method_decorator(auth_login_required, name='dispatch')
+class DirectoryListView(View):
+	def get(self, request):
+		host = request.GET.get('host', '')
+		server_type_id = ServerType.objects.get(server_type='file').server_type_id
+		server = Server.objects.get(server_type_id=server_type_id,host=host)
+		path_root = server.file_path_root
+		path = request.GET.get('path', '')
+		absolutely_path = path_root + path
+		# 返回上级目录，生成上级目录路径
+		path_end = re.split('/+', path)[-1]
+		parent_path = path.rstrip(path_end).rstrip('/')
+		directory = Directory()
+		directory.host = server.host
+		directory.host_port = server.port
+		directory.host_username = server.username
+		directory.host_password = server.password
+		file_list_orgin = directory.get_file_list(path=absolutely_path)
+		file_list = []
+		for file_info in file_list_orgin:
+			file = {}
+			file_info = re.split(' +', file_info)
+			file['file_type'] = file_info[0]
+			file['file_link_count'] = file_info[1]
+			file['file_owner'] = file_info[2]
+			file['file_group'] = file_info[3]
+			file['file_size'] = file_info[4]
+			file['file_mtime'] = file_info[5] + ' ' + file_info[6] + ' ' + file_info[7]
+			file['file_name'] = file_info[8]
+			file['file_host'] = host
+			if file['file_type'][0] == 'd':
+				file['is_directory'] = 1
+			else:
+				file['is_directory'] = 0
+			file_list.append(file)
+		context = {
+			'host': host,
+			'file_list': file_list, 
+			'path': path,
+			'parent_path': parent_path
+			}
+		return render(request, 'directory_list.html', context)
+

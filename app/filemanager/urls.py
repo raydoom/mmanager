@@ -7,5 +7,6 @@ urlpatterns = [
     path('directory_list', views.DirectoryListView.as_view()),
     path('text_viewer', views.TextViewerView.as_view()),
     path('file_download', views.FileDownloadView.as_view()),
+    path('file_server_list', views.FileServerListView.as_view()),
 
 ]

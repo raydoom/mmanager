@@ -4,7 +4,6 @@ import os
 import time
 import logging
 import paramiko
-import paramiko
 from django.shortcuts import render
 from django.shortcuts import redirect
 
@@ -124,6 +123,21 @@ def exec_command_over_ssh(host='', port='22', username='', password='', cmd=''):
 		std_out = std_out.read()
 		ssh_client.close()
 		return (std_out)
+	except Exception as e:
+		logging.error(e)
+		return None
+
+# sftp传输文件
+def transfer_file_over_sftp(host='', port='22', username='', password='', cmd='', remote_path='', local_path=''):
+	try:
+		tran = paramiko.Transport((host, port))
+		data_encrypter = DataEncrypter()
+		password =  data_encrypter.decrypt(data=password)
+		tran.connect(username=username,password=password)
+		sftp = paramiko.SFTPClient.from_transport(tran)
+		sftp.get(remote_path, local_path)
+		tran.close()
+		return True
 	except Exception as e:
 		logging.error(e)
 		return None

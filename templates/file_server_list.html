@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<ol class="breadcrumb">
+  <li>Ops Manager</li>
+  <li class="active">File Server List</li>
+</ol>
+
+<div class="page-header">
+    <h2>
+        File Server List
+    </h2>
+</div>
+
+<table class="table table-hover">
+<caption>
+<form class="form-inline" style="float: right;" action="/server/file_server" method="post">
+ {% csrf_token %}
+  <div class="form-group">
+    <p class="form-control-static">
+        <select class="form-control" name="filter_select">
+          <option {% if filter_select == "Host" or filter_select == "" %} selected="selected" {% endif %}>Host</option>
+          <option {% if filter_select == "Port =" %} selected="selected" {% endif %}>Port =</option>
+        </select>
+    </p>
+    <input type="text" class="form-control" name="filter_keyword" value="{{filter_keyword}}" placeholder="">
+  </div>
+  <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> Filter</button>
+  <div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    More Actions <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-right">
+    <li><a href="#">Edit</a></li>
+    <li><a style="color: red;" href="#">Delete</a></li>
+  </ul>
+</div>
+</form>
+</caption>
+    <tr>
+        <td colspan="12" data-column="0">
+            <span class="table_count">Displaying {{ curent_page_size }} / {{ file_server.paginator.count }} items</span>
+        </td>
+    </tr>
+    <tr class="active">
+        <th><input type="checkbox" name="check_all" id="check_all" onclick="checkAll()"></th>
+        <th width="15%">Host</th>
+        <th width="10%">Port</th>
+        <th width="20%">File Path Root</th>
+        <th width="40%">Description</th>
+        <th colspan="4" width="15%">Actions</th>
+    </tr>
+    {% for server in file_server %}
+    <tr>
+        <td><input type="checkbox" name="check_item"></td>
+        <td><a style="color:inherit;" href="/filemanager/directory_list?host={{server.host}}">{{server.host}}</a></td>
+        <td>{{server.port}}</td>
+        <td>{{server.file_path_root}}</td>
+        <td>{{server.description}}</td>
+        <td>
+          
+          <!-- Split button -->
+          <div class="btn-group">
+            <a type="button" class="btn btn-default btn-sm" href="/server/server_update?host={{server.host}}&server_type={{server.server_type}}">Edit</a>
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li><a style="color: red;" href="/server/server_delete?host={{server.host}}&server_type={{server.server_type}}">Delete Server</a></li>
+            </ul>
+          </div>
+
+        </td>
+
+    </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="12" data-column="0">
+            <span class="table_count">Displaying {{ curent_page_size }} / {{ file_server.paginator.count }} items</span>
+        </td>
+    </tr>
+
+</table>
+
+<div>
+  <span style="text-align:center; display:block;">
+    <a>
+        {% if file_server.has_previous %}
+            <a style="text-decoration:underline; color:inherit;" href="{{ page_prefix }}{{ file_server.previous_page_number }}">Previous</a>
+        {% endif %}
+    </a>
+    <a style="color:inherit;">&nbsp; < {{ file_server.number }} / {{ file_server.paginator.num_pages }} > &nbsp;</a>
+    <a>
+        {% if file_server.has_next %}
+            <a style="text-decoration:underline; color:inherit;" href="{{ page_prefix }}{{ file_server.next_page_number }}">Next</a>
+        {% endif %}
+    </a>
+  </span>
+</div>
+
+<script> 
+//复选框的全选、取消全选功能
+function checkAll() {
+var all=document.getElementById('check_all');//获取到点击全选的那个复选框的id
+var one=document.getElementsByName('check_item');//获取到复选框的名称
+//因为获得的是数组，所以要循环 为每一个checked赋值
+for(var i=0;i<one.length;i++){
+one[i].checked=all.checked; //直接赋值不就行了嘛
+}
+}
+</script>
+
+{% endblock %}
+

@@ -44,7 +44,7 @@
     </caption>
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ dir_infos_count }} items <code style="font-size: 13px;">Path: {{current_dir}}</span>
+            <span class="table_count">Displaying {{ dir_infos_count }} items <code style="font-size: 13px;">Path: {{path}}</span>
         </td>
     </tr>
     <tr class="active">
@@ -54,28 +54,34 @@
         <th width="25%">Mtime</th>
         <th colspan="4" width="15%">Actions</th>
     </tr>
-    {% for dir_info in dir_infos %}
-    {% if dir_info.isdir == 1  %}
+    {% for file_info in file_list %}
+    {% if file_info.is_directory == 1  %}
     <tr>
         <td><input type="checkbox" name="check_item"></td>
         <td>
         <span class="fa fa-folder-o">
-            <a style="color:inherit;" href="?dist={{current_dir}}{{dir_info.file_name}}"</a>
-            {{dir_info.file_name}}
+            {% if file_info.file_name != '..' %}
+            <a style="color:inherit;" href="?host={{host}}&path={{path}}/{{file_info.file_name}}">
+            {% endif %}
+            {% if file_info.file_name == '..' %}
+            <a style="color:inherit;" href="?host={{host}}&path={{parent_path}}">
+            {% endif %}
+            {{file_info.file_name}}
+            </a>
         </span>
         </td>
-        <td>{{dir_info.file_size}}</td>
-        <td>{{dir_info.mtime}}</td>
+        <td>{{file_info.file_size}}</td>
+        <td>{{file_info.file_mtime}}</td>
         <td>
 
             <!-- Split button -->
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="/filemanager/directory_list?dist={{current_dir}}{{dir_info.file_name}}">Open</a>
+            <a type="button" class="btn btn-default btn-sm" href="/filemanager/directory_list?dist={{current_path}}{{dir_info.file_name}}">Open</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="/filemanager/file_download?filepath={{current_dir}}{{dir_info.file_name}}">Download</a></li>
+              <li><a href="/filemanager/file_download?host={{host}}&path={{path}}/{{file_info.file_name}}">Download</a></li>
             </ul>
           </div>
         </td>
@@ -83,28 +89,29 @@
     {% endif %}
     {% endfor %}
 
-    {% for dir_info in dir_infos %}
-    {% if dir_info.isdir == 0  %}
+    {% for file_info in file_list %}
+    {% if file_info.is_directory == 0  %}
     <tr>
         <td><input type="checkbox" name="check_item"></td>
         <td>
         <span class="fa fa-file-text-o">
-            <a a style="color:inherit;" href="/filemanager/text_viewer?dist={{current_dir}}{{dir_info.file_name}}"</a>
-        {{dir_info.file_name}}
+            <a a style="color:inherit;" href="/filemanager/text_viewer?host={{host}}&path={{path}}/{{file_info.file_name}}">
+            {{file_info.file_name}}
+            </a>
         </span>
         </td>
-        <td>{{dir_info.file_size}}</td>
-        <td>{{dir_info.mtime}}</td>
+        <td>{{file_info.file_size}}</td>
+        <td>{{file_info.file_mtime}}</td>
         <td>
 
         <!-- Split button -->
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="/filemanager/text_viewer?dist={{current_dir}}{{dir_info.file_name}}">Open</a>
+            <a type="button" class="btn btn-default btn-sm" href="/filemanager/text_viewer?path={{path}}{{dir_info.file_name}}">Open</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="/filemanager/file_download?filepath={{current_dir}}{{dir_info.file_name}}">Download</a></li>
+              <li><a href="/filemanager/file_download?host={{host}}&path={{path}}/{{file_info.file_name}}">Download</a></li>
             </ul>
           </div>
         </td>

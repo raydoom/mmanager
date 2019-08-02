@@ -174,6 +174,7 @@ class ServerCreateView(View):
 		password_api = request.POST.get('password_api')
 		port_api = request.POST.get('port_api')
 		protocal_api = request.POST.get('protocal_api')
+		file_path_root = request.POST.get('file_path_root')
 		description = request.POST.get('description')
 		server_type = request.POST.get('server_type')
 		server_type_id = int(ServerType.objects.get(server_type=server_type.lower()).server_type_id)
@@ -187,7 +188,8 @@ class ServerCreateView(View):
 			port_api=int(port_api),
 			protocal_api=protocal_api,
 			server_type_id=server_type_id,
-			description=description
+			file_path_root=file_path_root,
+			description=description,
 			)
 		return redirect('/server/server_list')
 

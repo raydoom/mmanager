@@ -30,6 +30,7 @@ class Server(models.Model):
 	password_api = models.CharField(max_length=256, default='', blank=True)	
 	port_api = models.IntegerField(default=0)
 	protocal_api = models.CharField(max_length=50, default='', blank=True)
+	file_path_root = models.CharField(max_length=128, default='', blank=True)
 	description = models.CharField(max_length=128, default='', blank=True)
 	server_type_id = models.IntegerField()
 	class Meta:

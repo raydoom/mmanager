@@ -105,6 +105,7 @@ CREATE TABLE `app_server` (
   `port` int(11) DEFAULT NULL,
   `username` varchar(50) DEFAULT NULL,
   `password` varchar(50) DEFAULT NULL,
+  `file_path_root` varchar(128) DEFAULT NULL,
   `description` varchar(128) DEFAULT NULL,
   `password_api` varchar(50) DEFAULT '',
   `username_api` varchar(50) DEFAULT '',
@@ -359,7 +360,7 @@ CREATE TABLE `django_session` (
 INSERT INTO `app_server_type` VALUES (1, 'docker');
 INSERT INTO `app_server_type` VALUES (3, 'jenkins');
 INSERT INTO `app_server_type` VALUES (2, 'supervisor');
-
+INSERT INTO `app_server_type` VALUES (4, 'file');
 -- ----------------------------
 -- Records of app_user
 -- ----------------------------
