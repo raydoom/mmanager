@@ -40,7 +40,7 @@
 </caption>
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ curent_page_size }} / {{ file_server.paginator.count }} items</span>
+            <span class="table_count">Displaying {{ current_page_size }} / {{ file_server.paginator.count }} items</span>
         </td>
     </tr>
     <tr class="active">
@@ -54,7 +54,7 @@
     {% for server in file_server %}
     <tr>
         <td><input type="checkbox" name="check_item"></td>
-        <td><a style="color:inherit;" href="/filemanager/directory_list?host={{server.host}}">{{server.host}}</a></td>
+        <td>{{server.host}}</td>
         <td>{{server.port}}</td>
         <td>{{server.file_path_root}}</td>
         <td>{{server.description}}</td>
@@ -62,12 +62,12 @@
           
           <!-- Split button -->
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="/server/server_update?host={{server.host}}&server_type={{server.server_type}}">Edit</a>
+            <a type="button" class="btn btn-default btn-sm" href="/filemanager/directory_list?host={{server.host}}">Open</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a style="color: red;" href="/server/server_delete?host={{server.host}}&server_type={{server.server_type}}">Delete Server</a></li>
+              <li><a style="color: red;" href="/filemanager/directory_list?host={{server.host}}">Open</a></li>
             </ul>
           </div>
 
@@ -77,7 +77,7 @@
     {% endfor %}
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ curent_page_size }} / {{ file_server.paginator.count }} items</span>
+            <span class="table_count">Displaying {{ current_page_size }} / {{ file_server.paginator.count }} items</span>
         </td>
     </tr>
 

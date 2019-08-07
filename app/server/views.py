@@ -24,6 +24,7 @@ class ServerListView(View):
 		filter_select = request.GET.get('filter_select')
 		server_list = []
 		server_lists = []
+		# docker服务器
 		try:
 			server_type_id = ServerType.objects.get(server_type='docker').server_type_id
 			servers = Server.objects.filter(server_type_id=server_type_id).order_by('host')
@@ -49,6 +50,7 @@ class ServerListView(View):
 				server.status = 'Disonnected'
 				server.description = 'none'
 			server_lists.append(server)
+		# supervisor服务器
 		try:
 			server_type_id = ServerType.objects.get(server_type='supervisor').server_type_id
 			servers = Server.objects.filter(server_type_id=server_type_id).order_by('host')
@@ -72,6 +74,7 @@ class ServerListView(View):
 				server.status = 'Disonnected'	
 				server.description = 'none'			
 			server_lists.append(server)
+		# jenkins服务器
 		try:
 			server_type_id = ServerType.objects.get(server_type='jenkins').server_type_id
 			servers = Server.objects.filter(server_type_id=server_type_id).order_by('host')
@@ -94,6 +97,18 @@ class ServerListView(View):
 				logging.error(e)
 				server.status = 'Disonnected'	
 				server.description = 'none'
+			server_lists.append(server)
+		# file服务器
+		try:
+			server_type_id = ServerType.objects.get(server_type='file').server_type_id
+			servers = Server.objects.filter(server_type_id=server_type_id).order_by('host')
+			print(servers)
+		except Exception as e:
+			logging.error(e)
+			servers = []
+		for server in servers:
+			server.type = 'file'
+			server.status = 'Connected'
 			server_lists.append(server)
 		try:
 			for server in server_lists:

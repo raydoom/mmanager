@@ -22,7 +22,6 @@ from app.utils.common_func import get_file_contents
 from app.utils.common_func import log_record
 from app.utils.common_func import exec_command_over_ssh
 from app.utils.common_func import transfer_file_over_sftp
-from django.conf import settings
 from app.filemanager.directory import Directory
 from app.utils.config_info_formater import ConfigInfo
 from app.utils.paginator import paginator_for_list_view
@@ -44,7 +43,7 @@ class TextViewerView(View):
 		path_root = server.file_path_root
 		path = request.GET.get('path')		
 		cmd_tail = 'tail -' + lines_for_view + ' ' + path_root + path	
-		if filter_keyword != '':
+		if filter_select == 'Content' and filter_keyword != '':
 			cmd_tail = cmd_tail + ' | grep ' + filter_keyword
 		text_content = exec_command_over_ssh(
 			server.host,
@@ -53,7 +52,11 @@ class TextViewerView(View):
 			server.password,
 			cmd=cmd_tail,
 			)
-		text_content = text_content.decode()
+		try:
+			text_content = text_content.decode(encoding='utf8')
+		except Exception as e:
+			logging.error(e)
+			text_content = 'can not decode file content'
 		log_user=request.session.get('username')
 		log_detail=log_user + ' viewer ' + path
 		log_record(log_user=log_user, log_detail=log_detail)
@@ -120,30 +123,34 @@ class FileServerListView(View):
 		filter_select = request.GET.get('filter_select')
 		server_type_id = ServerType.objects.get(server_type='file').server_type_id
 		if filter_keyword != None:
-			if filter_select == 'User =':
-				file_server = ActionLog.objects.filter(log_user=filter_keyword).order_by('-log_time')
-			if filter_select == 'Detail':
-				file_server = ActionLog.objects.filter(log_detail__icontains=filter_keyword).order_by('-log_time')
+			if filter_select == 'Host':
+				file_servers = Server.objects.filter(
+					server_type_id=server_type_id,
+					host__icontains=filter_select
+					)
+			if filter_select == 'Port =':
+				file_servers = Server.objects.filter(
+					server_type_id=server_type_id,
+					port=filter_select
+					)
 			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
 		else:
-			file_server = Server.objects.filter(server_type_id=server_type_id).order_by('host')
-			print(file_server)
+			file_servers = Server.objects.filter(server_type_id=server_type_id).order_by('host')
 			page_prefix = '?page='
 		page_num = request.GET.get('page')
-		action_log = paginator_for_list_view(file_server ,page_num)
-		print(file_server.values())
-		curent_page_size = len(file_server)
+		file_server = paginator_for_list_view(file_servers, page_num)
+		current_page_size = len(file_server)
 		context = {
 			'file_server': file_server,
-			'curent_page_size': curent_page_size, 
-			'page_prefix': page_prefix
+			'current_page_size': current_page_size,
+			'page_prefix': page_prefix,
 			}
 		return render(request, 'file_server_list.html', context)
 
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')
 		filter_select = request.POST.get('filter_select')
-		prg_url = '/action_log/action_log_list?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword
+		prg_url = '/filemanager/file_server_list?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword
 		return redirect(prg_url)
 
 # 目录列表
