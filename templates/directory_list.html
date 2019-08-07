@@ -76,12 +76,12 @@
 
             <!-- Split button -->
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="/filemanager/directory_list?dist={{current_path}}{{dir_info.file_name}}">Open</a>
+            <a type="button" class="btn btn-default btn-sm" href="/filemanager/directory_list?dist={{current_path}}{{file_info.file_name}}">Open</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="/filemanager/file_download?host={{host}}&path={{path}}/{{file_info.file_name}}">Download</a></li>
+              <li><a href="">Download</a></li>
             </ul>
           </div>
         </td>
@@ -106,7 +106,7 @@
 
         <!-- Split button -->
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="/filemanager/text_viewer?path={{path}}{{dir_info.file_name}}">Open</a>
+            <a type="button" class="btn btn-default btn-sm" href="/filemanager/text_viewer?path={{path}}{{file_info.file_name}}">Open</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
