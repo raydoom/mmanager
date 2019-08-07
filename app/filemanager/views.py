@@ -126,12 +126,12 @@ class FileServerListView(View):
 			if filter_select == 'Host':
 				file_servers = Server.objects.filter(
 					server_type_id=server_type_id,
-					host__icontains=filter_select
+					host__icontains=filter_keyword
 					)
 			if filter_select == 'Port =':
 				file_servers = Server.objects.filter(
 					server_type_id=server_type_id,
-					port=filter_select
+					port=int(filter_keyword)
 					)
 			page_prefix = '?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword + '&page='
 		else:
@@ -140,16 +140,21 @@ class FileServerListView(View):
 		page_num = request.GET.get('page')
 		file_server = paginator_for_list_view(file_servers, page_num)
 		current_page_size = len(file_server)
+		if filter_keyword == None:
+			filter_select = ''
+			filter_keyword = ''
 		context = {
 			'file_server': file_server,
 			'current_page_size': current_page_size,
 			'page_prefix': page_prefix,
+			'filter_select': filter_select,
+			'filter_keyword': filter_keyword,
 			}
 		return render(request, 'file_server_list.html', context)
 
 	def post(self, request):
-		filter_keyword = request.POST.get('filter_keyword')
-		filter_select = request.POST.get('filter_select')
+		filter_keyword = request.POST.get('filter_keyword', '')
+		filter_select = request.POST.get('filter_select', '')
 		prg_url = '/filemanager/file_server_list?filter_select=' + filter_select + '&filter_keyword=' + filter_keyword
 		return redirect(prg_url)
 

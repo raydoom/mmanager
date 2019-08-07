@@ -7,5 +7,5 @@ class Directory:
 	def get_file_list(self, path='/tmp/'):
 		cmd = 'ls -alh ' +  path
 		stdout = exec_command_over_ssh(self.host, self.host_port, self.host_username, self.host_password, cmd)
-		stdout = stdout.decode().split('\n')[2:-1]
+		stdout = stdout.decode(encoding='utf8').split('\n')[2:-1]
 		return (stdout)
