@@ -194,9 +194,11 @@ class DirectoryListView(View):
 			else:
 				file['is_directory'] = 0
 			file_list.append(file)
+		file_list_count = len(file_list)
 		context = {
 			'host': host,
 			'file_list': file_list, 
+			'file_list_count': file_list_count,
 			'path': path,
 			'parent_path': parent_path
 			}
