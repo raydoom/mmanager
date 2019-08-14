@@ -9,10 +9,12 @@ from django.utils.decorators import method_decorator
 from app.server.models import Server
 from app.server.models import ServerType
 from app.server.models import ServerInfoCache
+from app.filemanager.directory import Directory
 from app.utils.common_func import auth_login_required
 from app.utils.common_func import log_record
 from app.utils.get_application_list import get_process_lists
 from app.utils.get_application_list import get_job_lists
+from app.utils.data_encrypter import DataEncrypter
 from app.utils.paginator import paginator_for_list_view
 
 # 所有服务器列表
@@ -95,20 +97,33 @@ class ServerListView(View):
 				server.description = str(len(result)) + ' jobs, ' + str(result_blue) + ' blue'
 			except Exception as e:
 				logging.error(e)
-				server.status = 'Disonnected'	
+				server.status = 'Disonnected'
 				server.description = 'none'
 			server_lists.append(server)
 		# file服务器
 		try:
 			server_type_id = ServerType.objects.get(server_type='file').server_type_id
 			servers = Server.objects.filter(server_type_id=server_type_id).order_by('host')
-			print(servers)
 		except Exception as e:
 			logging.error(e)
 			servers = []
 		for server in servers:
 			server.type = 'file'
-			server.status = 'Connected'
+			try:
+				directory = Directory()
+				directory.host = server.host
+				directory.host_port = server.port
+				directory.host_username = server.username
+				directory.host_password = server.password
+				path_root = server.file_path_root
+				file_list_orgin = directory.get_file_list(path=path_root)
+				if len(file_list_orgin) != 0:
+					server.status = 'Connected'
+				else:
+					server.status = 'Disonnected'
+			except Exception as e:
+				logging.error(e)
+				server.status = 'Disonnected'
 			server_lists.append(server)
 		try:
 			for server in server_lists:
@@ -230,16 +245,16 @@ class ServerUpdateView(View):
 		return render(request, 'server_update.html', context)
 
 	def post(self, request):
-		host = request.POST.get('host')
-		port = request.POST.get('port')
-		username = request.POST.get('username')
-		password = request.POST.get('password')
-		username_api = request.POST.get('username_api')
-		password_api = request.POST.get('password_api')
-		port_api = request.POST.get('port_api')
-		protocal_api = request.POST.get('protocal_api')
-		description = request.POST.get('description')
-		server_type = request.POST.get('server_type')
+		host = request.POST.get('host', '')
+		port = request.POST.get('port', 0)
+		username = request.POST.get('username', '')
+		password = request.POST.get('password', '')
+		username_api = request.POST.get('username_api', '')
+		password_api = request.POST.get('password_api', '')
+		port_api = request.POST.get('port_api', 0)
+		protocal_api = request.POST.get('protocal_api', '')
+		description = request.POST.get('description', '')
+		server_type = request.POST.get('server_type', '')
 		try:
 			server_type_id = ServerType.objects.get(server_type=server_type).server_type_id
 			obj = Server.objects.get(server_type_id=server_type_id, host=host)
@@ -252,7 +267,15 @@ class ServerUpdateView(View):
 			obj.description = description
 			if password != '':
 				obj.password = password
+			else:
+				data_encrypter = DataEncrypter()
+				password = data_encrypter.decrypt(data=obj.password)
+				obj.password = password
 			if password_api != '':
+				obj.password_api = password_api
+			else:
+				data_encrypter = DataEncrypter()
+				password_api = data_encrypter.decrypt(data=obj.password_api)
 				obj.password_api = password_api
 			obj.save()
 		except Exception as e:

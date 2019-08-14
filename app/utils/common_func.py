@@ -117,7 +117,7 @@ def exec_command_over_ssh(host='', port='22', username='', password='', cmd=''):
 		ssh_client = paramiko.SSHClient()
 		ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 		data_encrypter = DataEncrypter()
-		password =  data_encrypter.decrypt(data=password)
+		password = data_encrypter.decrypt(data=password)
 		ssh_client.connect(host, port, username, password)
 		std_in, std_out, std_err = ssh_client.exec_command(cmd)
 		std_out = std_out.read()
