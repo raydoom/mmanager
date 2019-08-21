@@ -1,7 +1,6 @@
 # coding=utf8
 
 import logging
-from app.utils.data_encrypter import DataEncrypter
 from app.utils.common_func import exec_command_over_ssh
 
 class Directory:
