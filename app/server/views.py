@@ -253,6 +253,7 @@ class ServerUpdateView(View):
 		password_api = request.POST.get('password_api', '')
 		port_api = request.POST.get('port_api', 0)
 		protocal_api = request.POST.get('protocal_api', '')
+		file_path_root = request.POST.get('file_path_root', '')
 		description = request.POST.get('description', '')
 		server_type = request.POST.get('server_type', '')
 		try:
@@ -264,6 +265,7 @@ class ServerUpdateView(View):
 			obj.username_api = username_api
 			obj.port_api = int(port_api)
 			obj.protocal_api = protocal_api
+			obj.file_path_root = file_path_root
 			obj.description = description
 			if password != '':
 				obj.password = password

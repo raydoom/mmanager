@@ -74,16 +74,29 @@
         <td>{{file_info.file_mtime}}</td>
         <td>
 
-            <!-- Split button -->
+          <!-- Split button -->
+          {% if file_info.file_name != '..' %}
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="/filemanager/directory_list?dist={{current_path}}{{file_info.file_name}}">Open</a>
+            <a type="button" class="btn btn-default btn-sm" href="?host={{host}}&path={{path}}/{{file_info.file_name}}">Open</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="">Download</a></li>
+              <li><a href="">Download Zip</a></li>
             </ul>
           </div>
+          {% endif %}
+          {% if file_info.file_name == '..' %}
+          <div class="btn-group">
+            <a type="button" class="btn btn-default btn-sm" href="?host={{host}}&path={{parent_path}}">Open</a>
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li><a href="">Download Zip</a></li>
+            </ul>
+          </div>
+          {% endif %}        
         </td>
     </tr>
     {% endif %}
@@ -106,7 +119,7 @@
 
         <!-- Split button -->
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="/filemanager/text_viewer?path={{path}}{{file_info.file_name}}">Open</a>
+            <a type="button" class="btn btn-default btn-sm" href="/filemanager/text_viewer?host={{host}}&path={{path}}/{{file_info.file_name}}">Tail &nbsp;&nbsp;</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
