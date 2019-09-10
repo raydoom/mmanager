@@ -10,7 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
-import os, configparser
+import os
+import configparser
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -18,9 +19,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
-CONF_DIRS=(BASE_DIR+'/config')
+CONF_DIR=(BASE_DIR + '/config')
 conf_db = configparser.ConfigParser()
-conf_db.read(CONF_DIRS+'/config.ini')
+conf_db.read(CONF_DIR + '/config.ini')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '3ibw+bwwjuu66)m0(cgglkjh_#v+d7r6zq*)y$7&!n248ekun='
@@ -76,23 +77,23 @@ WSGI_APPLICATION = 'mmanager.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': conf_db.get('db_info', 'db_name'),
-#         'USER': conf_db.get('db_info', 'user'),
-#         'PASSWORD': conf_db.get('db_info', 'password'),
-#         'HOST': conf_db.get('db_info', 'host'),
-#         'PORT': conf_db.get('db_info', 'port'),
-#     }
-# }
-
 DATABASES = {
-     'default': {
-         'ENGINE': 'django.db.backends.sqlite3',
-         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-     }
- }  
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': conf_db.get('db_info', 'db_name'),
+        'USER': conf_db.get('db_info', 'user'),
+        'PASSWORD': conf_db.get('db_info', 'password'),
+        'HOST': conf_db.get('db_info', 'host'),
+        'PORT': conf_db.get('db_info', 'port'),
+    }
+}
+
+# DATABASES = {
+#      'default': {
+#          'ENGINE': 'django.db.backends.sqlite3',
+#          'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#      }
+#  }  
 
 STATICFILES_DIRS=(BASE_DIR,'static')
 # Password validation
