@@ -174,7 +174,7 @@ class ServerListView(View):
 		if filter_keyword == None:
 			filter_select = ''
 			filter_keyword = ''
-		context =  {
+		context = {
 			'server_list': server_list,
 			'curent_page_size':curent_page_size,
 			'filter_keyword': filter_keyword,
