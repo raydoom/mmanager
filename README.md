@@ -12,13 +12,7 @@
 #### 所需组件
 
 - python 3.6
-- django 2.1.3（python模块）
-- paramiko 2.4.2（python模块）
-- dwebsocket 0.5.10（python模块）
-- pymysql 0.9.2（python模块）
-- requests 2.20.1（python模块）
-- cryptography 2.6.1（python模块）
-- configparser 3.7.4（python模块）
+- django
 - bootstrap 3.3.6
 - jquery 1.9.1
 - fontawesome 4.7.0
