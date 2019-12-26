@@ -20,6 +20,7 @@ from app.utils.paginator import paginator_for_list_view
 class LoginView(View):
 	def get(self, request):
 		return render(request, 'login.html')
+		
 	def post(self, request):
 		username = request.POST.get('username')
 		password = request.POST.get('password')

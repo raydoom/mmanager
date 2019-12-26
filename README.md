@@ -11,7 +11,7 @@
 
 #### 所需组件
 
-- python 3.6
+- python 3
 - django
 - bootstrap 3.3.6
 - jquery 1.9.1

@@ -68,6 +68,7 @@ class TextViewerView(View):
 			'filter_keyword': filter_keyword
 			}
 		return render(request, 'text_viewer.html', context)
+
 	def post(self, request):
 		path = request.POST.get('path')
 		host = request.POST.get('host', '')

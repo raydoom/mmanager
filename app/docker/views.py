@@ -91,6 +91,7 @@ class ContainerListView(View):
 			'page_prefix': page_prefix
 			}
 		return render(request, 'container_list.html', context)
+		
 	def post(self, request):
 		filter_keyword = request.POST.get('filter_keyword')
 		filter_select = request.POST.get('filter_select')
