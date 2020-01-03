@@ -12,6 +12,7 @@ from app.server.models import ServerInfoCache
 from app.filemanager.directory import Directory
 from app.utils.common_func import auth_login_required
 from app.utils.common_func import log_record
+from app.utils.get_application_list import get_container_lists
 from app.utils.get_application_list import get_process_lists
 from app.utils.get_application_list import get_job_lists
 from app.utils.data_encrypter import DataEncrypter

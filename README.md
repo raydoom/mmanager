@@ -45,11 +45,11 @@ command=python3 manage.py runserver 0.0.0.0:8000
 autostart=true
 autorestart=unexpected
 startsecs=1                                                      
-directory=/opt/app_python/mmanager
+directory=/opt/apppython/mmanager
 stdout_logfile=/var/log/mmanager.log
-redirect_stderr = true
-stdout_logfile_maxbytes = 10MB
-stdout_logfile_backups = 10
+redirect_stderr=true
+stdout_logfile_maxbytes=10MB
+stdout_logfile_backups=10
 ```
 推荐使用supervisor或nohup进行部署，不推荐使用&放到后台运行，会导致websocket连接无法释放，进而导致系统资源浪费。
 
