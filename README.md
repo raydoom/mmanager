@@ -53,7 +53,7 @@ stdout_logfile_backups=10
 ```
 推荐使用supervisor或nohup进行部署，不推荐使用&放到后台运行，会导致websocket连接无法释放，进而导致系统资源浪费。
 ```
-nohup python3 manage.py runserver 0.0.0.0:8000 >> /var/log/manager.log &
+nohup python3 manage.py runserver 0.0.0.0:8000 >> /var/log/mmanager.log &
 ```
 
 部署完成后，访问8000端口，默认用户admin/111111
