@@ -22,7 +22,7 @@
         <select class="form-control" name="filter_select">
           <option {% if filter_select == "Status =" %} selected="selected" {% endif %}>Status =</option>
           <option {% if filter_select == "Name" or filter_select == "" %} selected="selected" {% endif %}>Name</option>
-          <option {% if filter_select == "Host" %} selected="selected" {% endif %}>Location</option>
+          <option {% if filter_select == "Host" %} selected="selected" {% endif %}>Host</option>
         </select>
     </p>
     <input type="text" class="form-control" name="filter_keyword" value="{{filter_keyword}}" placeholder="">

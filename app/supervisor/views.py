@@ -55,7 +55,7 @@ class ProcessListView(View):
 			if filter_select == 'Status =':
 				process_lists = ProcessInfoCache.objects.filter(
 					current_user_id=current_user_id,
-					status=filter_keyword
+					statename=filter_keyword
 					)
 			if filter_select == 'Name':
 				process_lists = ProcessInfoCache.objects.filter(
