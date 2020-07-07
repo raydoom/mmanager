@@ -177,6 +177,7 @@ class UserCreateView(View):
 				description=description
 				)
 			message = 'User [ ' + username + ' ] Successfully Created'
+			context = {"message": message}
 		except Exception as e:
 			logging.error(e)
 			message = "Failed to create user [ " + username + " ]"
