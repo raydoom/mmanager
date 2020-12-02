@@ -8,8 +8,6 @@ from django.http import HttpResponse
 from django.http import StreamingHttpResponse
 from django.views import View
 from django.utils.decorators import method_decorator
-from dwebsocket import require_websocket
-from dwebsocket import accept_websocket
 
 from app.server.models import Server
 from app.server.models import ServerType
@@ -17,7 +15,6 @@ from app.supervisor.process import Process
 from app.supervisor.models import ProcessInfoCache
 from app.utils.common_func import auth_login_required
 from app.utils.common_func import log_record
-from app.utils.common_func import send_data_over_websocket
 from app.utils.get_application_list import get_process_lists
 from app.utils.paginator import paginator_for_list_view
 
@@ -113,33 +110,16 @@ class ProcessOptionView(View):
 		log_record(request.session.get('username'), log_detail=log_detail)
 		return HttpResponse(result)
 
-# 获取supervisor程序的日志
-@auth_login_required
-@accept_websocket
-def process_log(request):
-	if not request.is_websocket():
+# 获取supervisor程序的日志页面
+@method_decorator(auth_login_required, name='dispatch')
+class ProcessLog(View):
+	def get(self, request):
 		host = request.GET.get('host')
 		host_port = int(request.GET.get('host_port'))
 		process_name = request.GET.get('process_name')
 		context = {'name': process_name, 'host': host}
 		return render(request, 'tail_log.html', context)
-	else:
-		host = request.GET.get('host')
-		host_port = int(request.GET.get('host_port'))
-		process_name = request.GET.get('process_name')
-		server_type_id = ServerType.objects.get(server_type='supervisor').server_type_id
-		server = Server.objects.get(server_type_id=server_type_id, host=host, port=host_port)
-		process = Process()
-		process.host = server.host
-		process.host_port = server.port
-		process.host_username = server.username
-		process.host_password = server.password
-		process.process_name = process_name		
-		channel = process.tail_process_logs()
-		# 为每个websocket连接开启独立线程
-		t = threading.Thread(target=send_data_over_websocket, args=(request,channel))
-		t.start()
-		t.join()
+
 
 
 

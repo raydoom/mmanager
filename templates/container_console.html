@@ -13,7 +13,7 @@
 
 <script>
   var schema = window.location.protocol=='https:' ? 'wss:' : 'ws:';
-  var wsurl=schema+"//"+window.location.host+window.location.pathname+window.location.search
+  var wsurl=schema+"//"+window.location.host+"/ws"+window.location.pathname+window.location.search
   var socket = new WebSocket(wsurl);
 
   socket.onopen = function () {
