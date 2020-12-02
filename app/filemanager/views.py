@@ -11,8 +11,6 @@ from django.http import FileResponse
 from django.http import StreamingHttpResponse
 from django.views import View
 from django.utils.decorators import method_decorator
-from dwebsocket import require_websocket
-from dwebsocket import accept_websocket
 
 from app.server.models import Server
 from app.server.models import ServerType
