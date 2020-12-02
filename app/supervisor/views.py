@@ -115,31 +115,31 @@ class ProcessOptionView(View):
 
 # 获取supervisor程序的日志
 @auth_login_required
-@accept_websocket
 def process_log(request):
-	if not request.is_websocket():
-		host = request.GET.get('host')
-		host_port = int(request.GET.get('host_port'))
-		process_name = request.GET.get('process_name')
-		context = {'name': process_name, 'host': host}
-		return render(request, 'tail_log.html', context)
-	else:
-		host = request.GET.get('host')
-		host_port = int(request.GET.get('host_port'))
-		process_name = request.GET.get('process_name')
-		server_type_id = ServerType.objects.get(server_type='supervisor').server_type_id
-		server = Server.objects.get(server_type_id=server_type_id, host=host, port=host_port)
-		process = Process()
-		process.host = server.host
-		process.host_port = server.port
-		process.host_username = server.username
-		process.host_password = server.password
-		process.process_name = process_name		
-		channel = process.tail_process_logs()
-		# 为每个websocket连接开启独立线程
-		t = threading.Thread(target=send_data_over_websocket, args=(request,channel))
-		t.start()
-		t.join()
+	host = request.GET.get('host')
+	host_port = int(request.GET.get('host_port'))
+	process_name = request.GET.get('process_name')
+	context = {'name': process_name, 'host': host}
+	return render(request, 'tail_log.html', context)
+
+
+	# else:
+	# 	host = request.GET.get('host')
+	# 	host_port = int(request.GET.get('host_port'))
+	# 	process_name = request.GET.get('process_name')
+	# 	server_type_id = ServerType.objects.get(server_type='supervisor').server_type_id
+	# 	server = Server.objects.get(server_type_id=server_type_id, host=host, port=host_port)
+	# 	process = Process()
+	# 	process.host = server.host
+	# 	process.host_port = server.port
+	# 	process.host_username = server.username
+	# 	process.host_password = server.password
+	# 	process.process_name = process_name		
+	# 	channel = process.tail_process_logs()
+	# 	# 为每个websocket连接开启独立线程
+	# 	t = threading.Thread(target=send_data_over_websocket, args=(request,channel))
+	# 	t.start()
+	# 	t.join()
 
 
 

@@ -4,6 +4,8 @@ import os
 import time
 import logging
 import paramiko
+import ctypes
+import inspect
 from django.shortcuts import render
 from django.shortcuts import redirect
 
@@ -166,16 +168,38 @@ def send_data_over_websocket(request, channel):
 	while True:
 		try:
 			# 检测客户端心跳，如果客户端关闭，则停止读取和发送日志
-			if request.websocket.is_closed():
-				print ('websocket is closed')
-				channel.close()
-				break
+			# if request.websocket.is_closed():
+			# 	print ('websocket is closed')
+			# 	channel.close()
+			# 	break
 			if channel.recv_ready():
 				recvfromssh = channel.recv(16371)
 				log = recvfromssh.decode("utf-8" ,"ignore").encode("utf-8")
 				request.websocket.send(log)
 			request.websocket.send('')
 			time.sleep(0.5)
+		except Exception as e:
+			logging.error(e)
+
+
+# 将日志发送到websocket目标页面
+def send_data_over_websocket_via_channels(channel_obj, channel):
+	while True:
+		print('111111111111111111')
+		try:
+			# 检测客户端心跳，如果客户端关闭，则停止读取和发送日志
+			# if request.websocket.is_closed():
+			# 	print ('websocket is closed')
+			# 	channel.close()
+			# 	break
+
+			if channel.recv_ready():
+				recvfromssh = channel.recv(16371)
+				log = recvfromssh.decode("utf-8" ,"ignore")
+				channel_obj.send(str(log))
+			channel_obj.send('')
+			# await asyncio.sleep(1)
+			time.sleep(1)
 		except Exception as e:
 			logging.error(e)
 
@@ -203,3 +227,20 @@ def shell_input_reciever(request, channel):
 		for msg in request.websocket:
 			cmd = msg.decode()
 			channel.send(cmd)
+
+# 结束线程
+def stop_thread(thread):
+	tid = thread.ident
+	exctype = SystemExit
+	"""raises the exception, performs cleanup if needed"""
+	tid = ctypes.c_long(tid)
+	if not inspect.isclass(exctype):
+		exctype = type(exctype)
+	res = ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, ctypes.py_object(exctype))
+	if res == 0:
+		raise ValueError("invalid thread id")
+	elif res != 1:
+		# """if it returns a number greater than one, you're in trouble,
+		# and you should call it again with exc=NULL to revert the effect"""
+		ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, None)
+		raise SystemError("PyThreadState_SetAsyncExc failed")
