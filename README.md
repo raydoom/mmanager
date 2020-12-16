@@ -58,6 +58,8 @@ nohup python3 manage.py runserver 0.0.0.0:8000 >> /var/log/mmanager.log &
 
 部署完成后，访问8000端口，默认用户admin/111111
 
-#### TODO
-
-- 为容器创建webshell，使用户能从web端连接到容器的shell，执行命令（已完成）
+#### docker部署
+docker启动
+```
+docker run --name=mmanager -p 8000:8000 -e db_host=172.16.0.26 -e db_port=3306 -e db_use=root -e db_password=111111 raydoom/mmanager:latest
+```
