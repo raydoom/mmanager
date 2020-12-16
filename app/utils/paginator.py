@@ -3,11 +3,10 @@
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
-from app.utils.config_info_formater import ConfigInfo
+from config import config
 
 # 获取默认page_size大小
-config = ConfigInfo()
-page_size_default = int(config.config_info.get('page_info').get('page_size_default'))
+page_size_default = int(config.page_size_default)
 
 # 列表分页函数
 def paginator_for_list_view(object_list, page_num):

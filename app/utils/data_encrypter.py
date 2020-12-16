@@ -3,11 +3,10 @@
 # 需要安装扩展模块 pip3 install cryptography
 
 from cryptography.fernet import Fernet
-from app.utils.config_info_formater import ConfigInfo
+from config import config
 
 # key_data_encrypter
-config = ConfigInfo()
-key_data_encrypter = config.config_info.get('secret_info').get('key_data_encrypter')
+key_data_encrypter = config.key_data_encrypter
 
 # 利用key对字符串加密和解密
 class DataEncrypter():

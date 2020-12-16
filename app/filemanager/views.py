@@ -21,13 +21,12 @@ from app.utils.common_func import log_record
 from app.utils.common_func import exec_command_over_ssh
 from app.utils.common_func import transfer_file_over_sftp
 from app.filemanager.directory import Directory
-from app.utils.config_info_formater import ConfigInfo
+from config import config
 from app.utils.paginator import paginator_for_list_view
 
 # 获取配置文件按信息
-config = ConfigInfo()
-tmp_path = config.config_info.get('path_info').get('tmp_path')
-lines_for_view = (config.config_info.get('path_info').get('lines_for_view'))
+tmp_path = config.tmp_path
+lines_for_view = config.lines_for_view
 
 # 文本文件浏览
 @method_decorator(auth_login_required, name='dispatch')
