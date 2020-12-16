@@ -2,8 +2,9 @@ from python
 run apt update -y
 run apt install -y gcc git
 
-run cd /opt && git clone https://github.com/raydoom/mmanager.git 
-run pip3 install -r /opt/mmanager/requirements.txt -i http://mirrors.aliyun.com/pypi/simple  --trusted-host mirrors.aliyun.com
+run cd /opt && git clone https://github.com/raydoom/mmanager.git
+run pip3 install mysqlclient -i http://mirrors.aliyun.com/pypi/simple --trusted-host mirrors.aliyun.com
+run pip3 install -r /opt/mmanager/requirements.txt -i http://mirrors.aliyun.com/pypi/simple --trusted-host mirrors.aliyun.com
 
 expose 8000
 
