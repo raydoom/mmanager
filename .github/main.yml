@@ -38,6 +38,6 @@ jobs:
           platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
-          tags:
+          tags: |
             raydoom/mmanager:latest
             raydoom/mmanager:${{ github.sha }}
