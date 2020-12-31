@@ -1,24 +1,43 @@
-name: Docker Image CI
-
+name: docker-ci
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
+    branches:
+      - master
 jobs:
-  build:
-      runs-on: ubuntu-latest
-      name: Build image job
-      steps:
-          - name: Checkout master
-            uses: actions/checkout@master
-          - name: Build and publish image
-            uses: ilteoood/docker_buildx@master
-            with:
-              publish: true
-              imageName: raydoom/mmanager
-              platform: linux/amd64,linux/arm64 # 你准备构建的镜像平台
-              tag: latest # 默认latest，可以针对平台，修改tag
-              dockerUser: ${{ secrets.DOCKER_USERNAME }} # docker hub userid
-              dockerPassword: ${{ secrets.DOCKER_PASSWORD }} # docker hub password
+  build-and-deploy-image:
+    runs-on: ubuntu-latest
+    steps:
+      # 拉取master分支
+      - name: Checkout
+        uses: actions/checkout@master
+      # 设置qemu来编译多个平台的镜像
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      # 设置buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      # 配置缓存加快编译速度
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      # 登陆dockerhub
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      # 编译并且推送到dockerhub
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+          tags: |
+            raydoom/mmanager:latest
+            raydoom/mmanager:${{ github.sha }}
