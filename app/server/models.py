@@ -73,9 +73,11 @@ class Server(models.Model):
 					 if container_info[-1] == '':
 					 	container.name = container_info[-2]
 				container_list.append(container)
+			return (container_list)
 		except Exception as e:
 			logging.error(e)
-		return (container_list)
+			return None
+		
 
 	# 获取supervisor进程列表
 	def get_process_list(self):
@@ -94,9 +96,10 @@ class Server(models.Model):
 					 process.statename = process_info[1]
 					 process.description = process_info[2]
 				process_list.append(process)
+			return (process_list)
 		except Exception as e:
 			logging.error(e)
-		return (process_list)
+			return None
 
 	# 获取job列表
 	def get_job_list(self):
@@ -115,9 +118,10 @@ class Server(models.Model):
 				job.name=job_info[i].get('name')
 				job.color=job_info[i].get('color')
 				job_list.append(job)
+			return (job_list)
 		except Exception as e:
 			logging.error(e)
-		return (job_list)
+			return None
 
 # 主机信息缓存，用于查询主机列表时生成分页
 class ServerInfoCache(models.Model):
