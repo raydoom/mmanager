@@ -42,16 +42,16 @@ DROP TABLE IF EXISTS `app_container_info_cache`;
 
 CREATE TABLE `app_container_info_cache` (
   `container_info_cache_id` int(11) NOT NULL AUTO_INCREMENT,
-  `host` varchar(128) NOT NULL DEFAULT '',
+  `host` varchar(256) NOT NULL DEFAULT '',
   `host_port` int(11) NOT NULL,
-  `container_id` varchar(128) NOT NULL DEFAULT '',
-  `image` varchar(128) NOT NULL DEFAULT '',
-  `command` varchar(128) NOT NULL DEFAULT '',
-  `created` varchar(128) NOT NULL DEFAULT '',
-  `statename` varchar(128) NOT NULL DEFAULT '',
-  `status` varchar(128) NOT NULL DEFAULT '',
-  `port` varchar(128) NOT NULL DEFAULT '',
-  `name` varchar(128) NOT NULL DEFAULT '',
+  `container_id` varchar(256) NOT NULL DEFAULT '',
+  `image` varchar(256) NOT NULL DEFAULT '',
+  `command` varchar(256) NOT NULL DEFAULT '',
+  `created` varchar(256) NOT NULL DEFAULT '',
+  `statename` varchar(256) NOT NULL DEFAULT '',
+  `status` varchar(256) NOT NULL DEFAULT '',
+  `port` varchar(256) NOT NULL DEFAULT '',
+  `name` varchar(256) NOT NULL DEFAULT '',
   `current_user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`container_info_cache_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -65,11 +65,11 @@ DROP TABLE IF EXISTS `app_job_info_cache`;
 
 CREATE TABLE `app_job_info_cache` (
   `job_info_cache_id` int(11) NOT NULL AUTO_INCREMENT,
-  `host` varchar(128) DEFAULT '',
+  `host` varchar(256) DEFAULT '',
   `host_port_api` int(11) DEFAULT NULL,
-  `color` varchar(128) DEFAULT '',
-  `name` varchar(128) DEFAULT '',
-  `host_protocal_api` varchar(128) DEFAULT NULL,
+  `color` varchar(256) DEFAULT '',
+  `name` varchar(256) DEFAULT '',
+  `host_protocal_api` varchar(256) DEFAULT NULL,
   `current_user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`job_info_cache_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -83,11 +83,11 @@ DROP TABLE IF EXISTS `app_process_info_cache`;
 
 CREATE TABLE `app_process_info_cache` (
   `process_info_cache_id` int(11) NOT NULL AUTO_INCREMENT,
-  `host` varchar(128) NOT NULL DEFAULT '',
+  `host` varchar(256) NOT NULL DEFAULT '',
   `host_port` int(11) NOT NULL,
-  `statename` varchar(128) NOT NULL DEFAULT '',
-  `name` varchar(128) NOT NULL DEFAULT '',
-  `description` varchar(128) DEFAULT NULL,
+  `statename` varchar(256) NOT NULL DEFAULT '',
+  `name` varchar(256) NOT NULL DEFAULT '',
+  `description` varchar(256) DEFAULT NULL,
   `current_user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`process_info_cache_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -104,10 +104,10 @@ CREATE TABLE `app_server` (
   `host` varchar(50) NOT NULL DEFAULT '',
   `port` int(11) DEFAULT NULL,
   `username` varchar(50) DEFAULT NULL,
-  `password` varchar(128) DEFAULT NULL,
-  `file_path_root` varchar(128) DEFAULT NULL,
-  `description` varchar(128) DEFAULT NULL,
-  `password_api` varchar(128) DEFAULT '',
+  `password` varchar(256) DEFAULT NULL,
+  `file_path_root` varchar(256) DEFAULT NULL,
+  `description` varchar(256) DEFAULT NULL,
+  `password_api` varchar(256) DEFAULT '',
   `username_api` varchar(50) DEFAULT '',
   `server_type_id` int(11) DEFAULT NULL,
   `port_api` int(11) DEFAULT NULL,
@@ -128,7 +128,7 @@ CREATE TABLE `app_server_info_cache` (
   `host` varchar(50) NOT NULL DEFAULT '',
   `port` int(11) NOT NULL,
   `server_type` varchar(50) NOT NULL,
-  `description` varchar(128) NOT NULL,
+  `description` varchar(256) NOT NULL,
   `port_api` int(11) DEFAULT NULL,
   `protocal_api` varchar(50) NOT NULL DEFAULT '',
   `status` varchar(50) NOT NULL DEFAULT '',
@@ -159,11 +159,11 @@ DROP TABLE IF EXISTS `app_user`;
 
 CREATE TABLE `app_user` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(128) NOT NULL,
-  `password` varchar(128) NOT NULL,
-  `email` varchar(128) NOT NULL,
+  `username` varchar(256) NOT NULL,
+  `password` varchar(256) NOT NULL,
+  `email` varchar(256) NOT NULL,
   `role` varchar(32) DEFAULT NULL,
-  `description` varchar(128) NOT NULL,
+  `description` varchar(256) NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `app_user_info_username_d91fc6b7_uniq` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -226,7 +226,7 @@ DROP TABLE IF EXISTS `auth_user`;
 
 CREATE TABLE `auth_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `password` varchar(128) NOT NULL,
+  `password` varchar(256) NOT NULL,
   `last_login` datetime(6) DEFAULT NULL,
   `is_superuser` tinyint(1) NOT NULL,
   `username` varchar(150) NOT NULL,
