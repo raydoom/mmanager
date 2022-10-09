@@ -13,7 +13,7 @@ page_size_default = 10
 
 # db_info
 db_engine = 'mysql'
-db_host = '172.16.0.26'
+db_host = '192.168.1.16'
 db_port = 3306
 db_user = 'root'
 db_password = '111111'

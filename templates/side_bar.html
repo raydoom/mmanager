@@ -3,46 +3,46 @@
 <ul class="nav nav-pills nav-stacked">
   <li>
     <a data-toggle="collapse" href="#collapse-server-action" aria-expanded="false" aria-controls="collapse-server-action" style="color: inherit;" >
-            Service
+            服务
         <span class="fa fa-chevron-right pull-right"></span>    
     </a>
     <ul class="nav panel-collapse collapse" id="collapse-server-action">
-      <li ><a id="nav-container_list" style="text-align: right;" href="/docker/container_list">Docker Container</a></li>
-      <li ><a id="nav-process_list" style="text-align: right;" href="/supervisor/process_list">Supervisor Process</a></li>
+      <li ><a id="nav-container_list" style="text-align: right;" href="/docker/container_list">容器管理</a></li>
+      <li ><a id="nav-process_list" style="text-align: right;" href="/supervisor/process_list">服务管理</a></li>
     </ul>
 
   </li>
 
   <li>
     <a data-toggle="collapse" href="#collapse-ops-manage" aria-expanded="false" aria-controls="collapse-ops-manage" style="color: inherit;" >
-            Ops Manage
+            运维管理
         <span class="fa fa-chevron-right pull-right"></span>
     </a>
     <ul class="nav panel-collapse collapse" id="collapse-ops-manage">
-      <li ><a id="nav-job_list" style="text-align: right;" href="/jenkins/job_list">Job List</a></li>
-      <li ><a id="nav-file_server_list" style="text-align: right;" href="/filemanager/file_server_list">File Manager</a></li>
+      <li ><a id="nav-job_list" style="text-align: right;" href="/jenkins/job_list">任务列表</a></li>
+      <li ><a id="nav-file_server_list" style="text-align: right;" href="/filemanager/file_server_list">文件浏览</a></li>
     </ul>
   </li>
 
   <li>
     <a data-toggle="collapse" href="#collapse-setting" aria-expanded="false" aria-controls="collapse-setting" style="color: inherit;" >
-            Settings
+            设置
         <span class="fa fa-chevron-right pull-right"></span>
     </a>
     <ul class="nav panel-collapse collapse" id="collapse-setting">
-      <li ><a id="nav-my_account" style="text-align: right;" href="/account/my_account">Account</a></li>
+      <li ><a id="nav-my_account" style="text-align: right;" href="/account/my_account">账户</a></li>
     </ul>
   </li>
   {% if request.session.role == "admin" %}
   <li>
     <a data-toggle="collapse" href="#collapse-admin" aria-expanded="false" aria-controls="collapse-admin" style="color: inherit;" >
-            Admin
+            系统管理
         <span class="fa fa-chevron-right pull-right"></span>
     </a>
     <ul class="nav panel-collapse collapse" id="collapse-admin">
-      <li ><a id="nav-user_list" style="text-align: right;" href="/account/user_list">User List</a></li>
-      <li ><a id="nav-server_list" style="text-align: right;" href="/server/server_list">Server List</a></li>
-      <li ><a id="nav-action_log_list" style="text-align: right;" href="/action_log/action_log_list">Action Log</a></li>
+      <li ><a id="nav-user_list" style="text-align: right;" href="/account/user_list">用户列表</a></li>
+      <li ><a id="nav-server_list" style="text-align: right;" href="/server/server_list">服务器列表</a></li>
+      <li ><a id="nav-action_log_list" style="text-align: right;" href="/action_log/action_log_list">操作日志</a></li>
     </ul>
   </li>
   {% endif %}
