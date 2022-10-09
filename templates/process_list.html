@@ -3,13 +3,13 @@
 {% block body %}
 
 <ol class="breadcrumb">
-  <li>Service</li>
-  <li class="active">Supervisor Process</li>
+  <li>服务</li>
+  <li class="active">服务管理</li>
 </ol>
 
 <div class="page-header">
     <h2>
-        Supervisor Process
+        服务管理
     </h2>
 </div>
 
@@ -20,24 +20,24 @@
   <div class="form-group">
     <p class="form-control-static">
         <select class="form-control" name="filter_select">
-          <option {% if filter_select == "Status =" %} selected="selected" {% endif %}>Status =</option>
-          <option {% if filter_select == "Name" or filter_select == "" %} selected="selected" {% endif %}>Name</option>
-          <option {% if filter_select == "Host" %} selected="selected" {% endif %}>Host</option>
+          <option {% if filter_select == "Status =" %} selected="selected" {% endif %}>状态 =</option>
+          <option {% if filter_select == "Name" or filter_select == "" %} selected="selected" {% endif %}>名称</option>
+          <option {% if filter_select == "Host" %} selected="selected" {% endif %}>主机</option>
         </select>
     </p>
     <input type="text" class="form-control" name="filter_keyword" value="{{filter_keyword}}" placeholder="">
   </div>
-  <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> Filter</button>
+  <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> 过滤</button>
   <div class="btn-group">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    More Actions <span class="caret"></span>
+    更多操作 <span class="caret"></span>
   </button>
   <ul class="dropdown-menu dropdown-menu-right">
-    <li><a href="#">Restart Process</a></li>
-    <li><a href="#">Start Process</a></li>
-    <li><a href="#">Stop Process</a></li>
+    <li><a href="#">重启</a></li>
+    <li><a href="#">启动</a></li>
+    <li><a href="#">停止</a></li>
     <li role="separator" class="divider"></li>
-    <li><a href="#">Other</a></li>
+    <li><a href="#">其他</a></li>
   </ul>
 </div>
 </form>
@@ -45,16 +45,16 @@
 
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ curent_page_size }} / {{ process_list.paginator.count }} items</span>
+            <span class="table_count">显示 {{ curent_page_size }} / {{ process_list.paginator.count }} 项目</span>
         </td>
     </tr>
     <tr class="active">
         <th><input type="checkbox" name="check_all" id="check_all" onclick="checkAll()"></th>
-        <th width="10%">Status</th>
-        <th width="30%">Name</thw>
-        <th width="20%">Host</th>
-        <th width="25%">Description</th>
-        <th colspan="4" width="15%">Actions</th>
+        <th width="10%">状态</th>
+        <th width="30%">名称</thw>
+        <th width="20%">主机</th>
+        <th width="25%">详情</th>
+        <th colspan="4" width="15%">操作</th>
     </tr>
     {% for process in process_list %}
     <tr>
@@ -88,7 +88,7 @@
     {% endfor %}
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ curent_page_size }} / {{ process_list.paginator.count }} items</span>
+            <span class="table_count">显示 {{ curent_page_size }} / {{ process_list.paginator.count }} 项目</span>
         </td>
     </tr>
 </table>
