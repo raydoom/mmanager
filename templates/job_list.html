@@ -3,13 +3,13 @@
 {% block body %}
 
 <ol class="breadcrumb">
-  <li>Ops Manage</li>
-  <li class="active">Jenkins Job</li>
+  <li>运维管理</li>
+  <li class="active">Jenkins任务</li>
 </ol>
 
 <div class="page-header">
     <h2>
-        Jenkins Job
+      Jenkins任务
     </h2>
 </div>
 
@@ -20,39 +20,39 @@
   <div class="form-group">
     <p class="form-control-static">
         <select class="form-control" name="filter_select">
-          <option {% if filter_select == "Status =" %} selected="selected" {% endif %}>Status =</option>
-          <option {% if filter_select == "Name" or filter_select == "" %} selected="selected" {% endif %}>Name</option>
-          <option {% if filter_select == "Host" %} selected="selected" {% endif %}>Location</option>
+          <option {% if filter_select == "Status =" %} selected="selected" {% endif %}>状态 =</option>
+          <option {% if filter_select == "Name" or filter_select == "" %} selected="selected" {% endif %}>名称</option>
+          <option {% if filter_select == "Host" %} selected="selected" {% endif %}>位置</option>
         </select>
     </p>
     <input type="text" class="form-control" name="filter_keyword" value="{{filter_keyword}}" placeholder="">
   </div>
-  <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> Filter</button>
+  <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> 过滤</button>
   <div class="btn-group">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    More Actions <span class="caret"></span>
+    更多操作 <span class="caret"></span>
   </button>
   <ul class="dropdown-menu dropdown-menu-right">
-    <li><a href="#">Build Job</a></li>
-    <li><a href="#">Console Output</a></li>
+    <li><a href="#">执行任务</a></li>
+    <li><a href="#">任务日志</a></li>
     <li role="separator" class="divider"></li>
-    <li><a href="#">Other</a></li>
+    <li><a href="#">其他</a></li>
   </ul>
 </div>
 </form>
 </caption>
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ curent_page_size }} / {{ job_list.paginator.count }} items</span>
+            <span class="table_count">显示 {{ curent_page_size }} / {{ job_list.paginator.count }} 项目</span>
         </td>
     </tr>
     <tr class="active">
         <th><input type="checkbox" name="check_all" id="check_all" onclick="checkAll()"></th>
-        <th width="10%">Status</th>
-        <th width="30%">Name</thw>
-        <th width="20%">Host</th>
-        <th width="25%">Description</th>
-        <th colspan="4" width="15%">Actions</th>
+        <th width="10%">状态</th>
+        <th width="30%">名称</thw>
+        <th width="20%">主机</th>
+        <th width="25%">详情</th>
+        <th colspan="4" width="15%">操作</th>
     </tr>
     {% for job in job_list %}
     <tr>
@@ -83,7 +83,7 @@
     {% endfor %}
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ curent_page_size }} / {{ job_list.paginator.count }} items</span>
+            <span class="table_count">显示 {{ curent_page_size }} / {{ job_list.paginator.count }} 项目</span>
         </td>
     </tr>
 </table>

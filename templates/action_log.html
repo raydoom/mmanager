@@ -3,8 +3,8 @@
 {% block body %}
 
 <ol class="breadcrumb">
-  <li>Admin</li>
-  <li class="active">Action Log</li>
+  <li>系统管理</li>
+  <li class="active">操作日志</li>
 </ol>
 
 <div class="page-header">
@@ -20,33 +20,33 @@
   <div class="form-group">
     <p class="form-control-static">
         <select class="form-control" name="filter_select">
-          <option>User =</option>
-          <option>Detail</option>
+          <option>用户 =</option>
+          <option>详情</option>
         </select>
     </p>
     <input type="text" class="form-control" name="filter_keyword" placeholder="">
   </div>
-  <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> Filter</button>
+  <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> 过滤</button>
   <div class="btn-group">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    More Actions <span class="caret"></span>
+    更多操作 <span class="caret"></span>
   </button>
   <ul class="dropdown-menu dropdown-menu-right">
-    <li><a href="#">Delete</a></li>
-    <li><a href="#">Other</a></li>
+    <li><a href="#">删除</a></li>
+    <li><a href="#">其他</a></li>
   </ul>
 </div>
 </form>
 </caption>
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ curent_page_size }} / {{ action_log.paginator.count }} items</span>
+            <span class="table_count">显示 {{ curent_page_size }} / {{ action_log.paginator.count }} 项目</span>
         </td>
     </tr>
     <tr class="active">
-        <th width="20%">Time</th>
-        <th width="15%">User</thw>
-        <th width="65%">Detail</th>
+        <th width="20%">时间</th>
+        <th width="15%">用户</thw>
+        <th width="65%">详情</th>
     </tr>
     {% for log in action_log %}
     <tr>
@@ -57,7 +57,7 @@
     {% endfor %}
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ curent_page_size }} / {{ action_log.paginator.count }} items</span>
+            <span class="table_count">显示 {{ curent_page_size }} / {{ action_log.paginator.count }} 项目</span>
         </td>
     </tr>
 </table>

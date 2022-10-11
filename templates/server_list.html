@@ -3,13 +3,13 @@
 {% block body %}
 
 <ol class="breadcrumb">
-  <li>Setting</li>
-  <li class="active">Server List</li>
+  <li>系统管理</li>
+  <li class="active">服务器列表</li>
 </ol>
 
 <div class="page-header">
     <h2>
-        Server List
+      服务器列表
     </h2>
 </div>
 
@@ -20,40 +20,40 @@
   <div class="form-group">
     <p class="form-control-static">
         <select class="form-control" name="filter_select">
-          <option {% if filter_select == "Status =" or filter_select == "" %} selected="selected" {% endif %}>Status =</option>
-          <option {% if filter_select == "Host" %} selected="selected" {% endif %}>Host</option>
-          <option {% if filter_select == "Port =" %} selected="selected" {% endif %}>Port =</option>
-          <option {% if filter_select == "Type =" %} selected="selected" {% endif %}>Type =</option>
+          <option {% if filter_select == "Status =" or filter_select == "" %} selected="selected" {% endif %}>状态 =</option>
+          <option {% if filter_select == "Host" %} selected="selected" {% endif %}>主机</option>
+          <option {% if filter_select == "Port =" %} selected="selected" {% endif %}>端口 =</option>
+          <option {% if filter_select == "Type =" %} selected="selected" {% endif %}>类型 =</option>
         </select>
     </p>
     <input type="text" class="form-control" name="filter_keyword" value="{{filter_keyword}}" placeholder="">
   </div>
-  <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> Filter</button>
-  <button class="btn btn-default"><a class="fa fa-plus" href="/server/server_create" style="text-decoration:none; color: inherit;"> Create Server</a></button>
+  <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> 过滤</button>
+  <button class="btn btn-default"><a class="fa fa-plus" href="/server/server_create" style="text-decoration:none; color: inherit;"> 创建服务器</a></button>
   <div class="btn-group">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    More Actions <span class="caret"></span>
+    更多操作 <span class="caret"></span>
   </button>
   <ul class="dropdown-menu dropdown-menu-right">
-    <li><a href="#">Edit</a></li>
-    <li><a style="color: red;" href="#">Delete</a></li>
+    <li><a href="#">编辑</a></li>
+    <li><a style="color: red;" href="#">删除</a></li>
   </ul>
 </div>
 </form>
 </caption>
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ curent_page_size }} / {{ server_list.paginator.count }} items</span>
+            <span class="table_count">显示 {{ curent_page_size }} / {{ server_list.paginator.count }} 项目</span>
         </td>
     </tr>
     <tr class="active">
         <th><input type="checkbox" name="check_all" id="check_all" onclick="checkAll()"></th>
-        <th width="15%">Status</th>
-        <th width="15%">Host</th>
-        <th width="10%">Port</th>
-        <th width="15%">Type</th>
-        <th width="30%">Description</th>
-        <th colspan="4" width="15%">Actions</th>
+        <th width="15%">状态</th>
+        <th width="15%">主机</th>
+        <th width="10%">端口</th>
+        <th width="15%">类型</th>
+        <th width="30%">详情</th>
+        <th colspan="4" width="15%">操作</th>
     </tr>
     {% for server in server_list %}
     <tr>
@@ -82,7 +82,7 @@
     {% endfor %}
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ curent_page_size }} / {{ server_list.paginator.count }} items</span>
+            <span class="table_count">显示 {{ curent_page_size }} / {{ server_list.paginator.count }} 项目</span>
         </td>
     </tr>
 

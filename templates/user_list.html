@@ -3,13 +3,13 @@
 {% block body %}
 
 <ol class="breadcrumb">
-  <li>Admin</li>
-  <li class="active">User List</li>
+  <li>系统管理</li>
+  <li class="active">用户列表</li>
 </ol>
 
 <div class="page-header">
     <h2>
-        User List
+        用户列表
     </h2>
 </div>
 
@@ -20,39 +20,39 @@
   <div class="form-group">
     <p class="form-control-static">
         <select class="form-control" name="filter_select">
-          <option {% if filter_select == "User Name =" or filter_select == "" %} selected="selected" {% endif %}>User Name =</option>
-          <option {% if filter_select == "Email" %} selected="selected" {% endif %}>Email</option>
-          <option {% if filter_select == "Superuser" %} selected="selected" {% endif %}>Superuser</option>
-          <option>Description</option>
+          <option {% if filter_select == "User Name =" or filter_select == "" %} selected="selected" {% endif %}>用户名称 =</option>
+          <option {% if filter_select == "Email" %} selected="selected" {% endif %}>电子邮箱</option>
+          <option {% if filter_select == "Superuser" %} selected="selected" {% endif %}>超级用户</option>
+          <option>详情</option>
         </select>
     </p>
     <input type="text" class="form-control" name="filter_keyword" value="{{filter_keyword}}">
   </div>
-  <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> Filter</button>
-  <button class="btn btn-default"><a class="fa fa-plus" href="/account/user_create" style="text-decoration:none; color: inherit;"> Create User</a></button>
+  <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> 过滤</button>
+  <button class="btn btn-default"><a class="fa fa-plus" href="/account/user_create" style="text-decoration:none; color: inherit;">  创建用户</a></button>
   <div class="btn-group">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    More Actions <span class="caret"></span>
+    更多操作 <span class="caret"></span>
   </button>
   <ul class="dropdown-menu dropdown-menu-right">
-    <li><a style="color: red;" href="#">Delete</a></li>
-    <li><a href="#">Other</a></li>
+    <li><a style="color: red;" href="#">删除</a></li>
+    <li><a href="#">其他</a></li>
   </ul>
 </div>
 </form>
 </caption>
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ curent_page_size }} / {{ user_list.paginator.count }} items</span>
+            <span class="table_count">显示 {{ curent_page_size }} / {{ user_list.paginator.count }} 项目</span>
         </td>
     </tr>
     <tr class="active">
         <th><input type="checkbox" name="check_all" id="check_all" onclick="checkAll()"></th>
-        <th width="15%">User Name</th>
-        <th width="20%">Email</thw>
-        <th width="15%">Role</thw>
-        <th width="35%">Description</th>
-        <th width="15%">Action</th>
+        <th width="15%">用户名称</th>
+        <th width="20%">电子邮箱</thw>
+        <th width="15%">角色</thw>
+        <th width="35%">详情</th>
+        <th width="15%">操作</th>
     </tr>
     {% for user in user_list %}
     <tr>
@@ -65,13 +65,13 @@
  
           <!-- Split button -->
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="javascript:;" onclick="#">Edit</a>
+            <a type="button" class="btn btn-default btn-sm" href="javascript:;" onclick="#">编辑</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="/account/password_reset?username={{user.username}}">Reset Password</a></li>
-              <li><a style="color: red;" href="/account/user_delete?username={{user.username}}">Delete User</a></li>
+              <li><a href="/account/password_reset?username={{user.username}}">重置密码</a></li>
+              <li><a style="color: red;" href="/account/user_delete?username={{user.username}}">删除用户</a></li>
             </ul>
           </div>
         </td>
@@ -79,7 +79,7 @@
     {% endfor %}
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ curent_page_size }} / {{ user_list.paginator.count }} items</span>
+            <span class="table_count">显示 {{ curent_page_size }} / {{ user_list.paginator.count }} 项目</span>
         </td>
     </tr>
 </table>

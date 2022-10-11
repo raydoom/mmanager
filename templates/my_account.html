@@ -3,13 +3,13 @@
 {% block body %}
 
 <ol class="breadcrumb">
-  <li>Settings</li>
-  <li class="active">Account</li>
+  <li>设置</li>
+  <li class="active">账户</li>
 </ol>
 
 <div class="page-header">
     <h2>
-        Account
+        账户
     </h2>
 </div>
 
@@ -21,22 +21,22 @@
   <div class="form-group">
     <p class="form-control-static">
         <select class="form-control" name="filter_select">
-          <option>User Name</option>
-          <option>Email</option>
-          <option>Description</option>
+          <option>用户名</option>
+          <option>电子邮箱</option>
+          <option>详情</option>
         </select>
     </p>
     <input type="text" class="form-control" name="filter_keyword" placeholder="">
   </div>
-  <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> Filter</button>
+  <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> 过滤</button>
   <div class="btn-group">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    More Actions <span class="caret"></span>
+    更多操作 <span class="caret"></span>
   </button>
   <ul class="dropdown-menu dropdown-menu-right">
-    <li><a href="#">Edit</a></li>
-    <li><a href="#">Change Password</a></li>
-    <li><a href="#">Other</a></li>
+    <li><a href="#">编辑</a></li>
+    <li><a href="#">修改密码</a></li>
+    <li><a href="#">其他</a></li>
   </ul>
 </div>
 </form>
@@ -44,16 +44,16 @@
 
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying 1 / 1 items</span>
+            <span class="table_count">显示 1 / 1 项目</span>
         </td>
     </tr>
     <tr class="active">
         <th><input type="checkbox" name="check_all" id="check_all" onclick="checkAll()"></th>
-        <th width="10%">User Name</th>
-        <th width="30%">Email</thw>
-        <th width="20%">Last Login</th>
-        <th width="25%">Description</th>
-        <th colspan="4" width="15%">Actions</th>
+        <th width="10%">用户名</th>
+        <th width="30%">电子邮箱</thw>
+        <th width="20%">最后登陆</th>
+        <th width="25%">详情</th>
+        <th colspan="4" width="15%">操作</th>
     </tr>
     <tr>
         <td><input type="checkbox" name="check_item"></td>
@@ -65,12 +65,12 @@
  
           <!-- Split button -->
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="javascript:;" onclick="#">Edit</a>
+            <a type="button" class="btn btn-default btn-sm" href="javascript:;" onclick="#">编辑</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="/account/password_change?username={{user_info.username}}">Change Password</a></li>
+              <li><a href="/account/password_change?username={{user_info.username}}">修改密码</a></li>
             </ul>
           </div>
         </td>
@@ -78,7 +78,7 @@
     </tr>
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying 1 /1 items</span>
+            <span class="table_count">显示 1 /1 项目</span>
         </td>
     </tr>
 </table>
