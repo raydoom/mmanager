@@ -3,25 +3,24 @@
 {% block body %}
 
 <ol class="breadcrumb">
-  <li>Admin</li>
-  <li class="active">Server Create</li>
+  <li>系统管理</li>
+  <li class="active">添加服务器</li>
 </ol>
 
 <div class="page-header">
-  <h2>Server Create</h2>
+  <h2>添加服务器</h2>
 </div>
 
 <div class="static_page">
-  <h3  class="modal-header">Server Create</h3>
   <div class="modal-body">
     <form class="form-horizontal" role="form" action='/server/server_create' method="post">
       {% csrf_token %}
         <div class="row">
           <div class="col-sm-6 col-md-5">
-              <p><strong>Host </strong><span class="fa fa-asterisk"></span></p>
+              <p><strong>主机 </strong><span class="fa fa-asterisk"></span></p>
               <input type="text" name="host" class="form-control" placeholder="" required autofocus>
               </br>
-              <p><strong>Server Type </strong><span class="fa fa-asterisk"></span></p>
+              <p><strong>类型 </strong><span class="fa fa-asterisk"></span></p>
               <select class="form-control" name="server_type">
                 <option>Docker</option>
                 <option>Supervisor</option>
@@ -29,31 +28,31 @@
                 <option>File</option>
               </select>
               </br>
-              <p><strong>Port </strong> </strong><span class="fa fa-asterisk"></span></p>
+              <p><strong>端口 </strong> </strong><span class="fa fa-asterisk"></span></p>
               <input type="text" name="port" class="form-control" value ="22">
               </br>
-              <p><strong>User Name </strong></p>
+              <p><strong>用户名 </strong></p>
               <input type="text" name="username" class="form-control">
               </br>
               <p><strong>Password </strong></span></p>
               <input type="password" name="password" class="form-control">
               </br>
-              <p><strong>API User Name </strong></p>
+              <p><strong>API 用户名 </strong></p>
               <input type="text" name="username_api" class="form-control">
               </br>
-              <p><strong>API Password </strong></span></p>
+              <p><strong>API 用户密码 </strong></span></p>
               <input type="password" name="password_api" class="form-control">
               </br>
-              <p><strong>API Port </strong></p>
+              <p><strong>API 端口 </strong></p>
               <input type="text" name="port_api" class="form-control" value="0">
               </br>
-              <p><strong>API Protocal </strong></p>
+              <p><strong>API 协议 </strong></p>
               <input type="text" name="protocal_api" class="form-control">
               </br>
-              <p><strong>File Path Root </strong></p>
+              <p><strong>根目录 </strong></p>
               <input type="text" name="file_path_root" class="form-control">
               </br>
-              <p><strong>Description </strong></p>
+              <p><strong>详情 </strong></p>
               <input type="text" name="description" class="form-control">
               </br>
               {% if message %}
@@ -62,11 +61,11 @@
               </br>
           </div>
           <div class="col-sm-6">
-            <h3>Description:</h3>
-            <p>Create new server and set related properties</p>
+            <h3>描述:</h3>
+            <p>添加新的服务器至系统</p>
           </div>
         </div>
-      <div class="modal-footer"><button class="btn btn-primary" type="submit">Submit</button></div>
+      <div class="modal-footer"><button class="btn btn-primary" type="submit">提交</button></div>
   </form>
 </div>
 </div>
