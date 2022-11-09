@@ -69,16 +69,16 @@
  
           <!-- Split button -->
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="process_log?host={{process.host}}&host_port={{process.host_port}}&process_name={{process.name}}" target="_blank">Tail Log</a>          
+            <a type="button" class="btn btn-default btn-sm" href="process_log?host={{process.host}}&host_port={{process.host_port}}&process_name={{process.name}}" target="_blank">查看日志</a>          
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
             {% if request.session.role == "admin" %}
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="javascript:;" onclick="process_opt('{{process.host}}','{{process.host_port}}','{{process.name}}','restart')">Restart Process</a></li>
+              <li><a href="javascript:;" onclick="process_opt('{{process.host}}','{{process.host_port}}','{{process.name}}','restart')">重启</a></li>
               <li role="separator" class="divider"></li>
-              <li><a href="javascript:;" onclick="process_opt('{{process.host}}','{{process.host_port}}','{{process.name}}','start')">Start Process</a></li>
-              <li><a href="javascript:;" onclick="process_opt('{{process.host}}','{{process.host_port}}','{{process.name}}','stop')">Stop Process</a></li>
+              <li><a href="javascript:;" onclick="process_opt('{{process.host}}','{{process.host_port}}','{{process.name}}','start')">启动</a></li>
+              <li><a href="javascript:;" onclick="process_opt('{{process.host}}','{{process.host_port}}','{{process.name}}','stop')">停止</a></li>
             </ul>
             {% endif %}
           </div>

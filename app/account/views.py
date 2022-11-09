@@ -31,7 +31,7 @@ class LoginView(View):
 				request.session['username'] = username
 				request.session['user_id'] = user.user_id
 				request.session['role'] = user.role
-				return redirect("/docker/container_list")
+				return redirect("/index/index")
 			else:
 				message = 'username or password error!'
 				context = {"message": message}

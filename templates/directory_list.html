@@ -3,13 +3,13 @@
 {% block body %}
 
 <ol class="breadcrumb">
-  <li>Ops Manage</li>
-  <li class="active">File Manager</li>
+  <li>运维管理</li>
+  <li class="active">文件服务器</li>
 </ol>
 
 <div class="page-header">
     <h2>
-        File Manager
+        文件服务器
     </h2>
 </div>
 
@@ -20,39 +20,38 @@
         <div class="form-group">
           <p class="form-control-static">
               <select class="form-control" name="filter_select">
-                <option>Name</option>
-                <option>Size</option>
-                <option>Mtime</option>
+                <option>名称</option>
+                <option>大小</option>
+                <option>修改时间</option>
               </select>
           </p>
           <input type="text" class="form-control" name="filter_keyword" value="{{filter_keyword}}" placeholder="">
           <input type="hidden" class="form-control" name="dist" value="{{current_directory}}" placeholder="">
         </div>
-        <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> Filter</button>
+        <button type="submit" class="btn btn-default"><span class="fa fa-filter"></span> 过滤</button>
         <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          More Actions <span class="caret"></span>
+          更多操作 <span class="caret"></span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right">
-          <li><a href="#">Download</a></li>
-          <li><a href="#">Download</a></li>
+          <li><a href="#">下载</a></li>
           <li role="separator" class="divider"></li>
-          <li><a href="#">Other</a></li>
+          <li><a href="#">其他</a></li>
         </ul>
       </div>
       </form>
     </caption>
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ file_list_count }} items <code style="font-size: 13px;">Path: {{path}}</span>
+            <span class="table_count">显示 {{ file_list_count }} 项目<code style="font-size: 13px;">Path: {{path}}</span>
         </td>
     </tr>
     <tr class="active">
         <th><input type="checkbox" name="check_all" id="check_all" onclick="checkAll()"></th>
-        <th width="40%">Name</th>
-        <th width="20%">Size</thw>
-        <th width="25%">Mtime</th>
-        <th colspan="4" width="15%">Actions</th>
+        <th width="40%">名称</th>
+        <th width="20%">大小</thw>
+        <th width="25%">修改时间</th>
+        <th colspan="4" width="15%">操作</th>
     </tr>
     {% for file_info in file_list %}
     {% if file_info.is_directory == 1  %}
@@ -77,23 +76,23 @@
           <!-- Split button -->
           {% if file_info.file_name != '..' %}
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="?host={{host}}&path={{path}}/{{file_info.file_name}}">Open</a>
+            <a type="button" class="btn btn-default btn-sm" href="?host={{host}}&path={{path}}/{{file_info.file_name}}">打开</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="">Download Zip</a></li>
+              <li><a href="">下载</a></li>
             </ul>
           </div>
           {% endif %}
           {% if file_info.file_name == '..' %}
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="?host={{host}}&path={{parent_path}}">Open</a>
+            <a type="button" class="btn btn-default btn-sm" href="?host={{host}}&path={{parent_path}}">打开</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="">Download Zip</a></li>
+              <li><a href="">下载</a></li>
             </ul>
           </div>
           {% endif %}        
@@ -119,12 +118,12 @@
 
         <!-- Split button -->
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="/filemanager/text_viewer?host={{host}}&path={{path}}/{{file_info.file_name}}">Tail &nbsp;&nbsp;</a>
+            <a type="button" class="btn btn-default btn-sm" href="/filemanager/text_viewer?host={{host}}&path={{path}}/{{file_info.file_name}}">查看 &nbsp;&nbsp;</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="/filemanager/file_download?host={{host}}&path={{path}}/{{file_info.file_name}}">Download</a></li>
+              <li><a href="/filemanager/file_download?host={{host}}&path={{path}}/{{file_info.file_name}}">下载</a></li>
             </ul>
           </div>
         </td>
@@ -133,7 +132,7 @@
     {% endfor %}
     <tr>
         <td colspan="12" data-column="0">
-            <span class="table_count">Displaying {{ file_list_count }} items</span>
+            <span class="table_count">显示 {{ file_list_count }} 项目</span>
         </td>
     </tr>
 </table>

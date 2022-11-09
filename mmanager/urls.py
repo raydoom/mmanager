@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls,name=admin),
     url(r'^favicon.ico$', RedirectView.as_view(url='/static/img/favicon.ico')),
 
+    path('index/', include('app.main.urls')),
     path('account/', include('app.account.urls')),
     path('server/', include('app.server.urls')),
     path('docker/', include('app.docker.urls')),

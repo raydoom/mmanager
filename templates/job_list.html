@@ -67,12 +67,12 @@
 
           <!-- Split button -->
           <div class="btn-group">
-            <a type="button" class="btn btn-default btn-sm" href="javascript:;" onclick="jenkins_job_opt('{{job.host}}','{{job.host_port_api}}','{{job.name}}','build')">Build Job</a>
+            <a type="button" class="btn btn-default btn-sm" href="javascript:;" onclick="jenkins_job_opt('{{job.host}}','{{job.host_port_api}}','{{job.name}}','build')">开始构建</a>
             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right">
-              <li><a href="javascript:;" onclick="jenkins_job_opt('{{job.host}}','{{job.host_port_api}}','{{job.name}}','build')">Build Job</a></li>
+              <li><a href="javascript:;" onclick="jenkins_job_opt('{{job.host}}','{{job.host_port_api}}','{{job.name}}','build')">开始构建</a></li>
               <li role="separator" class="divider"></li>
               <li><a href="#" target="_blank">Console Output</a></li>
             </ul>
